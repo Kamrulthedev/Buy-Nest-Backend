@@ -2,8 +2,17 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const GetAdmins = async () => {
-  const result = await prisma.admin.findMany();
+const GetAdmins = async (params : any) => {
+    console.log({params});
+
+  const result = await prisma.admin.findMany({
+    where : {
+        name : {
+            contains : params.searchTram,
+            mode : "insensitive"
+        }
+    }
+  });
   return result;
 };
 
