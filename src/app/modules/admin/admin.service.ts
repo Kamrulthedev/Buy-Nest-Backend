@@ -33,7 +33,8 @@ const GetAdmins = async (params: any, options: any) => {
   const whereCondition: Prisma.AdminWhereInput = { AND: andCondions };
   const result = await prisma.admin.findMany({
     where: whereCondition,
-    skip: (page - 1) * limit,
+    skip: (Number(page) - 1) * limit,
+    take : Number(limit)
   });
   return result;
 };
