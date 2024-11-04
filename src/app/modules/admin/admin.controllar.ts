@@ -8,7 +8,8 @@ import { AdminFilterableFields } from "./admin.constent";
 const GetAdminsDB = async (req: Request, res: Response) => {
   try {
     const filter = pick(req.query, AdminFilterableFields);
-    const result = await AdminServices.GetAdmins(filter);
+    const options = pick(req.query, ["limit", "page"]);
+    const result = await AdminServices.GetAdmins(filter, options);
     res.status(200).json({
       success: true,
       message: "Admins Fatched!",
