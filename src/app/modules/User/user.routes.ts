@@ -3,6 +3,6 @@ import { UserControllars } from "./user.controllar";
 
 const router = express.Router();
 
-router.get("/user", UserControllars.CreateAdminSQ);
+router.post("/create-admin", UserControllars.CreateAdminSQ);
 
 export const UserRoutes = router;
