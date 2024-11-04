@@ -1,13 +1,8 @@
 import express , {Request, Response} from "express";
+import { UserControllars } from "./user.controllar";
 
 const router = express.Router();
 
-
-
-router.get("/", (req : Request, res : Response) => {
-    res.send({
-        message : "Route is Working Perfectly.."
-    })
-});
+router.get("/user", UserControllars.CreateAdminSQ);
 
 export const UserRoutes = router;

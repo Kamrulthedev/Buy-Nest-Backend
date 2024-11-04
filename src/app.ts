@@ -10,6 +10,6 @@ app.get('/', (req: Request, res: Response) =>{
     res.send("PH Helth Care Server....")
 });
 
-app.use('/api/v1/user', UserRoutes);
+app.use('/api/v1', UserRoutes);
 
 export default app;
