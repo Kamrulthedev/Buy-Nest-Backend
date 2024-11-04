@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { adminSearchAvleFields } from "./admin.constent";
 
 const prisma = new PrismaClient();
 
@@ -6,7 +7,7 @@ const GetAdmins = async (params: any) => {
     const {searchTram, ...filterValue} = params;
   const andCondions: Prisma.AdminWhereInput[] = [];
 
-  const adminSearchAvleFields = ["name", "email"]
+
   if (params.searchTram) {
     andCondions.push({
       OR: adminSearchAvleFields.map((field) => ({

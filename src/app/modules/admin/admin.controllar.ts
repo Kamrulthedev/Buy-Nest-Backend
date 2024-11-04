@@ -1,25 +1,13 @@
 import { Request, Response } from "express";
 import { AdminServices } from "./admin.service";
-
-const pick = (obj: any, keys: any) => {
-  console.log(obj, keys);
-  const finalObj = {};
-
-
-  for (const key of keys) {
-    if (obj && Object.hasOwnProperty.call(obj, key)) {
-      finalObj[key]= obj[key]
-    }
-  }
-return finalObj
-};
+import { pick } from "../../../shared/pick";
+import { AdminFilterableFields } from "./admin.constent";
 
 
 
 const GetAdminsDB = async (req: Request, res: Response) => {
   try {
-
-    const filter =     pick(req.query, ["name", "email", "searchTram", "contactNumber"]);
+    const filter = pick(req.query, AdminFilterableFields);
     const result = await AdminServices.GetAdmins(filter);
     res.status(200).json({
       success: true,
