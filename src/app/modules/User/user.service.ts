@@ -11,7 +11,7 @@ const CreateAdmin = async (data: any) => {
   };
 
   const result = await prisma.$transaction(async (transactionClient) => {
-    const createdUserData = await transactionClient.user.create({
+    await transactionClient.user.create({
       data: userData,
     });
 
