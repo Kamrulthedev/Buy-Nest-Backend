@@ -3,13 +3,31 @@ import { AdminServices } from "./admin.service";
 import { pick } from "../../../shared/pick";
 import { AdminFilterableFields } from "./admin.constent";
 
-
-
 const GetAdminsDB = async (req: Request, res: Response) => {
   try {
     const filter = pick(req.query, AdminFilterableFields);
     const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
     const result = await AdminServices.GetAdmins(filter, options);
+    res.status(200).json({
+      success: true,
+      message: "Admins Fatched!",
+      meta: result.meta,
+      data: result.data,
+    });
+  } catch (err: unknown) {
+    const error = err as Error;
+    res.status(500).json({
+      success: false,
+      message: error?.name || "Something Went Wrong",
+      err: error,
+    });
+  }
+};
+
+const GetByIdDB = async (req: Request, res: Response) => {
+  console.log("This is controllar function id form db", req.params.id);
+  try {
+    const result = await AdminServices.GetById();
     res.status(200).json({
       success: true,
       message: "Admins Fatched!",
@@ -27,4 +45,5 @@ const GetAdminsDB = async (req: Request, res: Response) => {
 
 export const AdminControllars = {
   GetAdminsDB,
+  GetByIdDB
 };

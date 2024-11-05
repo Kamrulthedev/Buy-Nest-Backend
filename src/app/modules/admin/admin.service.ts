@@ -4,9 +4,8 @@ import { paginationHelper } from "../../../helpars/paginationHelper";
 
 const prisma = new PrismaClient();
 
-
 const GetAdmins = async (params: any, options: any) => {
-  const {page, limit, skip } : any = paginationHelper.calculatePagination;
+  const { page, limit, skip }: any = paginationHelper.calculatePagination;
 
   const { searchTram, ...filterValue } = params;
   const andCondions: Prisma.AdminWhereInput[] = [];
@@ -46,9 +45,28 @@ const GetAdmins = async (params: any, options: any) => {
             createdAt: "desc",
           },
   });
-  return result;
+
+  const TotalCount = await prisma.admin.count({
+    where : whereCondition
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total : TotalCount
+    },
+    data: result,
+  };
 };
+
+
+const GetById = async() =>{
+  console.log("get by Id console")
+};
+
 
 export const AdminServices = {
   GetAdmins,
+  GetById
 };
