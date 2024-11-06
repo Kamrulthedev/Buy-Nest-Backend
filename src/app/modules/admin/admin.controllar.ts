@@ -82,6 +82,26 @@ const DeleteFromAdminDB = async(req: Request, res: Response) =>{
   }
 }
 
+//soft Delete
+const SoftDeleteFromAdminDB = async(req: Request, res: Response) =>{
+  const { id } = req.params;
+  try {
+    const result = await AdminServices.SoftDeleteFromAdmin(id);
+    res.status(200).json({
+      success: true,
+      message: "Admin Data Deleted!",
+      data: result,
+    });
+  } catch (err: unknown) {
+    const error = err as Error;
+    res.status(500).json({
+      success: false,
+      message: error?.name || "Somting Went Wrong!",
+      err: error,
+    });
+  }
+}
+
 export const AdminControllars = {
   GetAdminsDB,
   GetByIdDB,
