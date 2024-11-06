@@ -80,12 +80,13 @@ const UpdateAdmin = async (id: string, data: Partial<Admin>) => {
   await prisma.admin.findUniqueOrThrow({
     where: {
       id,
+      isDeleted : false
     },
   });
 
   const result = await prisma.admin.update({
     where: {
-      id,
+      id
     },
     data,
   });
