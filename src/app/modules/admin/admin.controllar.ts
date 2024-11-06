@@ -25,7 +25,7 @@ const GetAdminsDB = async (req: Request, res: Response) => {
 };
 
 const GetByIdDB = async (req: Request, res: Response) => {
-  const {id} = req.params;
+  const { id } = req.params;
   try {
     const result = await AdminServices.GetById(id);
     res.status(200).json({
@@ -43,7 +43,27 @@ const GetByIdDB = async (req: Request, res: Response) => {
   }
 };
 
+const UpdateAdminDB = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const result = await AdminServices.UpdateAdmin();
+    res.status(200).json({
+      success: true,
+      message: "Admin Data Updaetd!",
+      data: result,
+    });
+  } catch (err: unknown) {
+    const error = err as Error;
+    res.status(500).json({
+      success: false,
+      message: error?.name || "Somting Went Wrong!",
+      err: error,
+    });
+  }
+};
+
 export const AdminControllars = {
   GetAdminsDB,
-  GetByIdDB
+  GetByIdDB,
+  UpdateAdminDB
 };

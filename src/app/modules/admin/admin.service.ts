@@ -70,8 +70,12 @@ const GetById = async(id : string) =>{
    return result
 };
 
+const UpdateAdmin = () =>{
+  console.log("Updated Admin Data!");
+};
 
 export const AdminServices = {
   GetAdmins,
-  GetById
+  GetById,
+  UpdateAdmin
 };

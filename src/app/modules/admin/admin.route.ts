@@ -8,4 +8,6 @@ router.get("/admins", AdminControllars.GetAdminsDB);
 
 router.get("/admin/:id", AdminControllars.GetByIdDB);
 
+router.patch("admin/:id", AdminControllars.UpdateAdminDB);
+
 export const AdminRoutes = router;
