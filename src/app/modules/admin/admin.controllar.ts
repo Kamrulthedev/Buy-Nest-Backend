@@ -25,9 +25,9 @@ const GetAdminsDB = async (req: Request, res: Response) => {
 };
 
 const GetByIdDB = async (req: Request, res: Response) => {
-  console.log("This is controllar function id form db", req.params.id);
+  const {id} = req.params;
   try {
-    const result = await AdminServices.GetById();
+    const result = await AdminServices.GetById(id);
     res.status(200).json({
       success: true,
       message: "Admins Fatched!",
