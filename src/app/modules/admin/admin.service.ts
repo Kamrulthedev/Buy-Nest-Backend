@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Admin, Prisma, PrismaClient } from "@prisma/client";
 import { adminSearchAvleFields } from "./admin.constent";
 import { paginationHelper } from "../../../helpars/paginationHelper";
 
@@ -47,35 +47,42 @@ const GetAdmins = async (params: any, options: any) => {
   });
 
   const TotalCount = await prisma.admin.count({
-    where : whereCondition
+    where: whereCondition,
   });
 
   return {
     meta: {
       page,
       limit,
-      total : TotalCount
+      total: TotalCount,
     },
     data: result,
   };
 };
 
-
-const GetById = async(id : string) =>{
-   const result = await prisma.admin.findUnique({
-    where : {
-      id
-    }
-   })
-   return result
+//single-get-data
+const GetById = async (id: string) => {
+  const result = await prisma.admin.findUnique({
+    where: {
+      id,
+    },
+  });
+  return result;
 };
 
-const UpdateAdmin = () =>{
-  console.log("Updated Admin Data!");
+//update-data
+const UpdateAdmin = async (id: string, data: Partial<Admin>) => {
+  const result = await prisma.admin.update({
+    where: {
+      id,
+    },
+    data,
+  });
+  return result;
 };
 
 export const AdminServices = {
   GetAdmins,
   GetById,
-  UpdateAdmin
+  UpdateAdmin,
 };
