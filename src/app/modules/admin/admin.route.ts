@@ -10,4 +10,6 @@ router.get("/admin/:id", AdminControllars.GetByIdDB);
 
 router.patch("/admin/:id", AdminControllars.UpdateAdminDB);
 
+router.delete("/admin/:id", AdminControllars.DeleteFromAdminDB);
+
 export const AdminRoutes = router;

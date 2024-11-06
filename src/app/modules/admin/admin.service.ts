@@ -77,7 +77,7 @@ const UpdateAdmin = async (id: string, data: Partial<Admin>) => {
     id
   }
   });
-  
+
   const result = await prisma.admin.update({
     where: {
       id,
@@ -87,8 +87,13 @@ const UpdateAdmin = async (id: string, data: Partial<Admin>) => {
   return result;
 };
 
+const DeleteFromAdmin = async(id : string) =>{
+  console.log("delete from Db Admin Services")
+};
+
 export const AdminServices = {
   GetAdmins,
   GetById,
   UpdateAdmin,
+DeleteFromAdmin
 };
