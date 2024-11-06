@@ -89,7 +89,7 @@ const SoftDeleteFromAdminDB = async(req: Request, res: Response) =>{
     const result = await AdminServices.SoftDeleteFromAdmin(id);
     res.status(200).json({
       success: true,
-      message: "Admin Data Deleted!",
+      message: "Admin Data Deleted Successfully!",
       data: result,
     });
   } catch (err: unknown) {

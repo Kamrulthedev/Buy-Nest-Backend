@@ -31,6 +31,10 @@ const GetAdmins = async (params: any, options: any) => {
     });
   }
 
+  andCondions.push({
+    isDeleted : false
+  });
+
   const whereCondition: Prisma.AdminWhereInput = { AND: andCondions };
   const result = await prisma.admin.findMany({
     where: whereCondition,
@@ -65,6 +69,7 @@ const GetById = async (id: string) => {
   const result = await prisma.admin.findUnique({
     where: {
       id,
+      isDeleted: false
     },
   });
   return result;
