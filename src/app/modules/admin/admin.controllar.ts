@@ -100,11 +100,12 @@ const SoftDeleteFromAdminDB = async(req: Request, res: Response) =>{
       err: error,
     });
   }
-}
+};
 
 export const AdminControllars = {
   GetAdminsDB,
   GetByIdDB,
   UpdateAdminDB,
-  DeleteFromAdminDB
+  DeleteFromAdminDB,
+  SoftDeleteFromAdminDB
 };
