@@ -1,6 +1,8 @@
 import  express, { Application, NextFunction, request, Request, Response, urlencoded }  from "express";
 import cors from "cors";
 import router from "./app/routes";
+import { globalErrorHendlar } from "./app/middlewares/globalerrorHendlar";
+import { notFount } from "./app/middlewares/notFound";
 
 
 
@@ -17,12 +19,8 @@ app.get('/', (req: Request, res: Response) =>{
 
 app.use("/api/v1", router);
 
-app.use((err : any, req: Request, res: Response , next : NextFunction) =>{
-      res.status(200).json({
-        success : false,
-        message : err.name || "Someting Went Wrong!",
-        error : err
-      })
-});
+app.use(globalErrorHendlar);
+
+app.use(notFount);
 
 export default app;
