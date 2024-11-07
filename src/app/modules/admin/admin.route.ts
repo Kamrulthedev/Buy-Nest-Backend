@@ -6,12 +6,12 @@ const router = express.Router();
 
 router.get("/admins", AdminControllars.GetAdminsDB);
 
-router.get("/admin/:id", AdminControllars.GetByIdDB);
+router.get("/:id", AdminControllars.GetByIdDB);
 
-router.patch("/admin/:id", AdminControllars.UpdateAdminDB);
+router.patch("/:id", AdminControllars.UpdateAdminDB);
 
-router.delete("/admin/:id", AdminControllars.DeleteFromAdminDB);
+router.delete("/:id", AdminControllars.DeleteFromAdminDB);
 
-router.delete("/admin/soft/:id", AdminControllars.SoftDeleteFromAdminDB);
+router.delete("/soft/:id", AdminControllars.SoftDeleteFromAdminDB);
 
 export const AdminRoutes = router;

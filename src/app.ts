@@ -1,7 +1,5 @@
 import  express, { Application, Request, Response, urlencoded }  from "express";
 import cors from "cors";
-import { UserRoutes } from "./app/modules/User/user.routes";
-import { AdminRoutes } from "./app/modules/admin/admin.route";
 import router from "./app/routes";
 
 
