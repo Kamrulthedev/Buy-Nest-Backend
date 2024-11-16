@@ -1,5 +1,5 @@
 export type IPagination = {
-    orderBy: string | undefined;
+    orderBy?: string | undefined;
     page ?: number;
     limit ?: number;
     sortBy ?: string | undefined;
