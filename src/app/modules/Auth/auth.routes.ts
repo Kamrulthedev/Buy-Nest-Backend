@@ -5,5 +5,5 @@ const router = express.Router();
 
 router.post('/login', AuthControllar.loginUserDB);
 
-export const authRoutes = router;
+export const AuthRoutes = router;
 

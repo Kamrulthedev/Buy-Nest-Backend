@@ -1,6 +1,6 @@
 
-const loginUser = async() =>{
-    console.log("Login User")
+const loginUser = async(payload : {email : string, password : string}) =>{
+    console.log("Login User", payload)
 };
 
 
