@@ -3,11 +3,12 @@ import cors from "cors";
 import router from "./app/routes";
 import { globalErrorHendlar } from "./app/middlewares/globalerrorHendlar";
 import { notFount } from "./app/middlewares/notFound";
-
+const cookieParser = require('cookie-parser'); 
 
 
 const app: Application = express();
 app.use(cors());
+app.use(cookieParser()); 
 
 //use parser
 app.use(express.json());

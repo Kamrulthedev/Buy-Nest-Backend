@@ -2,7 +2,6 @@ import { generateToken } from "../../../helpars/JwtHelpars";
 import { prisma } from "../../../shared/SharedPrisma";
 import * as bcrypt from "bcrypt";
 
-
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
@@ -43,7 +42,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
       role: userData.role,
       status: userData.status,
     },
-     process.env.JWT_REFRESH_TOKEN as string,
+    process.env.JWT_REFRESH_TOKEN as string,
     process.env.JWT_REFRESH_EXPIRES_IN as string
   );
 
@@ -54,6 +53,11 @@ const loginUser = async (payload: { email: string; password: string }) => {
   };
 };
 
+const RefreshToken = async (Token: string) => {
+  console.log("refreshToken", Token);
+};
+
 export const AuthService = {
   loginUser,
+  RefreshToken,
 };

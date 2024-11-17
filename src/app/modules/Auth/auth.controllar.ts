@@ -19,7 +19,20 @@ const loginUserDB = catchAsync(async(req, res) =>{
      })
 });
 
+const RefreshTokenDB = catchAsync(async(req, res)=>{
+    const {refreshToken} =  req.cookies;
+
+    const result = await AuthService.RefreshToken(refreshToken)
+  sendResponse(res, {
+    statusCode: 200, 
+    success : true,
+    message: "Refresh Token Created!",
+    data : result
+  })
+});
+
 
 export const AuthControllar = {
-    loginUserDB
+    loginUserDB,
+    RefreshTokenDB
 };
