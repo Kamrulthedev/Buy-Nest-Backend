@@ -1,4 +1,5 @@
-import { generateToken } from "../../../helpars/JwtHelpars";
+import { UserStatus } from "@prisma/client";
+import { generateToken, VerifyToken } from "../../../helpars/JwtHelpars";
 import { prisma } from "../../../shared/SharedPrisma";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -7,6 +8,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: payload.email,
+      status : UserStatus.ACTIVE
     },
   });
 
@@ -54,16 +56,12 @@ const loginUser = async (payload: { email: string; password: string }) => {
   };
 };
 
-
 //create refresh Token
 const RefreshToken = async (Token: string) => {
   let decodedData;
 
   try {
-    decodedData = jwt.verify(
-      Token,
-      process.env.JWT_REFRESH_TOKEN as string
-    );
+    decodedData = VerifyToken(Token, process.env.JWT_REFRESH_TOKEN as string)
   } catch (err) {
     throw new Error("You are not authorized!");
   }
@@ -74,9 +72,10 @@ const RefreshToken = async (Token: string) => {
   }
 
   try {
-    const userData = await prisma.user.findUnique({
+    const userData = await prisma.user.findUniqueOrThrow({
       where: {
         email: decodedData.email,
+        status : UserStatus.ACTIVE
       },
     });
 
@@ -95,15 +94,12 @@ const RefreshToken = async (Token: string) => {
 
     return {
       accessToken,
-      needPasswordChange: userData.needPasswordChange
+      needPasswordChange: userData.needPasswordChange,
     };
   } catch (err) {
     throw new Error("Could not verify user");
   }
-
-
 };
-
 
 export const AuthService = {
   loginUser,
