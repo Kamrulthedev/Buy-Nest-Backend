@@ -4,11 +4,18 @@ import { AuthService } from "./auth.service";
 
 const loginUserDB = catchAsync(async(req, res) =>{
      const result = await AuthService.loginUser(req.body);
+
+     const {refreshToken} = result;
+     res.cookie('refreshToken', refreshToken, {secure: false, httpOnly: true})
+
      sendResponse(res, {
         statusCode : 200,
         success : true,
         message : "Logged in Successfully!",
-        data : result
+        data : {
+            accessToken: result.accessToken,
+            needPasswordChange:result.needPasswordChange
+        }
      })
 });
 

@@ -1,6 +1,7 @@
+import { generateToken } from "../../../helpars/JwtHelpars";
 import { prisma } from "../../../shared/SharedPrisma";
 import * as bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -9,27 +10,48 @@ const loginUser = async (payload: { email: string; password: string }) => {
     },
   });
 
-  const isCorrentPassword: boolean = await bcrypt.compare(
+  // Ensure both passwords are strings
+  if (
+    typeof payload.password !== "string" ||
+    typeof userData.password !== "string"
+  ) {
+    throw new Error("Invalid password or user data format");
+  }
+
+  const isCorrectPassword: boolean = await bcrypt.compare(
     payload.password,
     userData.password
   );
+  if (!isCorrectPassword) {
+    throw new Error("Invalid password");
+  }
 
-  const accessToken = jwt.sign(
+  //create token
+  const accessToken = generateToken(
     {
       email: userData.email,
       role: userData.role,
       status: userData.status,
     },
     "123456789",
-    {
-      algorithm : "HS256",
-      expiresIn: '15m'
-    }
+    "5m"
   );
 
-  console.log({accessToken})
+  const refreshToken = generateToken(
+    {
+      email: userData.email,
+      role: userData.role,
+      status: userData.status,
+    },
+    "123456789",
+    "30d"
+  );
 
-  return userData;
+  return {
+    accessToken,
+    refreshToken,
+    needPasswordChange: userData.needPasswordChange,
+  };
 };
 
 export const AuthService = {
