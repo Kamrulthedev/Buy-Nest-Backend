@@ -33,8 +33,8 @@ const loginUser = async (payload: { email: string; password: string }) => {
       role: userData.role,
       status: userData.status,
     },
-    "123456789",
-    "5m"
+    process.env.JWT_ACCESS_TOKEN as string,
+    process.env.JWT_ACCESS_EXPIRES_IN as string
   );
 
   const refreshToken = generateToken(
@@ -43,8 +43,8 @@ const loginUser = async (payload: { email: string; password: string }) => {
       role: userData.role,
       status: userData.status,
     },
-    "123456789",
-    "30d"
+     process.env.JWT_REFRESH_TOKEN as string,
+    process.env.JWT_REFRESH_EXPIRES_IN as string
   );
 
   return {

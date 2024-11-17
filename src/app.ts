@@ -1,4 +1,4 @@
-import  express, { Application, NextFunction, request, Request, Response, urlencoded }  from "express";
+import  express, { Application, Request, Response, urlencoded }  from "express";
 import cors from "cors";
 import router from "./app/routes";
 import { globalErrorHendlar } from "./app/middlewares/globalerrorHendlar";
