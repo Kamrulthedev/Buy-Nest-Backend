@@ -1,6 +1,7 @@
 import { generateToken } from "../../../helpars/JwtHelpars";
 import { prisma } from "../../../shared/SharedPrisma";
 import * as bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -53,9 +54,56 @@ const loginUser = async (payload: { email: string; password: string }) => {
   };
 };
 
+
+//create refresh Token
 const RefreshToken = async (Token: string) => {
-  console.log("refreshToken", Token);
+  let decodedData;
+
+  try {
+    decodedData = jwt.verify(
+      Token,
+      process.env.JWT_REFRESH_TOKEN as string
+    );
+  } catch (err) {
+    throw new Error("You are not authorized!");
+  }
+
+  // Validate decoded data before querying
+  if (!decodedData || typeof decodedData !== "object" || !decodedData.email) {
+    throw new Error("Invalid token payload");
+  }
+
+  try {
+    const userData = await prisma.user.findUnique({
+      where: {
+        email: decodedData.email,
+      },
+    });
+
+    if (!userData) {
+      throw new Error("User not found");
+    }
+    const accessToken = generateToken(
+      {
+        email: userData.email,
+        role: userData.role,
+        status: userData.status,
+      },
+      process.env.JWT_ACCESS_TOKEN as string,
+      process.env.JWT_ACCESS_EXPIRES_IN as string
+    );
+
+    return {
+      accessToken,
+      needPasswordChange: userData.needPasswordChange
+    };
+  } catch (err) {
+    throw new Error("Could not verify user");
+  }
+
+
 };
+
 
 export const AuthService = {
   loginUser,

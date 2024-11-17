@@ -3,7 +3,7 @@ import cors from "cors";
 import router from "./app/routes";
 import { globalErrorHendlar } from "./app/middlewares/globalerrorHendlar";
 import { notFount } from "./app/middlewares/notFound";
-const cookieParser = require('cookie-parser'); 
+import cookieParser from 'cookie-parser'; 
 
 
 const app: Application = express();
