@@ -1,9 +1,11 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { AdminControllars } from "./admin.controllar";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { ValidationWithZod } from "./admin.validation";
 
 const router = express.Router();
+
+
 
 router.get("/admins", AdminControllars.GetAdminsDB);
 
