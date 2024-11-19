@@ -3,6 +3,7 @@ import { generateToken, VerifyToken } from "../../../helpars/JwtHelpars";
 import { prisma } from "../../../shared/SharedPrisma";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import config from "../../config";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -35,8 +36,8 @@ const loginUser = async (payload: { email: string; password: string }) => {
       role: userData.role,
       status: userData.status,
     },
-    process.env.JWT_ACCESS_TOKEN as string,
-    process.env.JWT_ACCESS_EXPIRES_IN as string
+    config.jwt_access_token as string,
+    config.jwt_access_token_expires_in as string
   );
 
   const refreshToken = generateToken(
@@ -45,8 +46,8 @@ const loginUser = async (payload: { email: string; password: string }) => {
       role: userData.role,
       status: userData.status,
     },
-    process.env.JWT_REFRESH_TOKEN as string,
-    process.env.JWT_REFRESH_EXPIRES_IN as string
+    config.jwt_refresh_token as string,
+    config.jwt_refresh_token_expires_in as string
   );
 
   return {
@@ -61,7 +62,7 @@ const RefreshToken = async (Token: string) => {
   let decodedData;
 
   try {
-    decodedData = VerifyToken(Token, process.env.JWT_REFRESH_TOKEN as string)
+    decodedData = VerifyToken(Token, config.jwt_refresh_token_expires_in as string)
   } catch (err) {
     throw new Error("You are not authorized!");
   }
@@ -88,8 +89,8 @@ const RefreshToken = async (Token: string) => {
         role: userData.role,
         status: userData.status,
       },
-      process.env.JWT_ACCESS_TOKEN as string,
-      process.env.JWT_ACCESS_EXPIRES_IN as string
+      config.jwt_access_token as string,
+      config.jwt_access_token_expires_in as string
     );
 
     return {
