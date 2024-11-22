@@ -102,7 +102,15 @@ const RefreshToken = async (Token: string) => {
   }
 };
 
+
+const ChangePasword = async(data : any) =>{
+  console.log(data)
+};
+
+
+
 export const AuthService = {
   loginUser,
   RefreshToken,
+  ChangePasword
 };
