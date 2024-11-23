@@ -4,6 +4,7 @@ import { prisma } from "../../../shared/SharedPrisma";
 import * as bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
 import config from "../../config";
+import emailSender from "./emailSender";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -142,18 +143,26 @@ const ForgetPassword = async (payload: { email: string }) => {
     where: {
       email: payload.email,
       status: UserStatus.ACTIVE
-    }
+    },
   });
-     const resetPasswordToken = generateToken(
-      { email: userData.email, role: userData.role },
-      config.reset_password_token as string,
-      config.reset_token_expires_in as string
-    );
+  const resetPasswordToken = generateToken(
+    { email: userData.email, role: userData.role },
+    config.reset_password_token as string,
+    config.reset_token_expires_in as string
+  );
 
-    const resetPassLink = config.reset_password_link + `?userId=${userData.id}&token=${resetPasswordToken}`
-    
-    //https://localhost:3000/reset-pass?email=kamrul@gmail.com&token=12eral432nkan3fasdgslkjhaskjd
-   
+  const resetPassLink = config.reset_password_link + `?userId=${userData.id}&token=${resetPasswordToken}`
+  await emailSender(userData.email,
+    `<div>
+       <p>Dear User, </p>
+       <p>Your Password Reset Link: 
+       <a href=${resetPassLink}>
+       <button>Reset Password</button>
+       </a>
+       </p>
+    </div>`
+  )
+  //https://localhost:3000/reset-pass?email=kamrul@gmail.com&token=12eral432nkan3fasdgslkjhaskjd
 };
 
 
