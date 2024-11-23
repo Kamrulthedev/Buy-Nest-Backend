@@ -2,7 +2,7 @@ import { UserStatus } from "@prisma/client";
 import { generateToken, VerifyToken } from "../../../helpars/JwtHelpars";
 import { prisma } from "../../../shared/SharedPrisma";
 import * as bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import config from "../../config";
 
 const loginUser = async (payload: { email: string; password: string }) => {
@@ -124,7 +124,7 @@ const ChangePasword = async (user: any, payload: any) => {
   await prisma.user.update({
     where: {
       email: userData.email,
-      status : UserStatus.ACTIVE
+      status: UserStatus.ACTIVE
     },
     data: {
       password: hashedPassword,
@@ -137,9 +137,29 @@ const ChangePasword = async (user: any, payload: any) => {
 };
 
 
+const ForgetPassword = async (payload: { email: string }) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: payload.email,
+      status: UserStatus.ACTIVE
+    }
+  });
+     const resetPasswordToken = generateToken(
+      { email: userData.email, role: userData.role },
+      config.reset_password_token as string,
+      config.reset_token_expires_in as string
+    );
+
+    const resetPassLink = config.reset_password_link + `?userId=${userData.id}&token=${resetPasswordToken}`
+    
+    //https://localhost:3000/reset-pass?email=kamrul@gmail.com&token=12eral432nkan3fasdgslkjhaskjd
+   
+};
+
 
 export const AuthService = {
   loginUser,
   RefreshToken,
-  ChangePasword
+  ChangePasword,
+  ForgetPassword
 };

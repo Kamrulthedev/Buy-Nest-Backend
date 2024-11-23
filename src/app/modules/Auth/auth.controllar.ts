@@ -44,9 +44,22 @@ const ChangePaswordDB = catchAsync(async (req: Request, res: Response): Promise<
   })
 });
 
+const ForgetPasswordDB = catchAsync(async (req, res) => {
+  const data = req.body;
+  const result = await AuthService.ForgetPassword(data);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Password Reset Successfully!",
+    data: result
+  })
+});
+
+
 
 export const AuthControllar = {
   loginUserDB,
   RefreshTokenDB,
-  ChangePaswordDB
+  ChangePaswordDB,
+  ForgetPasswordDB
 };

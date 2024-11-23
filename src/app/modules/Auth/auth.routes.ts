@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/login', AuthControllar.loginUserDB);
 router.post('/refresh-token', AuthControllar.RefreshTokenDB);
 router.post('/change-password', auth(UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),AuthControllar.ChangePaswordDB);
+router.post('/forget-password', AuthControllar.ForgetPasswordDB);
 
 export const AuthRoutes = router; 
 
