@@ -153,14 +153,88 @@ const ForgetPassword = async (payload: { email: string }) => {
 
   const resetPassLink = config.reset_password_link + `?userId=${userData.id}&token=${resetPasswordToken}`
   await emailSender(userData.email,
-    `<div>
-       <p>Dear User, </p>
-       <p>Your Password Reset Link: 
-       <a href=${resetPassLink}>
-       <button>Reset Password</button>
-       </a>
-       </p>
-    </div>`
+    `<html>
+      <head>
+        <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Password Reset</title>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  background-color: #f6f6f6;
+                  margin: 0;
+                  padding: 0;
+                 }
+                .email-container {
+                               max-width: 600px;
+                               margin: 20px auto;
+                               background-color: #ffffff;
+                               border-radius: 8px;
+                               overflow: hidden;
+                               box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                               }
+                .email-header {
+                              background-color: #4CAF50;
+                              color: #ffffff;
+                              padding: 20px;
+                              text-align: center;
+                              }
+                .email-body {
+                           padding: 20px;
+                           color: #333333;
+                           line-height: 1.6;
+                          }
+               .button-container {
+                          text-align: center;
+                          margin: 20px 0;
+                         }
+                .button {
+                         background-color: #4CAF50;
+                         color: #ffffff;
+                         padding: 10px 20px;
+                         border: none;
+                         border-radius: 5px;
+                         text-decoration: none;
+                         font-size: 16px;
+                         cursor: pointer;
+                         display: inline-block;
+                        }
+                .button:hover {
+                        background-color: #45a049;
+                        }
+                .email-footer {
+                        background-color: #f1f1f1;
+                        padding: 10px;
+                        text-align: center;
+                        font-size: 12px;
+                        color: #777777;
+                       }
+                a {
+                  text-decoration: none;
+                  color: inherit;
+                  }
+              </style>
+        </head>
+ <body>
+            <div class="email-container">
+                <div class="email-header">
+                    <h1>Password Reset Request</h1>
+                </div>
+                <div class="email-body">
+                    <p>Dear User,</p>
+                    <p>You recently requested to reset your password. Please click the button below to proceed:</p>
+                <div class="button-container">
+                    <a href="${resetPassLink}" class="button">Reset Password</a>
+                </div>
+                    <p>If you did not request this, you can safely ignore this email.</p>
+                    <p>Thank you,<br>The Support Team</p>
+                </div>
+                <div class="email-footer">
+                   <p>This email was sent to you because a password reset was requested for your account.</p>
+                </div>
+           </div>
+    </body>
+</html>`
   )
   //https://localhost:3000/reset-pass?email=kamrul@gmail.com&token=12eral432nkan3fasdgslkjhaskjd
 };
