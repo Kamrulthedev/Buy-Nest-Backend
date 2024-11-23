@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import { catchAsync } from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { AuthService } from "./auth.service";
@@ -31,7 +32,7 @@ const RefreshTokenDB = catchAsync(async (req, res) => {
 });
 
 
-const ChangePaswordDB = catchAsync(async (req, res) => {
+const ChangePaswordDB = catchAsync(async (req: Request, res: Response): Promise<void> => {
   const data = req.body;
   const user = req?.user;
   const result = await AuthService.ChangePasword(user, data);

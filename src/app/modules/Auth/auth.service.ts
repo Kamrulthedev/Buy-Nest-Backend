@@ -123,7 +123,8 @@ const ChangePasword = async (user: any, payload: any) => {
 
   await prisma.user.update({
     where: {
-      email: userData.email
+      email: userData.email,
+      status : UserStatus.ACTIVE
     },
     data: {
       password: hashedPassword,
