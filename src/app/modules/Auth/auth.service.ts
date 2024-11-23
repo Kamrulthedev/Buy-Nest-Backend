@@ -103,8 +103,12 @@ const RefreshToken = async (Token: string) => {
 };
 
 
-const ChangePasword = async(data : any) =>{
-  console.log(data)
+const ChangePasword = async(user ,payload : any) =>{
+  const userData = prisma.user.findUniqueOrThrow({
+    where : {
+      email : user.email
+    }
+  })
 };
 
 

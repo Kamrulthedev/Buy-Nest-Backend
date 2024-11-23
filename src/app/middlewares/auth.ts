@@ -16,9 +16,6 @@ export const auth = (...roles: string[]) => {
   
         const verifiedUser = VerifyToken(token, config.jwt_access_token as Secret);
         req.user = verifiedUser;
-
-        
-        console.log(verifiedUser);
         if (typeof verifiedUser !== "object" || verifiedUser === null || !("role" in verifiedUser)) {
           throw new AppError(401, "You are Not Authorized!");
         }
