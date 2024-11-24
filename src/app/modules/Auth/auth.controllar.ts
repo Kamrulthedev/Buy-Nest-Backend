@@ -46,12 +46,25 @@ const ChangePaswordDB = catchAsync(async (req: Request, res: Response): Promise<
 
 const ForgetPasswordDB = catchAsync(async (req, res) => {
   const data = req.body;
-  const result = await AuthService.ForgetPassword(data);
+  await AuthService.ForgetPassword(data);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Chack Your Email!",
+    data: null
+  })
+});
+
+
+const ResetPasswordDB = catchAsync(async (req, res) => {
+  const token = req.headers.authorization || '';
+  const data = req.body;
+  await AuthService.ResetPassword(token , data);
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Password Reset Successfully!",
-    data: result
+    data: null
   })
 });
 
@@ -61,5 +74,6 @@ export const AuthControllar = {
   loginUserDB,
   RefreshTokenDB,
   ChangePaswordDB,
-  ForgetPasswordDB
+  ForgetPasswordDB,
+  ResetPasswordDB
 };

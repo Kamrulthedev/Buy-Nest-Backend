@@ -5,6 +5,7 @@ import * as bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
 import config from "../../config";
 import emailSender from "./emailSender";
+import AppError from "../../errors/AppError";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -240,9 +241,45 @@ const ForgetPassword = async (payload: { email: string }) => {
 };
 
 
+
+const ResetPassword = async (token: string, payload: { id: string, Password: string }) => {
+  console.log({ token, payload });
+
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: payload.id,
+      status: UserStatus.ACTIVE
+    }
+  });
+  const isValidToken = VerifyToken(token, config.reset_password_token as Secret);
+
+  console.log(isValidToken);
+  if (!isValidToken) {
+    throw new AppError(403, "Forbidden Access!");
+  }
+  const hashedPassword: string = await bcrypt.hash(payload.Password, 12);
+
+  await prisma.user.update({
+    where: {
+      id: payload.id,
+      status: UserStatus.ACTIVE
+    },
+    data: {
+      password: hashedPassword,
+      needPasswordChange: false
+    }
+  })
+  return {
+    message: "Password Reset Successfully!"
+  }
+};
+
+
+
 export const AuthService = {
   loginUser,
   RefreshToken,
   ChangePasword,
-  ForgetPassword
+  ForgetPassword,
+  ResetPassword
 };
