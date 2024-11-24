@@ -62,7 +62,6 @@ const loginUser = async (payload: { email: string; password: string }) => {
 //create refresh Token
 const RefreshToken = async (Token: string) => {
   let decodedData;
-
   try {
     decodedData = VerifyToken(Token, config.jwt_refresh_token_expires_in as string)
   } catch (err) {
@@ -152,7 +151,9 @@ const ForgetPassword = async (payload: { email: string }) => {
     config.reset_token_expires_in as string
   );
 
+ //create reset password Link
   const resetPassLink = config.reset_password_link + `?userId=${userData.id}&token=${resetPasswordToken}`
+
   await emailSender(userData.email,
     `<html>
       <head>
@@ -216,7 +217,7 @@ const ForgetPassword = async (payload: { email: string }) => {
                   }
               </style>
         </head>
- <body>
+    <body>
             <div class="email-container">
                 <div class="email-header">
                     <h1>Password Reset Request</h1>

@@ -26,7 +26,7 @@ const RefreshTokenDB = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Refresh Token Created!",
+    message: "Refresh Token Created Successfully!",
     data: result,
   });
 });
@@ -41,8 +41,9 @@ const ChangePaswordDB = catchAsync(async (req: Request, res: Response): Promise<
     success: true,
     message: "Password Change Successfully!",
     data: result
-  })
+  });
 });
+
 
 const ForgetPasswordDB = catchAsync(async (req, res) => {
   const data = req.body;
