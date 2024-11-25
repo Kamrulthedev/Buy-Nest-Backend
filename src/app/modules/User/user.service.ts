@@ -1,12 +1,17 @@
 import { UserRole } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { prisma } from "../../../shared/SharedPrisma";
+import { Fileuploader } from "../../../helpars/fileUploads";
 
 
 const CreateAdmin = async (req: any) => {
-  console.log("File: ", req.file);
-  console.log("Data: ", req.body.data);
-  
+  const file = req.file;
+
+  if(file){
+    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
+    console.log('service console',uploadToCloudinary);
+  }
+
   // const hashedPassword: string = await bcrypt.hash(data.password, 12);
 
   // const userData = {
