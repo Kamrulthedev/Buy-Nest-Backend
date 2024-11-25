@@ -6,7 +6,6 @@ import { Fileuploader } from "../../../helpars/fileUploads";
 
 const CreateAdmin = async (req: any) => {
   const file = req.file;
-  console.log(req.body)
 
   if(file){
     const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);

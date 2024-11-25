@@ -3,6 +3,8 @@ import path from "path";
 import { v2 as cloudinary } from 'cloudinary';
 import config from "../app/config";
 import fs from 'fs';
+import { CloudinaryAsset } from "../app/Interfaces/file";
+import { UploadedFile } from "../app/Interfaces/UploadedFileType";
 
 // Configuration
 cloudinary.config({
@@ -33,10 +35,11 @@ const upload = multer({ storage: storage });
 //     }
 // };
 
-const uploadToCloudinary = async (file: any) => {
+const uploadToCloudinary = async (file: UploadedFile): Promise<CloudinaryAsset | undefined> => {
+    console.log(file);
     return new Promise((resolve, reject) => {
-        cloudinary.uploader.upload(file.path, { public_id: file.originalname },
-            (error, result) => {
+        cloudinary.uploader.upload(file.path,
+            (error : Error, result: CloudinaryAsset) => {
                 fs.unlinkSync(file.path)
                 if (error) {
                     reject(error)
