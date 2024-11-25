@@ -4,13 +4,12 @@ import { v2 as cloudinary } from 'cloudinary';
 import config from "../app/config";
 import fs from 'fs';
 
-
 // Configuration
 cloudinary.config({
     cloud_name: config.cloud_name,
     api_key: config.cloud_api_key,
     api_secret: config.cloud_api_secret
-}); 
+});
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -19,20 +18,33 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         cb(null, file.originalname)
     }
-})
+});
 const upload = multer({ storage: storage });
 
+// const uploadToCloudinary = async (file: any) => {
+//     try {
+//         const uploadResult = await cloudinary.uploader.upload(file.path, { public_id: file.filename });
+//         console.log(uploadResult);
+//         fs.unlinkSync(file.path);
+//         return uploadResult;
+//     } catch (error) {
+//         console.error("Cloudinary upload failed:", error);
+//         throw error;
+//     }
+// };
 
 const uploadToCloudinary = async (file: any) => {
-    try {
-        const uploadResult = await cloudinary.uploader.upload(file.path, { public_id: file.filename });
-        console.log(uploadResult);
-        fs.unlinkSync(file.path);
-        return uploadResult;
-    } catch (error) {
-        console.error("Cloudinary upload failed:", error);
-        throw error;
-    }
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(file.path, { public_id: file.originalname },
+            (error, result) => {
+                if (error) {
+                    reject(error)
+                } else {
+                    resolve(result)
+                }
+            }
+        )
+    });
 };
 
 export const Fileuploader = {
