@@ -11,7 +11,6 @@ const CreateAdmin = async (req: any) => {
   if(file){
     const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
     req.body.admin.profilePhoto = uploadToCloudinary?.secure_url
-    console.log(req.body)
   }
 
   const data = req.body;
