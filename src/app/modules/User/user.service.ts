@@ -37,6 +37,14 @@ const CreateAdmin = async (req: any) => {
   return result;
 };
 
+
+const CreateDoctor = async(req : any)=>{
+  console.log(req);
+};
+
+
+
 export const UserServices = {
   CreateAdmin,
+  CreateDoctor
 };

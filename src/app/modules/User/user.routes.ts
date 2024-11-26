@@ -16,4 +16,13 @@ router.post("/create-admin", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     },
 );
 
+
+router.post("/create-doctor", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+    Fileuploader.upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = UserValidation.CreateDoctorValidation.parse(JSON.parse(req.body.data))
+        return UserControllars.CreateDoctorSQ(req, res, next)
+    },
+);
+
 export const UserRoutes = router;
