@@ -11,6 +11,8 @@ const createAdmin = z.object({
     })
 });
 
+
+//Create Doctors Validation Schema
 const CreateDoctorValidation = z.object({
     password: z.string({ required_error: "Password is Requred!" }),
     doctor: z.object({
