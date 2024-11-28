@@ -21,7 +21,17 @@ const CreateDoctorSQ = catchAsync(async (req, res) => {
   });
 });
 
+const CreatePatientSQ = catchAsync(async (req, res) => {
+  const result = await UserServices
+  res.status(200).json({
+    success: true,
+    message: "Patient Created Usccessfully!",
+    data: result
+  })
+});
+
 export const UserControllars = {
   CreateAdminSQ,
-  CreateDoctorSQ
+  CreateDoctorSQ,
+  CreatePatientSQ
 };

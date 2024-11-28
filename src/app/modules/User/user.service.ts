@@ -3,6 +3,8 @@ import * as bcrypt from "bcrypt";
 import { prisma } from "../../../shared/SharedPrisma";
 import { Fileuploader } from "../../../helpars/fileUploads";
 import { UploadedFile } from "../../Interfaces/UploadedFileType";
+import { assert } from "console";
+import { any } from "zod";
 
 
 const CreateAdmin = async (req: any) => {
@@ -68,6 +70,11 @@ const CreateDoctor = async(req : any)=>{
   });
 
   return result;
+};
+
+
+const CreatePatient = async(req : any) =>{
+
 };
 
 
