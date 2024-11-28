@@ -1,6 +1,8 @@
-import { Request, Response } from "express";
 import { UserServices } from "./user.service";
 import { catchAsync } from "../../../shared/catchAsync";
+import { pick } from "../../../shared/pick";
+import sendResponse from "../../../shared/sendResponse";
+import { UserFilterableFields } from "./user.constant";
 
 const CreateAdminSQ = catchAsync(async (req, res) => {
   const result = await UserServices.CreateAdmin(req);
@@ -31,8 +33,24 @@ const CreatePatientSQ = catchAsync(async (req, res) => {
   })
 });
 
+
+const GetAllFormSQ = catchAsync(async(req, res) =>{
+  const filter = pick(req.query, UserFilterableFields);
+  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+  const result = await UserServices.GetAllForm(filter, options);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Admin Data fetched Successfully!",
+    meta: result.meta,
+    data: result.data,
+  });
+})
+
+
 export const UserControllars = {
   CreateAdminSQ,
   CreateDoctorSQ,
-  CreatePatientSQ
+  CreatePatientSQ,
+  GetAllFormSQ
 };
