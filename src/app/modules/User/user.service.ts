@@ -10,10 +10,10 @@ import { UserSearchAbleFilds } from "./user.constant";
 
 
 //create-admin
-const CreateAdmin = async (req: Request) : Promise<Admin> => {
+const CreateAdmin = async (req: Request): Promise<Admin> => {
   const file = req.file as UploadedFile;
 
-  if(file){
+  if (file) {
     const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
     req.body.admin.profilePhoto = uploadToCloudinary?.secure_url
   }
@@ -44,10 +44,10 @@ const CreateAdmin = async (req: Request) : Promise<Admin> => {
 
 
 //create doctor
-const CreateDoctor = async(req : Request) : Promise<Doctor>=>{
+const CreateDoctor = async (req: Request): Promise<Doctor> => {
   const file = req.file as UploadedFile;
 
-  if(file){
+  if (file) {
     const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
     req.body.doctor.profilePhoto = uploadToCloudinary?.secure_url
   }
@@ -78,9 +78,9 @@ const CreateDoctor = async(req : Request) : Promise<Doctor>=>{
 
 
 //create patient
-const CreatePatient = async(req : Request) : Promise<Patient> =>{
+const CreatePatient = async (req: Request): Promise<Patient> => {
   const file = req.file as UploadedFile;
-  if(file){
+  if (file) {
     const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
     req.body.patient.profilePhoto = uploadToCloudinary?.secure_url
   }
@@ -111,63 +111,79 @@ const CreatePatient = async(req : Request) : Promise<Patient> =>{
 
 
 //Get User 
-const GetAllForm = async (params: any, options: IPagination) =>{
-    const { page, limit, skip }: any = paginationHelper.calculatePagination;
-  
-    const { searchTram, ...filterValue } = params;
-    const andCondions: Prisma.UserWhereInput[] = [];
-  
-    if (params.searchTram) {
-      andCondions.push({
-        OR: UserSearchAbleFilds.map((field) => ({
-          [field]: {
-            contains: params.searchTram,
-            mode: "insensitive",
-          },
-        })),
-      });
-    }
-  
-    if (Object.keys(filterValue).length > 0) {
-      andCondions.push({
-        AND: Object.keys(filterValue).map((kay) => ({
-          [kay]: {
-            equals: (filterValue as any)[kay],
-          },
-        })),
-      });
-    }
-  
-    const whereCondition: Prisma.UserWhereInput = andCondions.length > 0 ? { AND: andCondions } : {};
+const GetAllForm = async (params: any, options: IPagination) => {
+  const { page, limit, skip }: any = paginationHelper.calculatePagination;
 
-    
-    const result = await prisma.user.findMany({
-      where: whereCondition,
-      skip: skip,
-      take: limit,
-      orderBy:
-        options.sortBy && options.orderBy
-          ? {
-              [options.sortBy]: options.sortOrder,
-            }
-          : {
-              createdAt: "desc",
-            },
+  const { searchTram, ...filterValue } = params;
+  const andCondions: Prisma.UserWhereInput[] = [];
+
+  if (params.searchTram) {
+    andCondions.push({
+      OR: UserSearchAbleFilds.map((field) => ({
+        [field]: {
+          contains: params.searchTram,
+          mode: "insensitive",
+        },
+      })),
     });
-  
-    const TotalCount = await prisma.user.count({
-      where: whereCondition,
+  }
+
+  if (Object.keys(filterValue).length > 0) {
+    andCondions.push({
+      AND: Object.keys(filterValue).map((kay) => ({
+        [kay]: {
+          equals: (filterValue as any)[kay],
+        },
+      })),
     });
-  
-    return {
-      meta: {
-        page,
-        limit,
-        total: TotalCount,
-      },
-      data: result,
-    };
-  
+  }
+
+  const whereCondition: Prisma.UserWhereInput = andCondions.length > 0 ? { AND: andCondions } : {};
+
+
+  const result = await prisma.user.findMany({
+    where: whereCondition,
+    skip: skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.orderBy
+        ? {
+          [options.sortBy]: options.sortOrder,
+        }
+        : {
+          createdAt: "desc",
+        },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      needPasswordChange: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      admin: true,
+      patient: true,
+      doctor: true
+    },
+  });
+
+  const TotalCount = await prisma.user.count({
+    where: whereCondition,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total: TotalCount,
+    },
+    data: result,
+  };
+};
+
+
+const ChangeProfileStatus = async(payload : {status : string}) =>{
+  console.log(payload);
 };
 
 
@@ -175,5 +191,6 @@ export const UserServices = {
   CreateAdmin,
   CreateDoctor,
   CreatePatient,
-  GetAllForm
+  GetAllForm,
+  ChangeProfileStatus
 };

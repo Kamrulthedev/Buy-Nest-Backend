@@ -41,16 +41,28 @@ const GetAllFormSQ = catchAsync(async(req, res) =>{
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Admin Data fetched Successfully!",
+    message: "User Data fetched Successfully!",
     meta: result.meta,
     data: result.data,
   });
-})
+});
+
+
+const ChangeProfileStatusSQ = catchAsync(async(req, res) =>{
+  const result = await UserServices.ChangeProfileStatus(req.body)
+  sendResponse(res, {
+    statusCode : 200,
+    success : true,
+    message  : "User Status Updated Successfully!",
+    data : result
+  })
+});
 
 
 export const UserControllars = {
   CreateAdminSQ,
   CreateDoctorSQ,
   CreatePatientSQ,
-  GetAllFormSQ
+  GetAllFormSQ,
+  ChangeProfileStatusSQ
 };

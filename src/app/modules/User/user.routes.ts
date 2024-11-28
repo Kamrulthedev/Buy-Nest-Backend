@@ -7,6 +7,7 @@ import { UserValidation } from "./user.validation";
 
 const router = express.Router();
 
+router.get('/', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), UserControllars.GetAllFormSQ)
 
 router.post("/create-admin", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     Fileuploader.upload.single('file'),
@@ -30,5 +31,8 @@ router.post("/create-patient", Fileuploader.upload.single('file'), (req: Request
     req.body = UserValidation.CreatePatient.parse(JSON.parse(req.body.data))
     return UserControllars.CreatePatientSQ(req, res, next)
 });
+
+
+router.patch('/:id/status', UserControllars.ChangeProfileStatusSQ);
 
 export const UserRoutes = router;
