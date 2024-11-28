@@ -33,6 +33,6 @@ router.post("/create-patient", Fileuploader.upload.single('file'), (req: Request
 });
 
 
-router.patch('/:id/status', UserControllars.ChangeProfileStatusSQ);
+router.patch('/:id/status',auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), UserControllars.ChangeProfileStatusSQ);
 
 export const UserRoutes = router;

@@ -182,8 +182,20 @@ const GetAllForm = async (params: any, options: IPagination) => {
 };
 
 
-const ChangeProfileStatus = async(payload : {status : string}) =>{
-  console.log(payload);
+const ChangeProfileStatus = async (id: string, status: UserRole) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id
+    }
+  })
+
+  const updateUser = await prisma.user.update({
+    where: {
+      id
+    },
+    data: status
+  })
+  return updateUser
 };
 
 

@@ -34,7 +34,7 @@ const CreatePatientSQ = catchAsync(async (req, res) => {
 });
 
 
-const GetAllFormSQ = catchAsync(async(req, res) =>{
+const GetAllFormSQ = catchAsync(async (req, res) => {
   const filter = pick(req.query, UserFilterableFields);
   const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
   const result = await UserServices.GetAllForm(filter, options);
@@ -48,13 +48,14 @@ const GetAllFormSQ = catchAsync(async(req, res) =>{
 });
 
 
-const ChangeProfileStatusSQ = catchAsync(async(req, res) =>{
-  const result = await UserServices.ChangeProfileStatus(req.body)
+const ChangeProfileStatusSQ = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.ChangeProfileStatus( id , req.body)
   sendResponse(res, {
-    statusCode : 200,
-    success : true,
-    message  : "User Status Updated Successfully!",
-    data : result
+    statusCode: 200,
+    success: true,
+    message: "User Status Updated Successfully!",
+    data: result
   })
 });
 
