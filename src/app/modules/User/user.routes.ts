@@ -28,6 +28,6 @@ router.post("/create-doctor", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
 router.post("/create-patient", Fileuploader.upload.single('file'), (req: Request, res: Response, next: NextFunction) => {
     req.body = UserValidation.CreatePatient.parse(JSON.parse(req.body.data))
     return UserControllars.CreatePatientSQ(req, res, next)
-})
+});
 
 export const UserRoutes = router;

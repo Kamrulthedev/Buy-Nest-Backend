@@ -1,10 +1,11 @@
-import { UserRole } from "@prisma/client";
+import { Patient, UserRole } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { prisma } from "../../../shared/SharedPrisma";
 import { Fileuploader } from "../../../helpars/fileUploads";
 import { UploadedFile } from "../../Interfaces/UploadedFileType";
 import { assert } from "console";
 import { any } from "zod";
+import { Request } from "express";
 
 
 const CreateAdmin = async (req: any) => {
@@ -73,8 +74,36 @@ const CreateDoctor = async(req : any)=>{
 };
 
 
-const CreatePatient = async(req : any) =>{
-  console.log(req.body);
+//create patient
+const CreatePatient = async(req : Request) : Promise<Patient> =>{
+  const file = req.file as UploadedFile;
+  if(file){
+    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
+    req.body.patient.profilePhoto = uploadToCloudinary?.secure_url
+  }
+
+  const data = req.body;
+
+  const hashedPassword: string = await bcrypt.hash(data.password, 12);
+
+  const userData = {
+    password: hashedPassword,
+    email: data.patient.email,
+    role: UserRole.PATIENT,
+  };
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.user.create({
+      data: userData,
+    });
+
+    const createdDoctordata = await transactionClient.patient.create({
+      data: data.patient,
+    });
+    return createdDoctordata;
+  });
+
+  return result;
 };
 
 

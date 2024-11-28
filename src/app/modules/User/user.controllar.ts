@@ -21,6 +21,7 @@ const CreateDoctorSQ = catchAsync(async (req, res) => {
   });
 });
 
+
 const CreatePatientSQ = catchAsync(async (req, res) => {
   const result = await UserServices.CreatePatient(req)
   res.status(200).json({
