@@ -32,15 +32,14 @@ const CreateDoctorValidation = z.object({
 
 
 const CreatePatient = z.object({
-    id: z.string().uuid().optional(),
-    email: z.string().email(),
-    name: z.string().min(1, "Name is required"),
-    profilePhoto: z.string().url().optional(),
-    contactNumber: z.string().optional(),
-    address: z.string().optional(),
-    isDeleted: z.boolean().optional().default(false),
-    createdAt: z.date().optional(),
-    updatedAt: z.date().optional(),
+    password: z.string({ required_error: "Password is Requred!" }),
+    patient: z.object({
+        name: z.string().min(1, "Name is required"),
+        email: z.string({required_error : "Email is requiend"}),
+        profilePhoto: z.string().url().optional(),
+        contactNumber: z.string().optional(),
+        address: z.string().optional(),
+    })
 });
 
 

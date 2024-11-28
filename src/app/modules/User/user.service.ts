@@ -74,12 +74,13 @@ const CreateDoctor = async(req : any)=>{
 
 
 const CreatePatient = async(req : any) =>{
-
+  console.log(req.body);
 };
 
 
 
 export const UserServices = {
   CreateAdmin,
-  CreateDoctor
+  CreateDoctor,
+  CreatePatient
 };
