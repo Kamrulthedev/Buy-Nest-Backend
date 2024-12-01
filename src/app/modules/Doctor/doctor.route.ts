@@ -7,5 +7,7 @@ const router = express.Router();
 
 router.get("/doctors", auth(UserRole.ADMIN, UserRole.SUPER_ADMIN), DoctorsControllars.GetDoctorsDB);
 
+router.get("/:id", DoctorsControllars.GetByIdDoctorsDB);
+
 
 export const DoctorsRoutes = router;

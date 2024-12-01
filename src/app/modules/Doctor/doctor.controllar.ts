@@ -8,18 +8,31 @@ import { DOctorFilterableFields } from "./doctor.constent";
 
 const GetDoctorsDB = catchAsync(async (req, res) => {
     const filter = pick(req.query, DOctorFilterableFields);
-  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
-  const result = await DoctorsServices.GetDoctors(filter, options);
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "DOctor Data fetched Successfully!",
-    meta: result.meta,
-    data: result.data,
-  });
+    const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+    const result = await DoctorsServices.GetDoctors(filter, options);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Doctor Data fetched Successfully!",
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+
+const GetByIdDoctorsDB = catchAsync(async (req, res) => {
+    const {id} = req.params;
+    const result = await DoctorsServices.GetByIdDoctors(id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Doctor Data fetched Successfully!",
+        data: result,
+    });
 });
 
 
 export const DoctorsControllars = {
-  GetDoctorsDB,
+    GetDoctorsDB,
+    GetByIdDoctorsDB
 };
