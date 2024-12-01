@@ -42,9 +42,25 @@ const CreatePatient = z.object({
     })
 });
 
+const UpdateUser = z.object({
+    name: z.string().optional(),
+    email: z.string().optional(),
+    contactNumber: z.string().optional(),
+    address: z.string().optional(),
+    registrationNumber: z.string().optional(),
+    rxperience: z.number().optional(),
+    gender: z.enum([Gender.MALE, Gender.FEMALE]).optional(),
+    appointmentFee: z.number().optional(),
+    qualification: z.string().optional(),
+    currentWorkingPlace: z.string().optional(),
+    designation: z.string().optional()
+
+})
+
 
 export const UserValidation = {
     createAdmin,
     CreateDoctorValidation,
-    CreatePatient
+    CreatePatient,
+    UpdateUser
 };

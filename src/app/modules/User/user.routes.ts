@@ -13,7 +13,7 @@ router.get('/me', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, Us
 
 router.patch("/update-me", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT), Fileuploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
-        req.body = JSON.parse(req.body.data)
+        req.body = UserValidation.UpdateUser.parse(JSON.parse(req.body.data))
         return UserControllars.UpdateMyProfileSQ(req, res, next)
     });
 
