@@ -88,15 +88,19 @@ const GetByIdDoctors = async (id: string) => {
 
 //update-data
 const UpdateDoctor = async (id: string, data: Partial<Doctor>) => {
+    console.log(data)
     await prisma.doctor.findUniqueOrThrow({
         where: {
             id,
-            isDeleted: false 
+            isDeleted: false
         },
     });
     const result = await prisma.doctor.update({
         where: { id },
         data,
+        include: {
+            doctorSpecialties: true
+        }
     });
     return result;
 };
@@ -132,7 +136,7 @@ const SoftDeleteFromDoctor = async (id: string) => {
         const adminDeletedData = await transactionClient.doctor.update({
             where: { id },
             data: {
-                isDeleted: true, 
+                isDeleted: true,
             },
         });
         await transactionClient.user.update({
