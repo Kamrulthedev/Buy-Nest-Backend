@@ -8,64 +8,74 @@ import { prisma } from "../../../shared/SharedPrisma";
 
 
 const GetAdmins = async (params: IAdminFilterRequest, options: IPagination) => {
-  const { page, limit, skip }: any = paginationHelper.calculatePagination;
+  try {
+    const { page, limit, skip } = paginationHelper.calculatePagination(options);
 
-  const { searchTram, ...filterValue } = params;
-  const andCondions: Prisma.AdminWhereInput[] = [];
+    const { searchTram, ...filterValue } = params;
+    const andConditions: Prisma.AdminWhereInput[] = [];
 
-  if (params.searchTram) {
-    andCondions.push({
-      OR: adminSearchAvleFields.map((field) => ({
-        [field]: {
-          contains: params.searchTram,
-          mode: "insensitive",
-        },
-      })),
-    });
-  }
-
-  if (Object.keys(filterValue).length > 0) {
-    andCondions.push({
-      AND: Object.keys(filterValue).map((kay) => ({
-        [kay]: {
-          equals: (filterValue as any)[kay],
-        },
-      })),
-    });
-  }
-
-  andCondions.push({
-    isDeleted : false
-  });
-
-  const whereCondition: Prisma.AdminWhereInput = { AND: andCondions };
-  const result = await prisma.admin.findMany({
-    where: whereCondition,
-    skip: skip,
-    take: limit,
-    orderBy:
-      options.sortBy && options.orderBy
-        ? {
-            [options.sortBy]: options.sortOrder,
-          }
-        : {
-            createdAt: "desc",
+    // Search condition
+    if (searchTram) {
+      andConditions.push({
+        OR: adminSearchAvleFields.map((field) => ({
+          [field]: {
+            contains: searchTram,
+            mode: "insensitive",
           },
-  });
+        })),
+      });
+    }
 
-  const TotalCount = await prisma.admin.count({
-    where: whereCondition,
-  });
+    // Filter conditions
+    if (Object.keys(filterValue).length > 0) {
+      andConditions.push({
+        AND: Object.keys(filterValue).map((key) => ({
+          [key as keyof typeof filterValue]: {
+            equals: filterValue[key as keyof typeof filterValue],
+          },
+        })),
+      });
+    }
 
-  return {
-    meta: {
-      page,
-      limit,
-      total: TotalCount,
-    },
-    data: result,
-  };
+    // Soft delete condition
+    andConditions.push({ isDeleted: false });
+
+    const whereCondition: Prisma.AdminWhereInput = { AND: andConditions };
+
+    // Fetch admins and count
+    const [result, TotalCount] = await Promise.all([
+      prisma.admin.findMany({
+        where: whereCondition,
+        skip,
+        take: limit,
+        orderBy:
+          options.sortBy && options.sortOrder
+            ? {
+                [options.sortBy]: options.sortOrder,
+              }
+            : {
+                createdAt: "desc",
+              },
+      }),
+      prisma.admin.count({
+        where: whereCondition,
+      }),
+    ]);
+
+    return {
+      meta: {
+        page,
+        limit,
+        total: TotalCount,
+      },
+      data: result,
+    };
+  } catch (error) {
+    console.error("Error fetching admins:", error);
+    throw new Error("Failed to fetch admins");
+  }
 };
+
 
 //single-get-data
 const GetById = async (id: string) => {
