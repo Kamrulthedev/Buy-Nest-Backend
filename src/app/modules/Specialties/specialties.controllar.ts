@@ -25,7 +25,33 @@ const GetSpecialtiesDB = catchAsync(async (req, res) => {
 });
 
 
+const GetByIdSpecialtiesDB = catchAsync(async (req, res) => {
+    const {id} = req.params;
+  const result = await SpecialtiesServices.GetByIdSpecialties(id)
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "fetched Specialties Single Data!",
+    data: result
+  });
+});
+
+
+const DeleteSpecialtiesDB = catchAsync(async (req, res) => {
+    const {id} = req.params;
+  const result = await SpecialtiesServices.DeleteSpecialties(id)
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Delete Specialties Data!",
+    data: null
+  });
+});
+
+
 export const SpecialtiesControllars = {
   InsertIntoDB,
-  GetSpecialtiesDB
+  GetSpecialtiesDB,
+  GetByIdSpecialtiesDB,
+  DeleteSpecialtiesDB
 };

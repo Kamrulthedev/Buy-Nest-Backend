@@ -16,7 +16,11 @@ router.post('/insert', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     },);
 
 
-router.get('/specialties', SpecialtiesControllars.GetSpecialtiesDB)
+router.get('/specialties', SpecialtiesControllars.GetSpecialtiesDB);
+
+router.get('/specialties/:id', SpecialtiesControllars.GetByIdSpecialtiesDB);
+
+router.delete('/specialties/:id', SpecialtiesControllars.DeleteSpecialtiesDB);
 
 
 export const SpecialtesRoutes = router; 
