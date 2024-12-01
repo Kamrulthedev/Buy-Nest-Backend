@@ -51,7 +51,7 @@ const GetAllFormSQ = catchAsync(async (req, res) => {
 
 const ChangeProfileStatusSQ = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await UserServices.ChangeProfileStatus( id , req.body)
+  const result = await UserServices.ChangeProfileStatus(id, req.body)
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -61,19 +61,30 @@ const ChangeProfileStatusSQ = catchAsync(async (req, res) => {
 });
 
 
-
-const GetMyProfileSQ = catchAsync(async(req, res) =>{
-   const {user} = req;
-   console.log(user);
-   const result = await UserServices.GetMyProfile(user);
-   sendResponse(res, {
-    statusCode : 200,
-    success : true,
-    message :"",
-    data : result
-   })
+const GetMyProfileSQ = catchAsync(async (req, res) => {
+  const { user } = req;
+  const result = await UserServices.GetMyProfile(user);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "My Profile Data",
+    data: result
+  })
 });
 
+
+const UpdateMyProfileSQ = catchAsync(async (req, res) => {
+  const {user} = req;
+  const {body} : any = req;
+  const {file} = req;
+  const result = await UserServices.UpdateMyProfile(user, body, file as any | null);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Update My Profile Data",
+    data: result
+  })
+});
 
 
 export const UserControllars = {
@@ -82,5 +93,6 @@ export const UserControllars = {
   CreatePatientSQ,
   GetAllFormSQ,
   ChangeProfileStatusSQ,
-  GetMyProfileSQ
+  GetMyProfileSQ,
+  UpdateMyProfileSQ
 };

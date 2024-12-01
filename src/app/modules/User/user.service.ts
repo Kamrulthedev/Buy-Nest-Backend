@@ -1,4 +1,4 @@
-import { Admin, Doctor, Patient, Prisma, UserRole } from "@prisma/client";
+import { Admin, Doctor, Patient, Prisma, UserRole, UserStatus } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { prisma } from "../../../shared/SharedPrisma";
 import { Fileuploader } from "../../../helpars/fileUploads";
@@ -201,7 +201,8 @@ const ChangeProfileStatus = async (id: string, status: UserRole) => {
 const GetMyProfile = async (user: { email: string, role: string, status: string }) => {
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
-      email: user.email
+      email: user.email,
+      status: UserStatus.ACTIVE
     },
     select: {
       id: true,
@@ -243,6 +244,57 @@ const GetMyProfile = async (user: { email: string, role: string, status: string 
   return { ...userInfo, ...ProfileInfo }
 };
 
+//update my Profile
+const UpdateMyProfile = async(user : {email : string, role: string, status: string} | null, body: any | null, file : UploadedFile) =>{
+  const Upload = file as UploadedFile;
+  if(Upload){
+   const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
+   body.profilePhoto = uploadToCloudinary?.secure_url;
+  };
+
+  const userInfo = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: user?.email,
+      status: UserStatus.ACTIVE
+    },
+  })
+  let UpdateInfo
+  if (userInfo.role === UserRole.SUPER_ADMIN) {
+    UpdateInfo = await prisma.admin.update({
+      where: {
+        email: userInfo.email
+      },
+      data : body
+    })
+  }
+  else if (userInfo.role === UserRole.ADMIN) {
+    UpdateInfo = await prisma.admin.update({
+      where: {
+        email: userInfo.email
+      },
+      data : body
+    })
+  }
+  else if (userInfo.role === UserRole.DOCTOR) {
+    UpdateInfo = await prisma.doctor.update({
+      where: {
+        email: userInfo.email
+      },
+      data : body
+    })
+  }
+  else if (userInfo.role === UserRole.PATIENT) {
+    UpdateInfo = await prisma.patient.update({
+      where: {
+        email: userInfo.email
+      },
+      data: body
+    })
+  }
+  return {...UpdateInfo }
+};
+
+
 
 export const UserServices = {
   CreateAdmin,
@@ -250,5 +302,6 @@ export const UserServices = {
   CreatePatient,
   GetAllForm,
   ChangeProfileStatus,
-  GetMyProfile
+  GetMyProfile,
+  UpdateMyProfile
 };
