@@ -9,6 +9,8 @@ const router = express.Router();
 
 router.get('/', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), UserControllars.GetAllFormSQ)
 
+router.get('/me',auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT), UserControllars.GetMyProfileSQ)
+
 router.post("/create-admin", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     Fileuploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {

@@ -3,6 +3,7 @@ import { catchAsync } from "../../../shared/catchAsync";
 import { pick } from "../../../shared/pick";
 import sendResponse from "../../../shared/sendResponse";
 import { UserFilterableFields } from "./user.constant";
+import { assert } from "console";
 
 const CreateAdminSQ = catchAsync(async (req, res) => {
   const result = await UserServices.CreateAdmin(req);
@@ -60,10 +61,26 @@ const ChangeProfileStatusSQ = catchAsync(async (req, res) => {
 });
 
 
+
+const GetMyProfileSQ = catchAsync(async(req, res) =>{
+   const {user} = req;
+   console.log(user);
+   const result = await UserServices.GetMyProfile(user);
+   sendResponse(res, {
+    statusCode : 200,
+    success : true,
+    message :"",
+    data : result
+   })
+});
+
+
+
 export const UserControllars = {
   CreateAdminSQ,
   CreateDoctorSQ,
   CreatePatientSQ,
   GetAllFormSQ,
-  ChangeProfileStatusSQ
+  ChangeProfileStatusSQ,
+  GetMyProfileSQ
 };
