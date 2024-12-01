@@ -32,7 +32,47 @@ const GetByIdDoctorsDB = catchAsync(async (req, res) => {
 });
 
 
+const UpdateDoctorsDB = catchAsync(async (req, res) => {
+    const {id} = req.params;
+     const data = req.body;
+    const result = await DoctorsServices.UpdateDoctor(id, data);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Doctor Data Update Successfully!",
+        data: result,
+    });
+});
+
+
+const DeleteDoctorDB = catchAsync(async (req, res) => {
+    const {id} = req.params;
+    const result = await DoctorsServices.DeleteFromDoctor(id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Doctor Data Deleted Successfully!",
+        data: null,
+    });
+});
+
+
+const SoftDeleteDoctorsDB = catchAsync(async (req, res) => {
+    const {id} = req.params;
+    const result = await DoctorsServices.SoftDeleteFromDoctor(id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Doctor Data Soft Delete Successfully!",
+        data: result,
+    });
+});
+
+
 export const DoctorsControllars = {
     GetDoctorsDB,
-    GetByIdDoctorsDB
+    GetByIdDoctorsDB,
+    UpdateDoctorsDB,
+    DeleteDoctorDB,
+    SoftDeleteDoctorsDB
 };

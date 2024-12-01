@@ -9,5 +9,15 @@ router.get("/doctors", auth(UserRole.ADMIN, UserRole.SUPER_ADMIN), DoctorsContro
 
 router.get("/:id", DoctorsControllars.GetByIdDoctorsDB);
 
+router.patch("/update/:id", DoctorsControllars.UpdateDoctorsDB);
+
+router.delete("/delete/:id",auth(UserRole.ADMIN, UserRole.SUPER_ADMIN), DoctorsControllars.DeleteDoctorDB);
+
+router.delete("/softDelete/:id",auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR), DoctorsControllars.SoftDeleteDoctorsDB);
+
+
+
+
+
 
 export const DoctorsRoutes = router;
