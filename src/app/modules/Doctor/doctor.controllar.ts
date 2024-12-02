@@ -8,6 +8,7 @@ import { DOctorFilterableFields } from "./doctor.constent";
 
 const GetDoctorsDB = catchAsync(async (req, res) => {
     const filter = pick(req.query, DOctorFilterableFields);
+    console.log("filters: " , filter);
     const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
     const result = await DoctorsServices.GetDoctors(filter, options);
     sendResponse(res, {
