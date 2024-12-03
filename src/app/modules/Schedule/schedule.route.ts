@@ -19,7 +19,7 @@ router.get(
 
 router.post(
     '/create',
-    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+    // auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     ScheduleControllers.InserScheduleIntoDB
 );
 
