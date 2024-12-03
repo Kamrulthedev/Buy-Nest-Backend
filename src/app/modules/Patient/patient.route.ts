@@ -1,24 +1,27 @@
 import express from 'express';
-import { PatientController } from './patient.controllar';
+import { PatientControllers } from './patient.controllar';
+
 
 const router = express.Router();
 
-router.get('/', PatientController.GetAllFromDB);
+router.get('/', PatientControllers.GetAllFromDB);
 
-// router.get(
-//     '/:id',
-//     PatientController.getByIdFromDB
-// );
+router.get(
+    '/:id',
+    PatientControllers.GetByIdFromDB
+);
 
-// router.patch(
-//     '/:id',
-//     PatientController.updateIntoDB
-// );
 
-// router.delete(
-//     '/:id',
-//     PatientController.deleteFromDB
-// );
+router.patch(
+    '/update/:id',
+    PatientControllers.UpdateIntoDB
+);
+
+
+router.delete(
+    '/delete/:id',
+    PatientControllers.DeleteFromDB
+);
 // router.delete(
 //     '/soft/:id',
 //     PatientController.softDelete

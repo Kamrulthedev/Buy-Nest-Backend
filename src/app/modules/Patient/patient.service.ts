@@ -62,7 +62,6 @@ const GetAllFrom = async (
   const total = await prisma.patient.count({
     where: whereConditions,
   });
-
   return {
     meta: {
       total,
@@ -75,7 +74,7 @@ const GetAllFrom = async (
 
 
 
-const getByIdFromDB = async (id: string): Promise<Patient | null> => {
+const GetByIdFrom = async (id: string): Promise<Patient | null> => {
   const result = await prisma.patient.findUnique({
     where: {
       id,
@@ -89,7 +88,8 @@ const getByIdFromDB = async (id: string): Promise<Patient | null> => {
   return result;
 };
 
-const updateIntoDB = async (id: string, payload: Partial<IPatientUpdate>): Promise<Patient | null> => {
+
+const UpdateInto = async (id: string, payload: Partial<IPatientUpdate>): Promise<Patient | null> => {
   const { patientHealthData, medicalReport, ...patientData } = payload;
   const patientInfo = await prisma.patient.findUniqueOrThrow({
     where: {
@@ -140,11 +140,10 @@ const updateIntoDB = async (id: string, payload: Partial<IPatientUpdate>): Promi
     }
   })
   return responseData;
-
 };
 
 
-const deleteFromDB = async (id: string): Promise<Patient | null> => {
+const DeleteFrom = async (id: string): Promise<Patient | null> => {
   const result = await prisma.$transaction(async (tx) => {
     // delete medical report
     await tx.medicalReport.deleteMany({
@@ -178,6 +177,8 @@ const deleteFromDB = async (id: string): Promise<Patient | null> => {
   return result;
 };
 
+
+
 const softDelete = async (id: string): Promise<Patient | null> => {
   return await prisma.$transaction(async transactionClient => {
     const deletedPatient = await transactionClient.patient.update({
@@ -200,10 +201,10 @@ const softDelete = async (id: string): Promise<Patient | null> => {
   });
 };
 
-export const PatientService = {
+export const PatientServices = {
   GetAllFrom,
-  getByIdFromDB,
-  updateIntoDB,
-  deleteFromDB,
+  GetByIdFrom,
+  UpdateInto,
+  DeleteFrom,
   softDelete,
 };

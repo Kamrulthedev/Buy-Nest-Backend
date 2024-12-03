@@ -2,14 +2,14 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../../../shared/catchAsync';
 import { pick } from '../../../shared/pick';
 import { patientFilterableFields } from './patient.constent';
-import { PatientService } from './patient.service';
 import sendResponse from '../../../shared/sendResponse';
+import { PatientServices } from './patient.service';
 
 
 const GetAllFromDB = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, patientFilterableFields);
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-  const result = await PatientService.GetAllFrom(filters, options);
+  const result = await PatientServices.GetAllFrom(filters, options);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -19,41 +19,41 @@ const GetAllFromDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
 
-//   const { id } = req.params;
-//   const result = await PatientService.getByIdFromDB(id);
+const GetByIdFromDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await PatientServices.GetByIdFrom(id);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Patient retrieval successfully',
+    data: result,
+  });
+});
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Patient retrieval successfully',
-//     data: result,
-//   });
-// });
 
-// const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await PatientService.updateIntoDB(id, req.body);
+const UpdateIntoDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await PatientServices.UpdateInto(id, req.body);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Patient updated successfully',
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Patient updated successfully',
+    data: result,
+  });
+});
 
-// const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await PatientService.deleteFromDB(id);
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Patient deleted successfully',
-//     data: result,
-//   });
-// });
+const DeleteFromDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await PatientServices.DeleteFrom(id);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Patient deleted successfully',
+    data: result,
+  });
+});
 
 
 // const softDelete = catchAsync(async (req: Request, res: Response) => {
@@ -67,10 +67,11 @@ const GetAllFromDB = catchAsync(async (req: Request, res: Response) => {
 //   });
 // });
 
-export const PatientController = {
+
+export const PatientControllers = {
   GetAllFromDB,
-//   getByIdFromDB,
-//   updateIntoDB,
-//   deleteFromDB,
-//   softDelete,
+  GetByIdFromDB,
+  UpdateIntoDB,
+  DeleteFromDB
+  //   softDelete,
 };
