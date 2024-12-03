@@ -2,25 +2,21 @@ import { addHours, addMinutes, format } from 'date-fns';
 import { prisma } from '../../../shared/SharedPrisma';
 
 
-
 const convertDateTime = async (date: Date) => {
     const offset = date.getTimezoneOffset() * 60000;
     return new Date(date.getTime() + offset);
 }
 
-
 const InserScheduleInto = async (payload: any) => {
     const { startDate, endDate, startTime, endTime } = payload;
 
     const interverlTime = 30;
-
     const schedules = [];
 
     const currentDate = new Date(startDate);
     const lastDate = new Date(endDate)
 
     while (currentDate <= lastDate) {
-        // 09:30  ---> ['09', '30']
         const startDateTime = new Date(
             addMinutes(
                 addHours(
@@ -56,7 +52,6 @@ const InserScheduleInto = async (payload: any) => {
                     endDateTime: scheduleData.endDateTime
                 }
             });
-
             if (!existingSchedule) {
                 const result = await prisma.schedule.create({
                     data: scheduleData
