@@ -22,9 +22,11 @@ router.delete(
     '/delete/:id',
     PatientControllers.DeleteFromDB
 );
-// router.delete(
-//     '/soft/:id',
-//     PatientController.softDelete
-// );
+
+
+router.delete(
+    '/soft/:id',
+    PatientControllers.SoftDeleteDB
+);
 
 export const PatientRoutes = router;
