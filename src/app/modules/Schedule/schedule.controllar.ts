@@ -14,6 +14,7 @@ const InserScheduleIntoDB = catchAsync(async (req, res) => {
     });
 });
 
+
 const GetAllFromDB = catchAsync(async (req , res) => {
     const filters = pick(req.query, ['startDate', 'endDate']);
     const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
@@ -38,6 +39,7 @@ const GetByIdFromDB = catchAsync(async (req, res) => {
         data: result,
     });
 });
+
 
 const DeleteScheduleDB = catchAsync(async (req, res) => {
     const { id } = req.params;
