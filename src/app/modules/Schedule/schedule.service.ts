@@ -116,7 +116,6 @@ const GetAllFrom = async (filters: IFilterRequest, options: IPagination, user: I
         });
 
         const doctorScheduleIds = doctorSchedules.map(schedule => schedule.scheduleId);
-        console.log(doctorScheduleIds)
         const result = await prisma.schedule.findMany({
             where: {
                 ...whereConditions,
@@ -156,13 +155,23 @@ const GetAllFrom = async (filters: IFilterRequest, options: IPagination, user: I
 
 
 const GetByIdFrom = async (id: string) => {
-
+    const result = await prisma.schedule.findUnique({
+        where: {
+            id,
+        },
+    });
+    return result;
 };
 
 
 
 const DeleteSchedule = async (id: string) => {
-
+    const result = await prisma.schedule.delete({
+        where: {
+            id,
+        },
+    });
+    return result;
 };
 
 

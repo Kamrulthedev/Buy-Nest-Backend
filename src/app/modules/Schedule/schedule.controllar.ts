@@ -4,6 +4,8 @@ import sendResponse from "../../../shared/sendResponse";
 import { IAuthUser } from "../../Interfaces/common";
 import { ScheduleService } from "./schedule.service";
 
+
+
 const InserScheduleIntoDB = catchAsync(async (req, res) => {
     const result = await ScheduleService.InserScheduleInto(req.body);
     sendResponse(res, {
