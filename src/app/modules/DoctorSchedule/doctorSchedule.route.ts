@@ -16,7 +16,7 @@ router.get(
 router.get(
     '/my-schedule',
     auth(UserRole.DOCTOR),
-    // DoctorScheduleController.getMySchedule
+    DoctorScheduleControllers.GetMyScheduleDB
 )
 
 router.post(
@@ -29,7 +29,7 @@ router.post(
 router.delete(
     '/:id',
     auth(UserRole.DOCTOR),
-    // DoctorScheduleController.deleteFromDB
+    DoctorScheduleControllers.DeleteDoctorSchedule
 );
 
 
