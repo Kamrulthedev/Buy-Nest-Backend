@@ -1,7 +1,6 @@
 import { prisma } from "../../../shared/SharedPrisma";
 
 
-
 const InsertInto = async (user: any, payload: {
     scheduleIds: string[]
 }) => {
@@ -10,20 +9,18 @@ const InsertInto = async (user: any, payload: {
             email: user.email
         }
     });
-
     const doctorScheduleData = payload.scheduleIds.map(scheduleId => ({
         doctorId: doctorData.id,
         scheduleId
-    }))
-
+    }));
     const result = await prisma.doctorSchedules.createMany({
         data: doctorScheduleData
     });
 
+    console.log(result)
+
     return result;
 };
-
-
 
 
 export const DoctorScheduleServices = {
