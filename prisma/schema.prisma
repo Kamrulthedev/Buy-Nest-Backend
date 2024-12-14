@@ -16,7 +16,7 @@ datasource db {
 model User {
   id                 String     @id @default(uuid())
   email              String     @unique
-  passwordHash       String
+  password       String
   role               UserRole
   needPasswordChange Boolean    @default(true)
   status             UserStatus @default(ACTIVE)

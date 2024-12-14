@@ -14,34 +14,6 @@ const moduleRotes = [
   {
     path: "/user",
     route: UserRoutes,
-  },
-  {
-    path: "/admin",
-    route: AdminRoutes,
-  },
-  {
-    path: "/auth",
-    route : AuthRoutes
-  },
-  {
-    path: '/specialties',
-    route : SpecialtesRoutes
-  },
-  {
-    path: "/doctor",
-    route: DoctorsRoutes
-  },
-  {
-    path: "/patient",
-    route: PatientRoutes
-  },
-  {
-    path: "/schedule",
-    route: ScheduleRoutes
-  },
-  {
-    path: "/doctor-schedule",
-    route: DoctorScheduleRoutes
   }
 ];
 

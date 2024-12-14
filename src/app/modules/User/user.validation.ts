@@ -1,4 +1,3 @@
-import { Gender } from "@prisma/client";
 import { z } from "zod";
 
 
@@ -20,13 +19,6 @@ const CreateDoctorValidation = z.object({
         email: z.string({ required_error: "Email is requied!" }),
         contactNumber: z.string({ required_error: "Contect Number is Required!" }),
         address: z.string().optional(),
-        registrationNumber: z.string(),
-        rxperience: z.number().optional(),
-        gender: z.enum([Gender.MALE, Gender.FEMALE]),
-        appointmentFee: z.number({ required_error: "This Must be Filup!" }),
-        qualification: z.string({ required_error: "quilification is required" }),
-        currentWorkingPlace: z.string({ required_error: "Current working place is required!" }),
-        designation: z.string({ required_error: "Designation is required!" })
     })
 });
 
@@ -47,14 +39,6 @@ const UpdateUser = z.object({
     email: z.string().optional(),
     contactNumber: z.string().optional(),
     address: z.string().optional(),
-    registrationNumber: z.string().optional(),
-    rxperience: z.number().optional(),
-    gender: z.enum([Gender.MALE, Gender.FEMALE]).optional(),
-    appointmentFee: z.number().optional(),
-    qualification: z.string().optional(),
-    currentWorkingPlace: z.string().optional(),
-    designation: z.string().optional()
-
 })
 
 
