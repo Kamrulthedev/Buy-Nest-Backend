@@ -30,6 +30,8 @@ model User {
   @@map("users")
 }
 
+
+
 model Admin {
   id            String   @id @default(uuid())
   name          String
@@ -43,6 +45,7 @@ model Admin {
 
   @@map("admins")
 }
+
 
 
 model Customer {
@@ -63,6 +66,8 @@ model Customer {
   Follow        Follow[]
 }
 
+
+
 model Vendor {
   id            String   @id @default(uuid())
   name          String
@@ -80,6 +85,7 @@ model Vendor {
 
   @@map("vendors")
 }
+
 
 
 model Shop {
@@ -121,6 +127,8 @@ model Product {
   cartItems   CartItem[]
 }
 
+
+
 model Follow {
   id        String   @id @default(uuid())
   customerId String
@@ -132,6 +140,8 @@ model Follow {
 
   @@unique([customerId, shopId])
 }
+
+
 
 model Order {
   id         String    @id @default(uuid())
@@ -148,6 +158,8 @@ model Order {
   items      OrderItem[]
 }
 
+
+
 model OrderItem {
   id         String    @id @default(uuid())
   orderId    String
@@ -158,6 +170,8 @@ model OrderItem {
   order      Order     @relation(fields: [orderId], references: [id])
   product    Product   @relation(fields: [productId], references: [id])
 }
+
+
 
 model Review {
   id         String    @id @default(uuid())
@@ -172,6 +186,8 @@ model Review {
   product    Product   @relation(fields: [productId], references: [id])
 }
 
+
+
 model Cart {
   id         String   @id @default(uuid())
   customerId String   @unique
@@ -181,6 +197,8 @@ model Cart {
   customer   Customer @relation(fields: [customerId], references: [id])
   items      CartItem[]
 }
+
+
 
 model CartItem {
   id         String   @id @default(uuid())
@@ -194,6 +212,8 @@ model CartItem {
   @@unique([cartId, productId])
 }
 
+
+
 model Category {
   id        String    @id @default(uuid())
   name      String    @unique
@@ -203,11 +223,15 @@ model Category {
   products  Product[]
 }
 
+
+
 enum UserRole {
   ADMIN
   VENDOR
   CUSTOMER
 }
+
+
 
 enum UserStatus {
   ACTIVE
@@ -216,6 +240,8 @@ enum UserStatus {
   PENDING
 }
 
+
+
 enum OrderStatus {
   PENDING
   PROCESSING
@@ -223,6 +249,8 @@ enum OrderStatus {
   COMPLETED
   CANCELED
 }
+
+
 
 enum PaymentStatus {
   PAID
