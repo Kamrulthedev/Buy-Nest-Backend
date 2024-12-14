@@ -99,6 +99,7 @@ model Shop {
   followers Follow[]
 }
 
+
 model Product {
   id          String   @id @default(uuid())
   name        String

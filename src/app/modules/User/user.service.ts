@@ -21,20 +21,23 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
   }
 
   const data = req.body;
+  console.log(data)
+  const hashedPassword: string = await bcrypt.hash(data.password, 12);
 
   const amdinCrateData = {
     name: data.name,
     email: data.email,
-    contactNumber: data.contactNumber
+    contactNumber: data.contactNumber,
+    profilePhoto: data.profilePhoto
   }
 
-  const hashedPassword: string = await bcrypt.hash(data.password, 12);
 
   const userData = {
     password: hashedPassword,
     email: data.email,
-    role: UserRole.ADMIN,
+    role: UserRole.ADMIN
   };
+
 
   const result = await prisma.$transaction(async (transactionClient) => {
     await transactionClient.user.create({
@@ -47,6 +50,7 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
     return createdAdmindata;
   });
 
+  console.log(result)
   return result;
 };
 
