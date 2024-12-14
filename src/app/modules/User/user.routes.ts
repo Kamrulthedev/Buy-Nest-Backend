@@ -17,7 +17,7 @@ const router = express.Router();
 //         return UserControllars.UpdateMyProfileSQ(req, res, next)
 //     });
 
-router.post("/create-admin", 
+router.post("/create-admin", auth(UserRole.ADMIN),
     Fileuploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
         req.body = UserValidation.createAdmin.parse(JSON.parse(req.body.data))

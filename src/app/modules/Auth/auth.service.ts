@@ -14,6 +14,9 @@ const loginUser = async (payload: { email: string; password: string }) => {
       status: UserStatus.ACTIVE
     },
   });
+
+  console.log(userData)
+
   if (
     typeof payload.password !== "string" ||
     typeof userData.password !== "string"

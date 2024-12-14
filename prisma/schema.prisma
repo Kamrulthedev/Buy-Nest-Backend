@@ -15,9 +15,12 @@ datasource db {
 
 model User {
   id                 String     @id @default(uuid())
+  name               String
   email              String     @unique
-  password       String
+  password           String
+  contactNumber      String
   role               UserRole
+  profilePhoto       String?
   needPasswordChange Boolean    @default(true)
   status             UserStatus @default(ACTIVE)
   lastLogin          DateTime?  @default(now())
@@ -29,8 +32,6 @@ model User {
 
   @@map("users")
 }
-
-
 
 model Admin {
   id            String   @id @default(uuid())
@@ -46,8 +47,6 @@ model Admin {
   @@map("admins")
 }
 
-
-
 model Customer {
   id            String   @id @unique @default(uuid())
   email         String   @unique
@@ -60,13 +59,11 @@ model Customer {
   updatedAt     DateTime @updatedAt
   user          User     @relation(references: [email], fields: [email])
 
-  Cart          Cart[]
-  Review        Review[]
-  Order         Order[]
-  Follow        Follow[]
+  Cart   Cart[]
+  Review Review[]
+  Order  Order[]
+  Follow Follow[]
 }
-
-
 
 model Vendor {
   id            String   @id @default(uuid())
@@ -80,13 +77,11 @@ model Vendor {
   updatedAt     DateTime @updatedAt
   user          User     @relation(fields: [email], references: [email])
 
-  shopId        String?  
-  shop          Shop?    
+  shopId String?
+  shop   Shop?
 
   @@map("vendors")
 }
-
-
 
 model Shop {
   id          String   @id @default(uuid())
@@ -97,17 +92,15 @@ model Shop {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  vendor      Vendor   @relation(fields: [vendorId], references: [id])
+  vendor Vendor @relation(fields: [vendorId], references: [id])
 
-  products    Product[]
-  orders      Order[]
-  followers   Follow[]
+  products  Product[]
+  orders    Order[]
+  followers Follow[]
 }
 
-
-
 model Product {
-  id          String    @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String?
   price       Float
@@ -117,76 +110,66 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  shopId      String
-  categoryId  String
+  shopId     String
+  categoryId String
 
-  shop        Shop      @relation(fields: [shopId], references: [id])
-  category    Category  @relation(fields: [categoryId], references: [id])
-  reviews     Review[]
-  orderItems  OrderItem[]
-  cartItems   CartItem[]
+  shop       Shop        @relation(fields: [shopId], references: [id])
+  category   Category    @relation(fields: [categoryId], references: [id])
+  reviews    Review[]
+  orderItems OrderItem[]
+  cartItems  CartItem[]
 }
 
-
-
 model Follow {
-  id        String   @id @default(uuid())
+  id         String   @id @default(uuid())
   customerId String
-  shopId    String
-  createdAt DateTime @default(now())
+  shopId     String
+  createdAt  DateTime @default(now())
 
-  customer   Customer @relation(fields: [customerId], references: [id])
-  shop       Shop     @relation(fields: [shopId], references: [id])
+  customer Customer @relation(fields: [customerId], references: [id])
+  shop     Shop     @relation(fields: [shopId], references: [id])
 
   @@unique([customerId, shopId])
 }
 
-
-
 model Order {
-  id         String    @id @default(uuid())
+  id         String      @id @default(uuid())
   totalPrice Float
   status     OrderStatus @default(PENDING)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   customerId String
   shopId     String
 
-  customer   Customer  @relation(fields: [customerId], references: [id])
-  shop       Shop      @relation(fields: [shopId], references: [id])
-  items      OrderItem[]
+  customer Customer    @relation(fields: [customerId], references: [id])
+  shop     Shop        @relation(fields: [shopId], references: [id])
+  items    OrderItem[]
 }
-
-
 
 model OrderItem {
-  id         String    @id @default(uuid())
-  orderId    String
-  productId  String
-  quantity   Int
-  price      Float
+  id        String @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float
 
-  order      Order     @relation(fields: [orderId], references: [id])
-  product    Product   @relation(fields: [productId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
 
-
-
 model Review {
-  id         String    @id @default(uuid())
-  rating     Int
-  comment    String?
-  createdAt  DateTime  @default(now())
+  id        String   @id @default(uuid())
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
 
   customerId String
   productId  String
 
-  customer   Customer  @relation(fields: [customerId], references: [id])
-  product    Product   @relation(fields: [productId], references: [id])
+  customer Customer @relation(fields: [customerId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id])
 }
-
-
 
 model Cart {
   id         String   @id @default(uuid())
@@ -194,44 +177,36 @@ model Cart {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  customer   Customer @relation(fields: [customerId], references: [id])
-  items      CartItem[]
+  customer Customer   @relation(fields: [customerId], references: [id])
+  items    CartItem[]
 }
 
-
-
 model CartItem {
-  id         String   @id @default(uuid())
-  cartId     String
-  productId  String
-  quantity   Int      @default(1)
+  id        String @id @default(uuid())
+  cartId    String
+  productId String
+  quantity  Int    @default(1)
 
-  cart       Cart     @relation(fields: [cartId], references: [id])
-  product    Product  @relation(fields: [productId], references: [id])
+  cart    Cart    @relation(fields: [cartId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 
   @@unique([cartId, productId])
 }
 
-
-
 model Category {
-  id        String    @id @default(uuid())
-  name      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  products  Product[]
+  products Product[]
 }
-
-
 
 enum UserRole {
   ADMIN
   VENDOR
   CUSTOMER
 }
-
-
 
 enum UserStatus {
   ACTIVE
@@ -240,8 +215,6 @@ enum UserStatus {
   PENDING
 }
 
-
-
 enum OrderStatus {
   PENDING
   PROCESSING
@@ -249,8 +222,6 @@ enum OrderStatus {
   COMPLETED
   CANCELED
 }
-
-
 
 enum PaymentStatus {
   PAID
