@@ -1,4 +1,4 @@
-import { Admin, Prisma, UserRole, UserStatus } from "@prisma/client";
+import { Admin, Prisma, UserRole, UserStatus, Vendor } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { prisma } from "../../../shared/SharedPrisma";
 import { Fileuploader } from "../../../helpars/fileUploads";
@@ -17,16 +17,22 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
 
   if (file) {
     const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
-    req.body.admin.profilePhoto = uploadToCloudinary?.secure_url
+    req.body.profilePhoto = uploadToCloudinary?.secure_url
   }
 
   const data = req.body;
+
+  const amdinCrateData = {
+    name: data.name,
+    email: data.email,
+    contactNumber: data.contactNumber
+  }
 
   const hashedPassword: string = await bcrypt.hash(data.password, 12);
 
   const userData = {
     password: hashedPassword,
-    email: data.admin.email,
+    email: data.email,
     role: UserRole.ADMIN,
   };
 
@@ -36,7 +42,7 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
     });
 
     const createdAdmindata = await transactionClient.admin.create({
-      data: data.admin,
+      data: amdinCrateData,
     });
     return createdAdmindata;
   });
@@ -45,39 +51,45 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
 };
 
 
-// //create doctor
-// const CreateDoctor = async (req: Request): Promise<Doctor> => {
-//   const file = req.file as UploadedFile;
+//create vendor
+const CreateVendor = async (req: Request): Promise<Vendor> => {
+  const file = req.file as UploadedFile;
 
-//   if (file) {
-//     const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
-//     req.body.doctor.profilePhoto = uploadToCloudinary?.secure_url
-//   }
+  if (file) {
+    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
+    req.body.doctor.profilePhoto = uploadToCloudinary?.secure_url
+  }
 
-//   const data = req.body;
+  const data = req.body;
 
-//   const hashedPassword: string = await bcrypt.hash(data.password, 12);
+  const vendorCrateData = {
+    name: data.name,
+    email: data.email,
+    contactNumber: data.contactNumber
+  }
 
-//   const userData = {
-//     password: hashedPassword,
-//     email: data.doctor.email,
-//     role: UserRole.DOCTOR,
-//   };
+  const hashedPassword: string = await bcrypt.hash(data.password, 12);
 
-//   const result = await prisma.$transaction(async (transactionClient) => {
-//     await transactionClient.user.create({
-//       data: userData,
-//     });
+  const userData = {
+    password: hashedPassword,
+    email: data.email,
+    role: UserRole.VENDOR,
+  };
 
-//     const createdDoctordata = await transactionClient.doctor.create({
-//       data: data.doctor,
-//     });
-//     return createdDoctordata;
-//   });
+  const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.user.create({
+      data: userData,
+    });
 
-// return result
+    const createdDoctordata = await transactionClient.vendor.create({
+      data: vendorCrateData,
+    });
+    return createdDoctordata;
+  });
 
-// };
+  return result
+
+};
 
 
 // //create patient
@@ -301,7 +313,7 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
 
 export const UserServices = {
   CreateAdmin,
-  // CreateDoctor,
+  CreateVendor
   // CreatePatient,
   // GetAllForm,
   // ChangeProfileStatus,

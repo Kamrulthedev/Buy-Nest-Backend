@@ -14,14 +14,14 @@ const CreateAdminDB = catchAsync(async (req, res) => {
 });
 
 
-// const CreateDoctorSQ = catchAsync(async (req, res) => {
-//   const result = await UserServices.CreateDoctor(req);
-//   res.status(200).json({
-//     success: true,
-//     message: "Doctor Created Successfully!",
-//     data: result,
-//   });
-// });
+const CreateVendorSDB = catchAsync(async (req, res) => {
+  const result = await UserServices.CreateVendor(req);
+  res.status(200).json({
+    success: true,
+    message: "Vendor Created Successfully!",
+    data: result,
+  });
+});
 
 
 // const CreatePatientSQ = catchAsync(async (req, res) => {
@@ -88,7 +88,7 @@ const CreateAdminDB = catchAsync(async (req, res) => {
 
 export const UserControllars = {
   CreateAdminDB,
-  // CreateDoctorSQ,
+  CreateVendorSDB
   // CreatePatientSQ,
   // GetAllFormSQ,
   // ChangeProfileStatusSQ,
