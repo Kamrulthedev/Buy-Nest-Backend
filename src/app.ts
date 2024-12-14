@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req: Request, res: Response) =>{
-    res.send("PH Helth Care Server....")
+    res.send("Welcome Buy Nest Server....")
 });
 
 app.use("/api/v1", router);

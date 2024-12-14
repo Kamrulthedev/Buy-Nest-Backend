@@ -6,6 +6,6 @@ export const generateToken = (payload: any, secret: string, expiresIn: string) =
   return token;
 };
 
-export const VerifyToken = (Token : string, secret : Secret) =>{
+export const VerifyToken = (Token: string, secret: Secret) => {
   return jwt.verify(Token, secret);
 };
