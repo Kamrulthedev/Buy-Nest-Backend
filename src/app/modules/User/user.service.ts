@@ -9,6 +9,9 @@ import { paginationHelper } from "../../../helpars/paginationHelper";
 import { UserSearchAbleFilds } from "./user.constant";
 import { resourceLimits } from "worker_threads";
 import { differenceInHours } from "date-fns";
+import { generateToken } from "../../../helpars/JwtHelpars";
+import config from "../../config";
+import { CreateCustomerResponse } from "../../Interfaces/common";
 
 
 //create-admin
@@ -36,7 +39,7 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
     password: hashedPassword,
     role: UserRole.ADMIN,
     name: data.name,
-    contactNumber: data.contactNumber, 
+    contactNumber: data.contactNumber,
   }
 
 
@@ -99,57 +102,75 @@ const CreateVendor = async (req: Request): Promise<Vendor> => {
 };
 
 
-//create Customer
-const CreateCustomer = async (req: Request): Promise<Customer> => {
-  const file = req.file as UploadedFile;
+
+
+const CreateCustomer = async (req: Request): Promise<CreateCustomerResponse> => {
+  const file = req.file as Express.Multer.File;
   if (file) {
-    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
-    req.body.profilePhoto = uploadToCloudinary?.secure_url;
+    try {
+      const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
+      req.body.profilePhoto = uploadToCloudinary?.secure_url;
+    } catch (error) {
+      throw new Error('Error uploading profile photo');
+    }
   }
-
   const data = req.body;
-
   // Check if email already exists
   const existingUser = await prisma.user.findUnique({
     where: { email: data.email },
   });
-
   if (existingUser) {
-    throw new Error("Email already in use");
+    throw new Error('Email already in use');
   }
-
   const hashedPassword: string = await bcrypt.hash(data.password, 12);
 
   const userData = {
     email: data.email,
     password: hashedPassword,
     role: UserRole.CUSTOMER,
-    name: data.name, 
-    contactNumber: data.contactNumber, 
+    name: data.name,
+    contactNumber: data.contactNumber,
   };
-  
-  const result = await prisma.$transaction(async (transactionClient) => {
-    const createdUser = await transactionClient.user.create({
-      data: userData,
-    });
-  
-    const customerCreateData = {
-      name: data.name,
-      email: data.email,
-      contactNumber: data.contactNumber,
-      profilePhoto: data.profilePhoto,
-    };
-  
-    const createdCustomerData = await transactionClient.customer.create({
-      data: customerCreateData,
-    });
-  
-    return createdCustomerData;
-  });
-  
 
-  return result;
+  try {
+    const result = await prisma.$transaction(async (transactionClient) => {
+      const createdUser = await transactionClient.user.create({
+        data: userData,
+      });
+
+      const customerCreateData = {
+        name: data.name,
+        email: data.email,
+        contactNumber: data.contactNumber,
+        profilePhoto: data.profilePhoto,
+      };
+
+      const createdCustomerData = await transactionClient.customer.create({
+        data: customerCreateData,
+      });
+
+      return createdCustomerData;
+    });
+
+    // Create token
+    const accessToken = generateToken(
+      {
+        email: result.email,
+        role: result.role,
+      },
+      config.jwt_access_token as string,
+      config.jwt_access_token_expires_in as string
+    );
+
+    return {
+      result,
+      accessToken,
+    };
+  } catch (error) {
+    throw new Error('Error creating customer: ');
+  }
 };
+
 
 
 // //Get User 
@@ -286,55 +307,49 @@ const CreateCustomer = async (req: Request): Promise<Customer> => {
 //   return { ...userInfo, ...ProfileInfo }
 // };
 
-// //update my Profile
-// const UpdateMyProfile = async(user : {email : string, role: string, status: string} | null, body: any | null, file : UploadedFile) =>{
-//   const Upload = file as UploadedFile;
-//   if(Upload){
-//    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
-//    body.profilePhoto = uploadToCloudinary?.secure_url;
-//   };
+//update my Profile
+const UpdateMyProfile = async (user: { email: string, role: string, status: string } | null, body: any | null, file: UploadedFile) => {
+  const Upload = file as UploadedFile;
+  if (Upload) {
+    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
+    body.profilePhoto = uploadToCloudinary?.secure_url;
+  };
 
-//   const userInfo = await prisma.user.findUniqueOrThrow({
-//     where: {
-//       email: user?.email,
-//       status: UserStatus.ACTIVE
-//     },
-//   })
-//   let UpdateInfo
-//   if (userInfo.role === UserRole.SUPER_ADMIN) {
-//     UpdateInfo = await prisma.admin.update({
-//       where: {
-//         email: userInfo.email
-//       },
-//       data : body
-//     })
-//   }
-//   else if (userInfo.role === UserRole.ADMIN) {
-//     UpdateInfo = await prisma.admin.update({
-//       where: {
-//         email: userInfo.email
-//       },
-//       data : body
-//     })
-//   }
-//   else if (userInfo.role === UserRole.DOCTOR) {
-//     UpdateInfo = await prisma.doctor.update({
-//       where: {
-//         email: userInfo.email
-//       },
-//       data : body
-//     })
-//   }
-//   else if (userInfo.role === UserRole.PATIENT) {
-//     UpdateInfo = await prisma.patient.update({
-//       where: {
-//         email: userInfo.email
-//       },
-//       data: body
-//     })
-//   }
-//   return {...UpdateInfo }
-// };
+
+  const userInfo = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: user?.email,
+      status: UserStatus.ACTIVE
+    },
+  })
+  
+  let UpdateInfo
+ if (userInfo.role === UserRole.ADMIN) {
+    UpdateInfo = await prisma.admin.update({
+      where: {
+        email: userInfo.email
+      },
+      data: body
+    })
+  }
+  else if (userInfo.role === UserRole.VENDOR) {
+    UpdateInfo = await prisma.vendor.update({
+      where: {
+        email: userInfo.email
+      },
+      data: body
+    })
+  }
+  else if (userInfo.role === UserRole.CUSTOMER) {
+    UpdateInfo = await prisma.customer.update({
+      where: {
+        email: userInfo.email
+      },
+      data: body
+    })
+  }
+  return { ...UpdateInfo }
+};
 
 
 
@@ -345,5 +360,5 @@ export const UserServices = {
   // GetAllForm,
   // ChangeProfileStatus,
   // GetMyProfile,
-  // UpdateMyProfile
+  UpdateMyProfile
 };

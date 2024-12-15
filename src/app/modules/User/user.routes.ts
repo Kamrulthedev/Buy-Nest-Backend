@@ -11,11 +11,14 @@ const router = express.Router();
 
 // router.get('/me', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT), UserControllars.GetMyProfileSQ);
 
-// router.patch("/update-me", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT), Fileuploader.upload.single('file'),
-//     (req: Request, res: Response, next: NextFunction) => {
-//         req.body = UserValidation.UpdateUser.parse(JSON.parse(req.body.data))
-//         return UserControllars.UpdateMyProfileSQ(req, res, next)
-//     });
+router.patch("/update-me", auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.CUSTOMER),
+    Fileuploader.upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = UserValidation.UpdateUser.parse(JSON.parse(req.body.data))
+        return UserControllars.UpdateMyProfileDB(req, res, next)
+    }
+);
+
 
 router.post("/create-admin", auth(UserRole.ADMIN),
     Fileuploader.upload.single('file'),

@@ -72,26 +72,26 @@ const CreateCustomerDB = catchAsync(async (req, res) => {
 // });
 
 
-// const UpdateMyProfileSQ = catchAsync(async (req, res) => {
-//   const {user} = req;
-//   const {body} : any = req;
-//   const {file} = req;
-//   const result = await UserServices.UpdateMyProfile(user, body, file as any | null);
-//   sendResponse(res, {
-//     statusCode: 200,
-//     success: true,
-//     message: "Update My Profile Data",
-//     data: result
-//   })
-// });
+const UpdateMyProfileDB = catchAsync(async (req, res) => {
+  const {user} = req;
+  const {body} : any = req;
+  const {file} = req;
+  const result = await UserServices.UpdateMyProfile(user, body, file as any | null);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Update Profile Successfully",
+    data: result
+  })
+});
 
 
 export const UserControllars = {
   CreateAdminDB,
   CreateVendorDB,
-  CreateCustomerDB
+  CreateCustomerDB,
   // GetAllFormSQ,
   // ChangeProfileStatusSQ,
   // GetMyProfileSQ,
-  // UpdateMyProfileSQ
+  UpdateMyProfileDB
 };

@@ -95,6 +95,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
       contactNumber: roleData.contactNumber,
       role: userData.role,
       profilePhoto: roleData.profilePhoto,
+      address: roleData.address,
       needPasswordChange: userData.needPasswordChange,
       status: userData.status,
       isDeleted: roleData.isDeleted,
