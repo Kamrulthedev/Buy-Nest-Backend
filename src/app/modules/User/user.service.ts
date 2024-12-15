@@ -173,76 +173,70 @@ const CreateCustomer = async (req: Request): Promise<CreateCustomerResponse> => 
 
 
 
-// //Get User 
-// const GetAllForm = async (params: any, options: IPagination) => {
-//   const { page, limit, skip }: any = paginationHelper.calculatePagination;
+//Get User 
+const GetAllForm = async (params: any, options: IPagination) => {
+  const { page, limit, skip } = paginationHelper.calculatePagination(options);
 
-//   const { searchTram, ...filterValue } = params;
-//   const andCondions: Prisma.UserWhereInput[] = [];
+  const { searchTerm, ...filterValue } = params;
+  const andConditions: Prisma.UserWhereInput[] = [];
 
-//   if (params.searchTram) {
-//     andCondions.push({
-//       OR: UserSearchAbleFilds.map((field) => ({
-//         [field]: {
-//           contains: params.searchTram,
-//           mode: "insensitive",
-//         },
-//       })),
-//     });
-//   }
+  // Search Condition
+  if (searchTerm) {
+    andConditions.push({
+      OR: UserSearchAbleFilds.map((field) => ({
+        [field]: {
+          contains: searchTerm,
+          mode: "insensitive",
+        },
+      })),
+    });
+  }
 
-//   if (Object.keys(filterValue).length > 0) {
-//     andCondions.push({
-//       AND: Object.keys(filterValue).map((kay) => ({
-//         [kay]: {
-//           equals: (filterValue as any)[kay],
-//         },
-//       })),
-//     });
-//   }
+  // Filter Condition
+  if (Object.keys(filterValue).length > 0) {
+    andConditions.push({
+      AND: Object.entries(filterValue).map(([key, value]) => ({
+        [key]: { equals: value },
+      })),
+    });
+  }
 
-//   const whereCondition: Prisma.UserWhereInput = andCondions.length > 0 ? { AND: andCondions } : {};
+  const whereCondition: Prisma.UserWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
+  // Query the database
+  const result = await prisma.user.findMany({
+    where: whereCondition,
+    skip,
+    take: limit,
+    orderBy: options.sortBy && options.sortOrder
+      ? { [options.sortBy]: options.sortOrder }
+      : { createdAt: "desc" },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      needPasswordChange: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      admin: true,
+      vendor: true,
+      customer: true,
+    },
+  });
 
-//   const result = await prisma.user.findMany({
-//     where: whereCondition,
-//     skip: skip,
-//     take: limit,
-//     orderBy:
-//       options.sortBy && options.orderBy
-//         ? {
-//           [options.sortBy]: options.sortOrder,
-//         }
-//         : {
-//           createdAt: "desc",
-//         },
-//     select: {
-//       id: true,
-//       email: true,
-//       role: true,
-//       needPasswordChange: true,
-//       status: true,
-//       createdAt: true,
-//       updatedAt: true,
-//       admin: true,
-//       patient: true,
-//       doctor: true
-//     },
-//   });
+  const totalCount = await prisma.user.count({ where: whereCondition });
 
-//   const TotalCount = await prisma.user.count({
-//     where: whereCondition,
-//   });
+  return {
+    meta: {
+      page,
+      limit,
+      total: totalCount,
+    },
+    data: result,
+  };
+};
 
-//   return {
-//     meta: {
-//       page,
-//       limit,
-//       total: TotalCount,
-//     },
-//     data: result,
-//   };
-// };
 
 
 // const ChangeProfileStatus = async (id: string, status: UserRole) => {
@@ -307,6 +301,7 @@ const CreateCustomer = async (req: Request): Promise<CreateCustomerResponse> => 
 //   return { ...userInfo, ...ProfileInfo }
 // };
 
+
 //update my Profile
 const UpdateMyProfile = async (user: { email: string, role: string, status: string } | null, body: any | null, file: UploadedFile) => {
   const Upload = file as UploadedFile;
@@ -314,7 +309,6 @@ const UpdateMyProfile = async (user: { email: string, role: string, status: stri
     const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
     body.profilePhoto = uploadToCloudinary?.secure_url;
   };
-
 
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
@@ -331,6 +325,7 @@ const UpdateMyProfile = async (user: { email: string, role: string, status: stri
       },
       data: body
     })
+    console.log(UpdateInfo)
   }
   else if (userInfo.role === UserRole.VENDOR) {
     UpdateInfo = await prisma.vendor.update({
@@ -348,6 +343,7 @@ const UpdateMyProfile = async (user: { email: string, role: string, status: stri
       data: body
     })
   }
+
   return { ...UpdateInfo }
 };
 
@@ -357,7 +353,7 @@ export const UserServices = {
   CreateAdmin,
   CreateVendor,
   CreateCustomer,
-  // GetAllForm,
+  GetAllForm,
   // ChangeProfileStatus,
   // GetMyProfile,
   UpdateMyProfile

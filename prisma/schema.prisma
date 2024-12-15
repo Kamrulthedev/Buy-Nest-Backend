@@ -37,8 +37,9 @@ model Admin {
   id            String   @id @default(uuid())
   name          String
   email         String   @unique
-  role          UserRole @default(ADMIN)   
+  role          UserRole @default(ADMIN)
   profilePhoto  String?
+  address       String?
   contactNumber String
   isDeleted     Boolean  @default(false)
   createdAt     DateTime @default(now())
@@ -52,7 +53,7 @@ model Customer {
   id            String   @id @unique @default(uuid())
   email         String   @unique
   name          String
-  role          UserRole   @default(CUSTOMER)
+  role          UserRole @default(CUSTOMER)
   profilePhoto  String?
   contactNumber String?
   address       String?
@@ -71,7 +72,7 @@ model Vendor {
   id            String   @id @default(uuid())
   name          String
   email         String   @unique
-  role          UserRole @default(VENDOR) 
+  role          UserRole @default(VENDOR)
   profilePhoto  String?
   contactNumber String
   address       String?

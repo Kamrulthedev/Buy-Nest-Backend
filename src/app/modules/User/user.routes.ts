@@ -7,7 +7,7 @@ import { UserValidation } from "./user.validation";
 
 const router = express.Router();
 
-// router.get('/', auth(UserRole.ADMIN), UserControllars.GetAllFormSQ);
+router.get('/all-users', auth(UserRole.ADMIN), UserControllars.GetAllFormDB);
 
 // router.get('/me', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT), UserControllars.GetMyProfileSQ);
 

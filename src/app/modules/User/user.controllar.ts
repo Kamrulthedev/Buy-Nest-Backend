@@ -34,18 +34,18 @@ const CreateCustomerDB = catchAsync(async (req, res) => {
 });
 
 
-// const GetAllFormSQ = catchAsync(async (req, res) => {
-//   const filter = pick(req.query, UserFilterableFields);
-//   const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
-//   const result = await UserServices.GetAllForm(filter, options);
-//   sendResponse(res, {
-//     statusCode: 200,
-//     success: true,
-//     message: "User Data fetched Successfully!",
-//     meta: result.meta,
-//     data: result.data,
-//   });
-// });
+const GetAllFormDB = catchAsync(async (req, res) => {
+  const filter = pick(req.query, UserFilterableFields);
+  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+  const result = await UserServices.GetAllForm(filter, options);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "User Data fetched Successfully!",
+    meta: result.meta,
+    data: result.data,
+  });
+});
 
 
 // const ChangeProfileStatusSQ = catchAsync(async (req, res) => {
@@ -90,7 +90,7 @@ export const UserControllars = {
   CreateAdminDB,
   CreateVendorDB,
   CreateCustomerDB,
-  // GetAllFormSQ,
+  GetAllFormDB,
   // ChangeProfileStatusSQ,
   // GetMyProfileSQ,
   UpdateMyProfileDB
