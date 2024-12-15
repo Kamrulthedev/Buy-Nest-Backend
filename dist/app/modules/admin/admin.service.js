@@ -25,55 +25,65 @@ const admin_constent_1 = require("./admin.constent");
 const paginationHelper_1 = require("../../../helpars/paginationHelper");
 const SharedPrisma_1 = require("../../../shared/SharedPrisma");
 const GetAdmins = (params, options) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page, limit, skip } = paginationHelper_1.paginationHelper.calculatePagination;
-    const { searchTram } = params, filterValue = __rest(params, ["searchTram"]);
-    const andCondions = [];
-    if (params.searchTram) {
-        andCondions.push({
-            OR: admin_constent_1.adminSearchAvleFields.map((field) => ({
-                [field]: {
-                    contains: params.searchTram,
-                    mode: "insensitive",
-                },
-            })),
-        });
-    }
-    if (Object.keys(filterValue).length > 0) {
-        andCondions.push({
-            AND: Object.keys(filterValue).map((kay) => ({
-                [kay]: {
-                    equals: filterValue[kay],
-                },
-            })),
-        });
-    }
-    andCondions.push({
-        isDeleted: false
-    });
-    const whereCondition = { AND: andCondions };
-    const result = yield SharedPrisma_1.prisma.admin.findMany({
-        where: whereCondition,
-        skip: skip,
-        take: limit,
-        orderBy: options.sortBy && options.orderBy
-            ? {
-                [options.sortBy]: options.sortOrder,
-            }
-            : {
-                createdAt: "desc",
+    try {
+        const { page, limit, skip } = paginationHelper_1.paginationHelper.calculatePagination(options);
+        const { searchTram } = params, filterValue = __rest(params, ["searchTram"]);
+        const andConditions = [];
+        // Search condition
+        if (searchTram) {
+            andConditions.push({
+                OR: admin_constent_1.adminSearchAvleFields.map((field) => ({
+                    [field]: {
+                        contains: searchTram,
+                        mode: "insensitive",
+                    },
+                })),
+            });
+        }
+        // Filter conditions
+        if (Object.keys(filterValue).length > 0) {
+            andConditions.push({
+                AND: Object.keys(filterValue).map((key) => ({
+                    [key]: {
+                        equals: filterValue[key],
+                    },
+                })),
+            });
+        }
+        // Soft delete condition
+        andConditions.push({ isDeleted: false });
+        const whereCondition = { AND: andConditions };
+        // Fetch admins and count
+        const [result, TotalCount] = yield Promise.all([
+            SharedPrisma_1.prisma.admin.findMany({
+                where: whereCondition,
+                skip,
+                take: limit,
+                orderBy: options.sortBy && options.sortOrder
+                    ? {
+                        [options.sortBy]: options.sortOrder,
+                    }
+                    : {
+                        createdAt: "desc",
+                    },
+            }),
+            SharedPrisma_1.prisma.admin.count({
+                where: whereCondition,
+            }),
+        ]);
+        return {
+            meta: {
+                page,
+                limit,
+                total: TotalCount,
             },
-    });
-    const TotalCount = yield SharedPrisma_1.prisma.admin.count({
-        where: whereCondition,
-    });
-    return {
-        meta: {
-            page,
-            limit,
-            total: TotalCount,
-        },
-        data: result,
-    };
+            data: result,
+        };
+    }
+    catch (error) {
+        console.error("Error fetching admins:", error);
+        throw new Error("Failed to fetch admins");
+    }
 });
 //single-get-data
 const GetById = (id) => __awaiter(void 0, void 0, void 0, function* () {
