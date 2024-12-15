@@ -14,7 +14,7 @@ const CreateAdminDB = catchAsync(async (req, res) => {
 });
 
 
-const CreateVendorSDB = catchAsync(async (req, res) => {
+const CreateVendorDB = catchAsync(async (req, res) => {
   const result = await UserServices.CreateVendor(req);
   res.status(200).json({
     success: true,
@@ -24,14 +24,14 @@ const CreateVendorSDB = catchAsync(async (req, res) => {
 });
 
 
-// const CreatePatientSQ = catchAsync(async (req, res) => {
-//   const result = await UserServices.CreatePatient(req)
-//   res.status(200).json({
-//     success: true,
-//     message: "Patient Created Usccessfully!",
-//     data: result
-//   })
-// });
+const CreateCustomerDB = catchAsync(async (req, res) => {
+  const result = await UserServices.CreateCustomer(req)
+  res.status(200).json({
+    success: true,
+    message: "Customer Created Usccessfully!",
+    data: result
+  })
+});
 
 
 // const GetAllFormSQ = catchAsync(async (req, res) => {
@@ -88,8 +88,8 @@ const CreateVendorSDB = catchAsync(async (req, res) => {
 
 export const UserControllars = {
   CreateAdminDB,
-  CreateVendorSDB
-  // CreatePatientSQ,
+  CreateVendorDB,
+  CreateCustomerDB
   // GetAllFormSQ,
   // ChangeProfileStatusSQ,
   // GetMyProfileSQ,

@@ -29,16 +29,16 @@ router.post("/create-admin",
 router.post("/create-vendor", auth(UserRole.ADMIN),
     Fileuploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
-        req.body = UserValidation.CreateDoctorValidation.parse(JSON.parse(req.body.data))
-        return UserControllars.CreateVendorSDB(req, res, next)
+        req.body = UserValidation.CreateVendorValidation.parse(JSON.parse(req.body.data))
+        return UserControllars.CreateVendorDB(req, res, next)
     },
 );
 
 
-// router.post("/create-patient", Fileuploader.upload.single('file'), (req: Request, res: Response, next: NextFunction) => {
-//     req.body = UserValidation.CreatePatient.parse(JSON.parse(req.body.data))
-//     return UserControllars.CreatePatientSQ(req, res, next)
-// });
+router.post("/create-customer", Fileuploader.upload.single('file'), (req: Request, res: Response, next: NextFunction) => {
+    req.body = UserValidation.CreateCustomer.parse(JSON.parse(req.body.data))
+    return UserControllars.CreateCustomerDB(req, res, next)
+});
 
 
 // router.patch('/:id/status', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), UserControllars.ChangeProfileStatusSQ);

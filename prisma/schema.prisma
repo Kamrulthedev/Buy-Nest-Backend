@@ -213,7 +213,6 @@ enum UserStatus {
   ACTIVE
   BLOCKED
   DELETED
-  PENDING
 }
 
 enum OrderStatus {

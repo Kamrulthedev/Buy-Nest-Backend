@@ -15,7 +15,16 @@ const loginUser = async (payload: { email: string; password: string }) => {
     },
   });
 
-  console.log(userData)
+  if (!userData) {
+    throw new Error("Unauthorized access");
+  }
+
+  const adminData = await prisma.admin.findUniqueOrThrow({
+    where: {
+      email: userData.email
+    },
+  });
+
 
   if (
     typeof payload.password !== "string" ||
@@ -55,7 +64,18 @@ const loginUser = async (payload: { email: string; password: string }) => {
     accessToken,
     refreshToken,
     needPasswordChange: userData.needPasswordChange,
-    userData
+    userData: {
+      name: adminData.name,
+      email: userData.email,
+      contactNumber: adminData.contactNumber,
+      role: userData.role,
+      profilePhoto: adminData.profilePhoto,
+      needPasswordChange: userData.needPasswordChange,
+      status: userData.status,
+      isDeleted: adminData.isDeleted,
+      createdAt:  adminData.createdAt,
+      updatedAt: adminData.updatedAt
+    },
   };
 };
 
