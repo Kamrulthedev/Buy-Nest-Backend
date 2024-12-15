@@ -45,6 +45,6 @@ router.post("/create-customer", Fileuploader.upload.single('file'),
     });
 
 
-// router.patch('/:id/status', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), UserControllars.ChangeProfileStatusSQ);
+router.patch('/change-status', auth(UserRole.ADMIN), UserControllars.ChangeUserStatusDB);
 
 export const UserRoutes = router;

@@ -12,6 +12,7 @@ import { differenceInHours } from "date-fns";
 import { generateToken } from "../../../helpars/JwtHelpars";
 import config from "../../config";
 import { CreateCustomerResponse } from "../../Interfaces/common";
+import AppError from "../../errors/AppError";
 
 
 //create-admin
@@ -213,6 +214,7 @@ const GetAllForm = async (params: any, options: IPagination) => {
       : { createdAt: "desc" },
     select: {
       id: true,
+      name: true,
       email: true,
       role: true,
       needPasswordChange: true,
@@ -239,21 +241,29 @@ const GetAllForm = async (params: any, options: IPagination) => {
 
 
 
-// const ChangeProfileStatus = async (id: string, status: UserRole) => {
-//   const userData = await prisma.user.findUniqueOrThrow({
-//     where: {
-//       id
-//     }
-//   })
+const ChangeUserStatus = async (data: { userId: string, status: UserRole }) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: data.userId
+    }
+  })
+  
+  if(!userData) {
+    throw new AppError(404, "User Not Found!")
+  }
 
-//   const updateUser = await prisma.user.update({
-//     where: {
-//       id
-//     },
-//     data: status
-//   })
-//   return updateUser
-// };
+  const updateUser = await prisma.user.update({
+    where: {
+      id: data.userId, 
+    },
+    data: {
+      status: data.status as UserStatus, 
+    },
+  });
+  return updateUser
+};
+
+
 
 // const GetMyProfile = async (user: { email: string, role: string, status: string }) => {
 //   const userInfo = await prisma.user.findUniqueOrThrow({
@@ -316,9 +326,9 @@ const UpdateMyProfile = async (user: { email: string, role: string, status: stri
       status: UserStatus.ACTIVE
     },
   })
-  
+
   let UpdateInfo
- if (userInfo.role === UserRole.ADMIN) {
+  if (userInfo.role === UserRole.ADMIN) {
     UpdateInfo = await prisma.admin.update({
       where: {
         email: userInfo.email
@@ -348,13 +358,18 @@ const UpdateMyProfile = async (user: { email: string, role: string, status: stri
 };
 
 
+const DeleteUser = async() =>{
+
+};
+
 
 export const UserServices = {
   CreateAdmin,
   CreateVendor,
   CreateCustomer,
   GetAllForm,
-  // ChangeProfileStatus,
+  ChangeUserStatus,
   // GetMyProfile,
-  UpdateMyProfile
+  UpdateMyProfile,
+  DeleteUser
 };
