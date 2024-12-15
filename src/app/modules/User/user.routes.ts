@@ -47,4 +47,6 @@ router.post("/create-customer", Fileuploader.upload.single('file'),
 
 router.patch('/change-status', auth(UserRole.ADMIN), UserControllars.ChangeUserStatusDB);
 
+router.delete('/delete-user', auth(UserRole.ADMIN), UserControllars.DeleteUserDB);
+
 export const UserRoutes = router;

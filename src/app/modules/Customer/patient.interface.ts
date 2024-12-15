@@ -1,4 +1,3 @@
-import { BloodGroup, Gender, MaritalStatus } from "@prisma/client";
 
 export type IPatientFilterRequest = {
   searchTerm?: string | undefined;
@@ -7,9 +6,7 @@ export type IPatientFilterRequest = {
 };
 
 type IPatientHealthData = {
-  gender: Gender
   dateOfBirth: string
-  bloodGroup: BloodGroup
   hasAllergies?: boolean
   hasDiabetes?: boolean
   height: string
@@ -22,7 +19,6 @@ type IPatientHealthData = {
   hasPastSurgeries?: boolean
   recentAnxiety?: boolean
   recentDepression?: boolean
-  maritalStatus?: MaritalStatus
 }
 
 type IMedicalReport = {

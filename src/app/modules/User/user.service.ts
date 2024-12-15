@@ -247,17 +247,17 @@ const ChangeUserStatus = async (data: { userId: string, status: UserRole }) => {
       id: data.userId
     }
   })
-  
-  if(!userData) {
+
+  if (!userData) {
     throw new AppError(404, "User Not Found!")
   }
 
   const updateUser = await prisma.user.update({
     where: {
-      id: data.userId, 
+      id: data.userId,
     },
     data: {
-      status: data.status as UserStatus, 
+      status: data.status as UserStatus,
     },
   });
   return updateUser
@@ -358,8 +358,57 @@ const UpdateMyProfile = async (user: { email: string, role: string, status: stri
 };
 
 
-const DeleteUser = async() =>{
+const DeleteUser = async (data: { userId: string }) => {
 
+  if (!data.userId) {
+    throw new AppError(402, "UserId Must be")
+  }
+
+  try {
+    const userInfo = await prisma.user.findUniqueOrThrow({
+      where: {
+        id: data.userId,
+      },
+    });
+
+    // Begin the transaction
+    const result = await prisma.$transaction(async (transactionClient) => {
+      let DeleteInfo;
+
+      if (userInfo.role === UserRole.ADMIN) {
+        DeleteInfo = await transactionClient.admin.delete({
+          where: {
+            email: userInfo.email,
+          },
+        });
+      } else if (userInfo.role === UserRole.VENDOR) {
+        DeleteInfo = await transactionClient.vendor.delete({
+          where: {
+            email: userInfo.email,
+          },
+        });
+      } else if (userInfo.role === UserRole.CUSTOMER) {
+        DeleteInfo = await transactionClient.customer.delete({
+          where: {
+            email: userInfo.email,
+          },
+        });
+      }
+
+      const deleteUser = await transactionClient.user.delete({
+        where: {
+          email: userInfo.email,
+        },
+      });
+
+      return deleteUser;
+    });
+
+    return result;
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw new Error("Failed to delete user");
+  }
 };
 
 

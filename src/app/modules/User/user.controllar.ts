@@ -85,6 +85,17 @@ const UpdateMyProfileDB = catchAsync(async (req, res) => {
 });
 
 
+const DeleteUserDB = catchAsync(async (req, res) => {
+  const result = await UserServices.DeleteUser(req.body)
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "User Deleted Successfully!",
+    data: result
+  })
+});
+
+
 export const UserControllars = {
   CreateAdminDB,
   CreateVendorDB,
@@ -92,5 +103,6 @@ export const UserControllars = {
   GetAllFormDB,
   ChangeUserStatusDB,
   // GetMyProfileSQ,
-  UpdateMyProfileDB
+  UpdateMyProfileDB,
+  DeleteUserDB
 };
