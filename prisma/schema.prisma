@@ -37,6 +37,7 @@ model Admin {
   id            String   @id @default(uuid())
   name          String
   email         String   @unique
+  role          UserRole @default(ADMIN)   
   profilePhoto  String?
   contactNumber String
   isDeleted     Boolean  @default(false)
@@ -51,6 +52,7 @@ model Customer {
   id            String   @id @unique @default(uuid())
   email         String   @unique
   name          String
+  role          UserRole   @default(CUSTOMER)
   profilePhoto  String?
   contactNumber String?
   address       String?
@@ -69,6 +71,7 @@ model Vendor {
   id            String   @id @default(uuid())
   name          String
   email         String   @unique
+  role          UserRole @default(VENDOR) 
   profilePhoto  String?
   contactNumber String
   address       String?
@@ -98,7 +101,6 @@ model Shop {
   orders    Order[]
   followers Follow[]
 }
-
 
 model Product {
   id          String   @id @default(uuid())

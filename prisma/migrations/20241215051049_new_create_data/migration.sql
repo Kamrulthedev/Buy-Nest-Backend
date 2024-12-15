@@ -2,7 +2,7 @@
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'VENDOR', 'CUSTOMER');
 
 -- CreateEnum
-CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'BLOCKED', 'DELETED', 'PENDING');
+CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'BLOCKED', 'DELETED');
 
 -- CreateEnum
 CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'PROCESSING', 'SHIPPED', 'COMPLETED', 'CANCELED');
@@ -13,9 +13,12 @@ CREATE TYPE "PaymentStatus" AS ENUM ('PAID', 'UNPAID');
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "passwordHash" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "contactNumber" TEXT NOT NULL,
     "role" "UserRole" NOT NULL,
+    "profilePhoto" TEXT,
     "needPasswordChange" BOOLEAN NOT NULL DEFAULT true,
     "status" "UserStatus" NOT NULL DEFAULT 'ACTIVE',
     "lastLogin" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
@@ -30,6 +33,7 @@ CREATE TABLE "admins" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL DEFAULT 'ADMIN',
     "profilePhoto" TEXT,
     "contactNumber" TEXT NOT NULL,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
@@ -44,6 +48,7 @@ CREATE TABLE "Customer" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL DEFAULT 'CUSTOMER',
     "profilePhoto" TEXT,
     "contactNumber" TEXT,
     "address" TEXT,
@@ -59,6 +64,7 @@ CREATE TABLE "vendors" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL DEFAULT 'VENDOR',
     "profilePhoto" TEXT,
     "contactNumber" TEXT NOT NULL,
     "address" TEXT,

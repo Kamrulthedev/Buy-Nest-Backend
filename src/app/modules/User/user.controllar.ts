@@ -28,7 +28,7 @@ const CreateCustomerDB = catchAsync(async (req, res) => {
   const result = await UserServices.CreateCustomer(req)
   res.status(200).json({
     success: true,
-    message: "Customer Created Usccessfully!",
+    message: "Customer Created Successfully!",
     data: result
   })
 });

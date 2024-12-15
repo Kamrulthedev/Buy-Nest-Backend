@@ -32,10 +32,12 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
 
 
   const userData = {
-    password: hashedPassword,
     email: data.email,
-    role: UserRole.ADMIN
-  };
+    password: hashedPassword,
+    role: UserRole.ADMIN,
+    name: data.name,
+    contactNumber: data.contactNumber, 
+  }
 
 
   const result = await prisma.$transaction(async (transactionClient) => {
@@ -74,10 +76,12 @@ const CreateVendor = async (req: Request): Promise<Vendor> => {
   const hashedPassword: string = await bcrypt.hash(data.password, 12);
 
   const userData = {
-    password: hashedPassword,
     email: data.email,
+    password: hashedPassword,
     role: UserRole.VENDOR,
-  };
+    name: data.name,
+    contactNumber: data.contactNumber,
+  }
 
   const result = await prisma.$transaction(async (transactionClient) => {
     await transactionClient.user.create({
@@ -120,26 +124,29 @@ const CreateCustomer = async (req: Request): Promise<Customer> => {
     email: data.email,
     password: hashedPassword,
     role: UserRole.CUSTOMER,
+    name: data.name, 
+    contactNumber: data.contactNumber, 
   };
-
+  
   const result = await prisma.$transaction(async (transactionClient) => {
     const createdUser = await transactionClient.user.create({
       data: userData,
     });
-
+  
     const customerCreateData = {
       name: data.name,
       email: data.email,
       contactNumber: data.contactNumber,
       profilePhoto: data.profilePhoto,
     };
-
+  
     const createdCustomerData = await transactionClient.customer.create({
       data: customerCreateData,
     });
-
+  
     return createdCustomerData;
   });
+  
 
   return result;
 };

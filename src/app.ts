@@ -1,14 +1,13 @@
 import  express, { Application, Request, Response, urlencoded }  from "express";
-import cors from "cors";
 import router from "./app/routes";
 import { globalErrorHendlar } from "./app/middlewares/globalerrorHendlar";
 import { notFount } from "./app/middlewares/notFound";
 import cookieParser from 'cookie-parser'; 
-
+const cors = require('cors');
 
 const app: Application = express();
-app.use(cookieParser()); 
 app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
+app.use(cookieParser()); 
 
 //use parser
 app.use(express.json());
