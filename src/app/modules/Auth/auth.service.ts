@@ -1,4 +1,4 @@
-import { UserStatus } from "@prisma/client";
+import { UserRole, UserStatus } from "@prisma/client";
 import { generateToken, VerifyToken } from "../../../helpars/JwtHelpars";
 import { prisma } from "../../../shared/SharedPrisma";
 import * as bcrypt from "bcrypt";
@@ -18,13 +18,6 @@ const loginUser = async (payload: { email: string; password: string }) => {
   if (!userData) {
     throw new Error("Unauthorized access");
   }
-
-  const adminData = await prisma.admin.findUniqueOrThrow({
-    where: {
-      email: userData.email
-    },
-  });
-
 
   if (
     typeof payload.password !== "string" ||
@@ -60,21 +53,53 @@ const loginUser = async (payload: { email: string; password: string }) => {
     config.jwt_refresh_token_expires_in as string
   );
 
+
+  // Define user-specific data structure
+  let roleData: any;
+
+  switch (userData.role) {
+    case UserRole.ADMIN:
+      roleData = await prisma.admin.findUnique({
+        where: { email: userData.email },
+      });
+      break;
+
+    case UserRole.VENDOR:
+      roleData = await prisma.vendor.findUnique({
+        where: { email: userData.email },
+      });
+      break;
+
+    case UserRole.CUSTOMER:
+      roleData = await prisma.customer.findUnique({
+        where: { email: userData.email },
+      });
+      break;
+
+    default:
+      throw new Error("Invalid user role");
+  }
+
+  if (!roleData) {
+    throw new Error("User data not found");
+  }
+
+
   return {
     accessToken,
     refreshToken,
     needPasswordChange: userData.needPasswordChange,
     userData: {
-      name: adminData.name,
+      name: roleData.name,
       email: userData.email,
-      contactNumber: adminData.contactNumber,
+      contactNumber: roleData.contactNumber,
       role: userData.role,
-      profilePhoto: adminData.profilePhoto,
+      profilePhoto: roleData.profilePhoto,
       needPasswordChange: userData.needPasswordChange,
       status: userData.status,
-      isDeleted: adminData.isDeleted,
-      createdAt:  adminData.createdAt,
-      updatedAt: adminData.updatedAt
+      isDeleted: roleData.isDeleted,
+      createdAt:  roleData.createdAt,
+      updatedAt: roleData.updatedAt
     },
   };
 };

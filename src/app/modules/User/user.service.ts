@@ -59,7 +59,7 @@ const CreateVendor = async (req: Request): Promise<Vendor> => {
 
   if (file) {
     const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
-    req.body.doctor.profilePhoto = uploadToCloudinary?.secure_url
+    req.body.profilePhoto = uploadToCloudinary?.secure_url
   }
 
   const data = req.body;
@@ -67,7 +67,8 @@ const CreateVendor = async (req: Request): Promise<Vendor> => {
   const vendorCrateData = {
     name: data.name,
     email: data.email,
-    contactNumber: data.contactNumber
+    contactNumber: data.contactNumber,
+    profilePhoto: data.profilePhoto
   }
 
   const hashedPassword: string = await bcrypt.hash(data.password, 12);
@@ -83,10 +84,10 @@ const CreateVendor = async (req: Request): Promise<Vendor> => {
       data: userData,
     });
 
-    const createdDoctordata = await transactionClient.vendor.create({
+    const createdVendordata = await transactionClient.vendor.create({
       data: vendorCrateData,
     });
-    return createdDoctordata;
+    return createdVendordata;
   });
 
   return result

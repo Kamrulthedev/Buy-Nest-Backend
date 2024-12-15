@@ -17,7 +17,7 @@ const router = express.Router();
 //         return UserControllars.UpdateMyProfileSQ(req, res, next)
 //     });
 
-router.post("/create-admin",
+router.post("/create-admin", auth(UserRole.ADMIN),
     Fileuploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
         req.body = UserValidation.createAdmin.parse(JSON.parse(req.body.data))
@@ -35,10 +35,11 @@ router.post("/create-vendor", auth(UserRole.ADMIN),
 );
 
 
-router.post("/create-customer", Fileuploader.upload.single('file'), (req: Request, res: Response, next: NextFunction) => {
-    req.body = UserValidation.CreateCustomer.parse(JSON.parse(req.body.data))
-    return UserControllars.CreateCustomerDB(req, res, next)
-});
+router.post("/create-customer", Fileuploader.upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = UserValidation.CreateCustomer.parse(JSON.parse(req.body.data))
+        return UserControllars.CreateCustomerDB(req, res, next)
+    });
 
 
 // router.patch('/:id/status', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), UserControllars.ChangeProfileStatusSQ);
