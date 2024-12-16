@@ -79,16 +79,18 @@ const GetAllVendors = async (params: IVendorFilterRequest, options: IPagination)
 
 
 const GetByIdVendor = async (id: string) => {
-    console.log(id)
     const result = await prisma.vendor.findUniqueOrThrow({
-        where: {
-            id: id
-        },
+      where: {
+        id: id
+      },
+      include: {
+        shop: true 
+      }
+    });
+    return result;
+  };
 
-    })
-    return result
-};
-
+  
 
 // //update-data
 // const UpdateDoctor = async (id: string, data: Partial<Doctor>) => {

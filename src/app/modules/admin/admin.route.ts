@@ -16,6 +16,5 @@ router.patch("/:id",auth(UserRole.ADMIN),  validateRequest(ValidationWithZod.Upd
 
 router.delete("/:id",auth(UserRole.ADMIN),  AdminControllars.DeleteFromAdminDB);
 
-router.delete("/soft/:id",auth(UserRole.ADMIN),  AdminControllars.SoftDeleteFromAdminDB);
 
 export const AdminRoutes = router;
