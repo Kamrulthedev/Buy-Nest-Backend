@@ -1,24 +1,24 @@
-// import { NextFunction, Request, RequestHandler, Response } from "express";
-// import { pick } from "../../../shared/pick";
-// import sendResponse from "../../../shared/sendResponse";
-// import { catchAsync } from "../../../shared/catchAsync";
-// import { DoctorsServices } from "./doctor.service";
-// import { DOctorFilterableFields } from "./doctor.constent";
+import { pick } from "../../../shared/pick";
+import sendResponse from "../../../shared/sendResponse";
+import { catchAsync } from "../../../shared/catchAsync";
+import { VendorsSearchAvleFields } from "./doctor.constent";
+import { VendorsServices } from "./doctor.service";
 
 
-// const GetDoctorsDB = catchAsync(async (req, res) => {
-//     const filter = pick(req.query, DOctorFilterableFields);
-//     console.log("filters: " , filter);
-//     const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
-//     const result = await DoctorsServices.GetDoctors(filter, options);
-//     sendResponse(res, {
-//         statusCode: 200,
-//         success: true,
-//         message: "Doctor Data fetched Successfully!",
-//         meta: result.meta,
-//         data: result.data,
-//     });
-// });
+
+const GetAllVendorsDB = catchAsync(async (req, res) => {
+    const filter = pick(req.query, VendorsSearchAvleFields);
+    console.log("filters: ", filter);
+    const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+    const result = await VendorsServices.GetAllVendors(filter, options);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Vendors Data fetched Successfully!",
+        meta: result.meta,
+        data: result.data,
+    });
+});
 
 
 // const GetByIdDoctorsDB = catchAsync(async (req, res) => {
@@ -70,10 +70,10 @@
 // });
 
 
-// export const DoctorsControllars = {
-//     GetDoctorsDB,
-//     GetByIdDoctorsDB,
-//     UpdateDoctorsDB,
-//     DeleteDoctorDB,
-//     SoftDeleteDoctorsDB
-// };
+export const VendotsControllars = {
+    GetAllVendorsDB
+    // GetByIdDoctorsDB,
+    // UpdateDoctorsDB,
+    // DeleteDoctorDB,
+    // SoftDeleteDoctorsDB
+};

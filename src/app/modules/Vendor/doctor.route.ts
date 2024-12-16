@@ -1,10 +1,11 @@
-// import express from "express";
-// import { auth } from "../../middlewares/auth";
-// import { UserRole } from "@prisma/client";
+import express from "express";
+import { auth } from "../../middlewares/auth";
+import { UserRole } from "@prisma/client";
+import { VendotsControllars } from "./doctor.controllar";
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.get("/doctors", auth(UserRole.ADMIN), DoctorsControllars.GetDoctorsDB);
+router.get("/all-vendors",  VendotsControllars.GetAllVendorsDB);
 
 // router.get("/:id", DoctorsControllars.GetByIdDoctorsDB);
 
@@ -16,4 +17,4 @@
 
 
 
-// export const DoctorsRoutes = router;
+export const VendorsRoutes = router;

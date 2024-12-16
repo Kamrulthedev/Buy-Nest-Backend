@@ -1,97 +1,81 @@
-// import { Doctor, Prisma, UserStatus } from "@prisma/client";
-// import { paginationHelper } from "../../../helpars/paginationHelper";
-// import { IPagination } from "../../Interfaces/Pagination";
-// import { prisma } from "../../../shared/SharedPrisma";
-// import { IDoctorFilterRequest } from "./doctor.interface";
-// import { DoctorSearchAvleFields } from "./doctor.constent";
+import { Prisma } from "@prisma/client";
+import { paginationHelper } from "../../../helpars/paginationHelper";
+import { IPagination } from "../../Interfaces/Pagination";
+import { prisma } from "../../../shared/SharedPrisma";
+import { IVendorFilterRequest } from "./doctor.interface";
+import { VendorsSearchAvleFields } from "./doctor.constent";
 
 
+const GetAllVendors = async (params: IVendorFilterRequest, options: IPagination) => {
+    try {
+        const { page, limit, skip } = paginationHelper.calculatePagination(options);
+        const { searchTram, ...filterValue }: any = params;
 
-// const GetDoctors = async (params: IDoctorFilterRequest, options: IPagination) => {
-//     try {
-//         const { page, limit, skip } = paginationHelper.calculatePagination(options);
+        const andConditions: Prisma.VendorWhereInput[] = [];
 
-//         const { searchTram, specialties, ...filterValue }: any = params;
-//         console.log(specialties)
-//         const andConditions: Prisma.DoctorWhereInput[] = [];
+        if (searchTram) {
+            andConditions.push({
+                OR: VendorsSearchAvleFields.map((field) => ({
+                    [field]: {
+                        contains: searchTram,
+                        mode: "insensitive",
+                    },
+                })),
+            });
+        }
 
-//         if (searchTram) {
-//             andConditions.push({
-//                 OR: DoctorSearchAvleFields.map((field) => ({
-//                     [field]: {
-//                         contains: searchTram,
-//                         mode: "insensitive",
-//                     },
-//                 })),
-//             });
-//         };
 
-//         if (specialties && specialties.length > 0) {
-//             andConditions.push({
-//                 doctorSpecialties: {
-//                     some: {
-//                         specialties: {
-//                             title: {
-//                                 contains: specialties,
-//                                 mode: "insensitive"
-//                             }
-//                         }
-//                     }
-//                 }
-//             })
-//         };
-//         if (Object.keys(filterValue).length > 0) {
-//             andConditions.push({
-//                 AND: Object.keys(filterValue).map((key) => ({
-//                     [key as keyof typeof filterValue]: {
-//                         equals: filterValue[key as keyof typeof filterValue],
-//                     },
-//                 })),
-//             });
-//         };
-//         // Add soft delete filter
-//         andConditions.push({ isDeleted: false });
-//         const whereCondition: Prisma.DoctorWhereInput = { AND: andConditions };
-//         // Fetch data
-//         const [result, TotalCount] = await Promise.all([
-//             prisma.doctor.findMany({
-//                 where: whereCondition,
-//                 skip,
-//                 take: limit,
-//                 orderBy:
-//                     options.sortBy && options.sortOrder
-//                         ? {
-//                             [options.sortBy]: options.sortOrder,
-//                         }
-//                         : {
-//                             createdAt: "desc",
-//                         },
-//                 include: {
-//                     doctorSpecialties: {
-//                         include: {
-//                             specialties: true
-//                         }
-//                     }
-//                 }
-//             }),
-//             prisma.doctor.count({
-//                 where: whereCondition,
-//             }),
-//         ]);
+        if (Object.keys(filterValue).length > 0) {
+            andConditions.push({
+                AND: Object.keys(filterValue).map((key) => ({
+                    [key as keyof typeof filterValue]: {
+                        equals: filterValue[key as keyof typeof filterValue],
+                    },
+                })),
+            });
+        }
 
-//         return {
-//             meta: {
-//                 page,
-//                 limit,
-//                 total: TotalCount,
-//             },
-//             data: result,
-//         };
-//     } catch (error) {
-//         console.error("Error fetching doctors:", error);
-//         throw new Error("Failed to fetch doctors");
-//     }
-// };
+        // Add soft delete filter
+        andConditions.push({ isDeleted: false });
+
+        const whereCondition: Prisma.VendorWhereInput = { AND: andConditions };
+
+        const [result, TotalCount] = await Promise.all([
+            prisma.vendor.findMany({
+                where: whereCondition,
+                skip,
+                take: limit,
+                orderBy:
+                    options.sortBy && options.sortOrder
+                        ? {
+                            [options.sortBy]: options.sortOrder,
+                        }
+                        : {
+                            createdAt: "desc",
+                        },
+                include: {
+                    shop: true
+                },
+            }),
+            prisma.vendor.count({
+                where: whereCondition,
+            }),
+        ]);
+
+        return {
+            meta: {
+                page,
+                limit,
+                total: TotalCount,
+            },
+            data: result,
+        };
+    } catch (error) {
+        console.error("Error fetching vendors:", error);
+        throw new Error("Failed to fetch vendors");
+    }
+};
+
 
 
 // const GetByIdDoctors = async (id: string) => {
@@ -216,10 +200,9 @@
 // };
 
 
-// export const DoctorsServices = {
-//     GetDoctors,
-//     GetByIdDoctors,
-//     UpdateDoctor,
-//     DeleteFromDoctor,
-//     SoftDeleteFromDoctor
-// };
+export const VendorsServices = {
+    GetAllVendors
+    // UpdateDoctor,
+    // DeleteFromDoctor,
+    // SoftDeleteFromDoctor
+};
