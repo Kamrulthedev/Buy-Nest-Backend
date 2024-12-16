@@ -5,7 +5,6 @@ import { VendorsSearchAvleFields } from "./vendor.constent";
 import { VendorsServices } from "./vendor.service";
 
 
-
 const GetAllVendorsDB = catchAsync(async (req, res) => {
     const filter = pick(req.query, VendorsSearchAvleFields);
     console.log("filters: ", filter);
@@ -21,16 +20,16 @@ const GetAllVendorsDB = catchAsync(async (req, res) => {
 });
 
 
-// const GetByIdDoctorsDB = catchAsync(async (req, res) => {
-//     const {id} = req.params;
-//     const result = await DoctorsServices.GetByIdDoctors(id);
-//     sendResponse(res, {
-//         statusCode: 200,
-//         success: true,
-//         message: "Doctor Data fetched Successfully!",
-//         data: result,
-//     });
-// });
+const GetByIdVendorsDB = catchAsync(async (req, res) => {
+    const {id} = req.params;
+    const result = await VendorsServices.GetByIdVendor(id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Vendor Data fetched Successfully!",
+        data: result,
+    });
+});
 
 
 // const UpdateDoctorsDB = catchAsync(async (req, res) => {
@@ -70,9 +69,9 @@ const GetAllVendorsDB = catchAsync(async (req, res) => {
 // });
 
 
-export const VendotsControllars = {
-    GetAllVendorsDB
-    // GetByIdDoctorsDB,
+export const VendorsControllars = {
+    GetAllVendorsDB,
+    GetByIdVendorsDB,
     // UpdateDoctorsDB,
     // DeleteDoctorDB,
     // SoftDeleteDoctorsDB

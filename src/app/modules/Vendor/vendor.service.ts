@@ -78,16 +78,16 @@ const GetAllVendors = async (params: IVendorFilterRequest, options: IPagination)
 
 
 
-// const GetByIdDoctors = async (id: string) => {
-//     console.log(id)
-//     const result = await prisma.doctor.findUniqueOrThrow({
-//         where: {
-//             id: id
-//         },
+const GetByIdVendor = async (id: string) => {
+    console.log(id)
+    const result = await prisma.vendor.findUniqueOrThrow({
+        where: {
+            id: id
+        },
 
-//     })
-//     return result
-// };
+    })
+    return result
+};
 
 
 // //update-data
@@ -201,7 +201,8 @@ const GetAllVendors = async (params: IVendorFilterRequest, options: IPagination)
 
 
 export const VendorsServices = {
-    GetAllVendors
+    GetAllVendors,
+    GetByIdVendor,
     // UpdateDoctor,
     // DeleteFromDoctor,
     // SoftDeleteFromDoctor

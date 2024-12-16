@@ -1,13 +1,14 @@
 import express from "express";
 import { auth } from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
-import { VendotsControllars } from "./vendor.controllar";
+import { VendorsControllars } from "./vendor.controllar";
+
 
 const router = express.Router();
 
-router.get("/all-vendors",  VendotsControllars.GetAllVendorsDB);
+router.get("/all-vendors", auth(UserRole.ADMIN), VendorsControllars.GetAllVendorsDB);
 
-// router.get("/:id", DoctorsControllars.GetByIdDoctorsDB);
+router.get("/:id", auth(UserRole.ADMIN, UserRole.VENDOR), VendorsControllars.GetByIdVendorsDB);
 
 // router.patch("/update/:id", DoctorsControllars.UpdateDoctorsDB);
 
