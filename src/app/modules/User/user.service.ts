@@ -13,6 +13,9 @@ import { generateToken } from "../../../helpars/JwtHelpars";
 import config from "../../config";
 import { CreateCustomerResponse } from "../../Interfaces/common";
 import AppError from "../../errors/AppError";
+import { CreateVendorResponse } from "./user.interface";
+
+
 
 
 //create-admin
@@ -60,58 +63,89 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
 
 
 //create vendor
-const CreateVendor = async (req: Request): Promise<Vendor> => {
+const CreateVendor = async (req: Request): Promise<CreateVendorResponse> => {
   const file = req.files as UploadedFile[];
 
-  console.log(file)
+  if (file && file.length >= 2) {
+    const [profilePhotoFile, logoFile] = file;
+    const profilePhotoUrl = await Fileuploader.uploadToCloudinary(profilePhotoFile);
+    const logoUrl = await Fileuploader.uploadToCloudinary(logoFile);
 
-  if (file) {
-    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file[0]);
-    req.body.profilePhoto = uploadToCloudinary?.secure_url
+    req.body.profilePhoto = profilePhotoUrl?.secure_url;
+    req.body.logoUrl = logoUrl?.secure_url;
+  } else {
+    throw new Error("Required files are missing.");
   }
 
-  if (file) {
-    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file[1]);
-    req.body.logoUrl = uploadToCloudinary?.secure_url
+  const data = req.body;
+
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email: data.email,
+    },
+  });
+
+  if (existingUser) {
+    throw new Error("Email already exists. Please use a different email.");
   }
 
-  console.log(req.body)
+  const vendorCreateData = {
+    name: data.name,
+    email: data.email,
+    contactNumber: data.contactNumber,
+    profilePhoto: data.profilePhoto,
+    address: data.address || null, 
+    isDeleted: false, 
+  };
 
+  const shopCreateData = {
+    name: data.shopName,
+    description: data.shopDescription,
+    logoUrl: data.logoUrl,
+    vendor: {
+      connect: { email: data.email },
+    },
+  };
 
-  // const data = req.body;
+  const hashedPassword: string = await bcrypt.hash(data.password, 12);
 
-  // const vendorCrateData = {
-  //   name: data.name,
-  //   email: data.email,
-  //   contactNumber: data.contactNumber,
-  //   profilePhoto: data.profilePhoto
-  // }
+  const userData = {
+    name: data.name,
+    email: data.email,
+    password: hashedPassword,
+    contactNumber: data.contactNumber,
+    role: UserRole.VENDOR, 
+    profilePhoto: data.profilePhoto,
+    status: UserStatus.ACTIVE,
+  };
 
-  // const hashedPassword: string = await bcrypt.hash(data.password, 12);
+  try {
+    const result = await prisma.$transaction(async (transactionClient) => {
+      const createdUser = await transactionClient.user.create({
+        data: userData,
+      });
 
-  // const userData = {
-  //   email: data.email,
-  //   password: hashedPassword,
-  //   role: UserRole.VENDOR,
-  //   name: data.name,
-  //   contactNumber: data.contactNumber,
-  // }
+      const createdVendor = await transactionClient.vendor.create({
+        data: vendorCreateData,
+      });
 
-  // const result = await prisma.$transaction(async (transactionClient) => {
-  //   await transactionClient.user.create({
-  //     data: userData,
-  //   });
+      const createdShop = await transactionClient.shop.create({
+        data: shopCreateData,
+      });
 
-  //   const createdVendordata = await transactionClient.vendor.create({
-  //     data: vendorCrateData,
-  //   });
-  //   return createdVendordata;
-  // });
+      return {
+        createdUser: createdUser, 
+        createdVendor: createdVendor,
+        createdShop: createdShop,
+      };
+    });
 
-  return result
-
+    return result
+  } catch (error) {
+    console.error("Error creating vendor:", error);
+    throw new Error("Failed to create vendor.");
+  }
 };
-
 
 
 
