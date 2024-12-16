@@ -30,7 +30,7 @@ router.post("/create-admin", auth(UserRole.ADMIN),
 
 
 router.post("/create-vendor", auth(UserRole.ADMIN),
-    Fileuploader.upload.single('file'),
+    Fileuploader.upload.array('files', 2),
     (req: Request, res: Response, next: NextFunction) => {
         req.body = UserValidation.CreateVendorValidation.parse(JSON.parse(req.body.data))
         return UserControllars.CreateVendorDB(req, res, next)

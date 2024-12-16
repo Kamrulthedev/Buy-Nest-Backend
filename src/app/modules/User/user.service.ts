@@ -61,42 +61,52 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
 
 //create vendor
 const CreateVendor = async (req: Request): Promise<Vendor> => {
-  const file = req.file as UploadedFile;
+  const file = req.files as UploadedFile[];
+
+  console.log(file)
 
   if (file) {
-    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
+    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file[0]);
     req.body.profilePhoto = uploadToCloudinary?.secure_url
   }
 
-  const data = req.body;
-
-  const vendorCrateData = {
-    name: data.name,
-    email: data.email,
-    contactNumber: data.contactNumber,
-    profilePhoto: data.profilePhoto
+  if (file) {
+    const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file[1]);
+    req.body.logoUrl = uploadToCloudinary?.secure_url
   }
 
-  const hashedPassword: string = await bcrypt.hash(data.password, 12);
+  console.log(req.body)
 
-  const userData = {
-    email: data.email,
-    password: hashedPassword,
-    role: UserRole.VENDOR,
-    name: data.name,
-    contactNumber: data.contactNumber,
-  }
 
-  const result = await prisma.$transaction(async (transactionClient) => {
-    await transactionClient.user.create({
-      data: userData,
-    });
+  // const data = req.body;
 
-    const createdVendordata = await transactionClient.vendor.create({
-      data: vendorCrateData,
-    });
-    return createdVendordata;
-  });
+  // const vendorCrateData = {
+  //   name: data.name,
+  //   email: data.email,
+  //   contactNumber: data.contactNumber,
+  //   profilePhoto: data.profilePhoto
+  // }
+
+  // const hashedPassword: string = await bcrypt.hash(data.password, 12);
+
+  // const userData = {
+  //   email: data.email,
+  //   password: hashedPassword,
+  //   role: UserRole.VENDOR,
+  //   name: data.name,
+  //   contactNumber: data.contactNumber,
+  // }
+
+  // const result = await prisma.$transaction(async (transactionClient) => {
+  //   await transactionClient.user.create({
+  //     data: userData,
+  //   });
+
+  //   const createdVendordata = await transactionClient.vendor.create({
+  //     data: vendorCrateData,
+  //   });
+  //   return createdVendordata;
+  // });
 
   return result
 
@@ -313,6 +323,9 @@ const ChangeUserStatus = async (data: { userId: string, status: UserRole }) => {
 
 
 //update my Profile
+
+
+
 const UpdateMyProfile = async (user: { email: string, role: string, status: string } | null, body: any | null, file: UploadedFile) => {
   const Upload = file as UploadedFile;
   if (Upload) {
