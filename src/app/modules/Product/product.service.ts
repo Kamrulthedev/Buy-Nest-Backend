@@ -1,14 +1,53 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { IPagination } from "../../Interfaces/Pagination";
 import { paginationHelper } from "../../../helpars/paginationHelper";
 import { prisma } from "../../../shared/SharedPrisma";
+import { Request } from "express";
+import { UploadedFile } from "../../Interfaces/UploadedFileType";
+import { Fileuploader } from "../../../helpars/fileUploads";
 
 
+const CreateProduct = async (req: Request): Promise<Product> => {
+    try {
+        const file = req.file as UploadedFile;
 
+        if (file) {
+            const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
+            req.body.imageUrl = uploadToCloudinary?.secure_url;
+        }
 
-const CreateProduct = async(req: any) =>{
+        const { name, description, price, discount, stock, category, shopId } = req.body;
 
-}
+        // Basic validation
+        if (!shopId) throw new Error("Shop ID is required!");
+        if (!name || !description || !price || !category || !stock) throw new Error("Missing required fields!");
+
+        const shop = await prisma.shop.findUnique({
+            where: { id: shopId },
+        });
+
+        if (!shop) throw new Error("Shop not found!");
+
+        // Create the product
+        const result = await prisma.product.create({
+            data: {
+                name,
+                description,
+                price: parseFloat(price),
+                discount: discount ? parseFloat(discount) : 0.0,
+                stock: parseInt(stock, 10),
+                imageUrl: req.body.imageUrl || '', 
+                category,
+                shopId,
+            },
+        });
+
+        return result;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Failed to create product");
+    }
+};
 
 
 // const GetAllShops = async (params: IShopFilterRequest, options: IPagination) => {
@@ -101,5 +140,7 @@ const CreateProduct = async(req: any) =>{
 
 
 export const ProductsServices = {
-CreateProduct
+    CreateProduct
 };
+
+
