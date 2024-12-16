@@ -2,8 +2,8 @@ import { Prisma } from "@prisma/client";
 import { paginationHelper } from "../../../helpars/paginationHelper";
 import { IPagination } from "../../Interfaces/Pagination";
 import { prisma } from "../../../shared/SharedPrisma";
-import { IVendorFilterRequest } from "./doctor.interface";
-import { VendorsSearchAvleFields } from "./doctor.constent";
+import { IVendorFilterRequest } from "./vendor.interface";
+import { VendorsSearchAvleFields } from "./vendor.constent";
 
 
 const GetAllVendors = async (params: IVendorFilterRequest, options: IPagination) => {

@@ -1,8 +1,8 @@
 import { pick } from "../../../shared/pick";
 import sendResponse from "../../../shared/sendResponse";
 import { catchAsync } from "../../../shared/catchAsync";
-import { VendorsSearchAvleFields } from "./doctor.constent";
-import { VendorsServices } from "./doctor.service";
+import { VendorsSearchAvleFields } from "./vendor.constent";
+import { VendorsServices } from "./vendor.service";
 
 
 

@@ -34,33 +34,35 @@ model User {
 }
 
 model Admin {
-  id            String   @id @default(uuid())
+  id            String     @id @default(uuid())
   name          String
-  email         String   @unique
-  role          UserRole @default(ADMIN)
+  email         String     @unique
+  role          UserRole   @default(ADMIN)
   profilePhoto  String?
   address       String?
   contactNumber String
-  isDeleted     Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  user          User     @relation(fields: [email], references: [email])
+  status        UserStatus @default(ACTIVE)
+  isDeleted     Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  user          User       @relation(fields: [email], references: [email])
 
   @@map("admins")
 }
 
 model Customer {
-  id            String   @id @unique @default(uuid())
-  email         String   @unique
+  id            String     @id @unique @default(uuid())
+  email         String     @unique
   name          String
-  role          UserRole @default(CUSTOMER)
+  role          UserRole   @default(CUSTOMER)
   profilePhoto  String?
   contactNumber String?
   address       String?
-  isDeleted     Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  user          User     @relation(references: [email], fields: [email])
+  status        UserStatus @default(ACTIVE)
+  isDeleted     Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  user          User       @relation(references: [email], fields: [email])
 
   Cart   Cart[]
   Review Review[]
@@ -69,17 +71,18 @@ model Customer {
 }
 
 model Vendor {
-  id            String   @id @default(uuid())
+  id            String     @id @default(uuid())
   name          String
-  email         String   @unique
-  role          UserRole @default(VENDOR)
+  email         String     @unique
+  role          UserRole   @default(VENDOR)
   profilePhoto  String?
   contactNumber String
   address       String?
-  isDeleted     Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  user          User     @relation(fields: [email], references: [email])
+  status        UserStatus @default(ACTIVE)
+  isDeleted     Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  user          User       @relation(fields: [email], references: [email])
 
   shopId String?
   shop   Shop?
