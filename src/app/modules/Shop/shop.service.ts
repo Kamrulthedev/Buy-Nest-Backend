@@ -55,9 +55,10 @@ const GetAllShops = async (params: IShopFilterRequest, options: IPagination) => 
                             createdAt: "desc",
                         },
                 include: {
-                    products: true,  // Include products
-                    orders: true,    // Include orders
-                    followers: true, // Include followers
+                    vendor: true,
+                    products: true,
+                    orders: true,
+                    followers: true,
                 },
             }),
             prisma.shop.count({
@@ -81,19 +82,22 @@ const GetAllShops = async (params: IShopFilterRequest, options: IPagination) => 
 
 
 
-// //single-get-data
-// const GetById = async (id: string) => {
-//     const result = await prisma.admin.findUnique({
-//         where: {
-//             id,
-//             isDeleted: false
-//         },
-//     });
-//     return result;
-// };
+//single-get-data
+const GetByShopId = async (id: string) => {
+    const result = await prisma.shop.findUnique({
+        where: {
+            id
+        },
+        include: {
+            vendor: true
+        }
+    });
+    return result;
+};
 
 
 
 export const ShopServices = {
     GetAllShops,
+    GetByShopId
 };

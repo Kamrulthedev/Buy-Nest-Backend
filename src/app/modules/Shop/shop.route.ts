@@ -6,8 +6,9 @@ import { ShopsControllars } from "./shop.controlllar";
 const router = express.Router();
 
 
-router.get("/all-shops",  ShopsControllars.GetAllShopsDB);
+router.get("/all-shops", auth(UserRole.ADMIN), ShopsControllars.GetAllShopsDB);
 
-// auth(UserRole.ADMIN),
+router.get("/:id", auth(UserRole.ADMIN, UserRole.VENDOR),  ShopsControllars.GetByShopIdDB);
+
 
 export const ShopsRoutes = router;

@@ -13,7 +13,7 @@ const GetAllShopsDB = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Admin Data fetched Successfully!",
+    message: "Shop Data fetched Successfully!",
     meta: result.meta,
     data: result.data,
   });
@@ -21,6 +21,19 @@ const GetAllShopsDB = catchAsync(async (req, res) => {
 
 
 
+const GetByShopIdDB = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await ShopServices.GetByShopId(id);
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Shop Data Fatched Successfully!",
+      data: result,
+    });
+  });
+
+
 export const ShopsControllars = {
     GetAllShopsDB,
+    GetByShopIdDB
 };
