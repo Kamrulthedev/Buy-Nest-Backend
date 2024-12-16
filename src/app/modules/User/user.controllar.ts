@@ -18,7 +18,7 @@ const CreateVendorDB = catchAsync(async (req, res) => {
   const result = await UserServices.CreateVendor(req);
   res.status(200).json({
     success: true,
-    message: "Vendor Created Successfully!",
+    message: "Vendor & Shop Created Successfully!",
     data: result,
   });
 });

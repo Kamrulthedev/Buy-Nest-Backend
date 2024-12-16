@@ -9,7 +9,7 @@ const createAdmin = z.object({
 });
 
 
-//Create Doctors Validation Schema
+//Create Vendor & Shop Validation Schema
 const CreateVendorValidation = z.object({
     password: z.string({ required_error: "Password is Requred!" }),
     name: z.string({ required_error: "Name is required!" }),
