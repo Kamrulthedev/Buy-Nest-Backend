@@ -106,6 +106,7 @@ model Shop {
   followers Follow[]
 }
 
+
 model Product {
   id          String   @id @default(uuid())
   name        String
@@ -116,12 +117,11 @@ model Product {
   imageUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  category    Category @default(ELECTRONICS)
 
-  shopId     String
-  categoryId String
+  shopId String
 
   shop       Shop        @relation(fields: [shopId], references: [id])
-  category   Category    @relation(fields: [categoryId], references: [id])
   reviews    Review[]
   orderItems OrderItem[]
   cartItems  CartItem[]
@@ -200,15 +200,6 @@ model CartItem {
   @@unique([cartId, productId])
 }
 
-model Category {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  products Product[]
-}
-
 enum UserRole {
   ADMIN
   VENDOR
@@ -233,3 +224,19 @@ enum PaymentStatus {
   PAID
   UNPAID
 }
+
+enum Category {
+  ELECTRONICS
+  FASHION
+  HOME_APPLIANCES
+  BOOKS
+  BEAUTY_AND_PERSONAL_CARE
+  SPORTS_AND_OUTDOORS
+  TOYS_AND_GAMES
+  GROCERY_AND_GOURMET
+  AUTOMOTIVE
+  HEALTH_AND_WELLNESS
+  FURNITURE
+  BABY_PRODUCTS
+}
+

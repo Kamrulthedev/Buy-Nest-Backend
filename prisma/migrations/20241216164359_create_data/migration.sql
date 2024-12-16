@@ -10,6 +10,9 @@ CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'PROCESSING', 'SHIPPED', 'COMPLETE
 -- CreateEnum
 CREATE TYPE "PaymentStatus" AS ENUM ('PAID', 'UNPAID');
 
+-- CreateEnum
+CREATE TYPE "Category" AS ENUM ('ELECTRONICS', 'FASHION', 'HOME_APPLIANCES', 'BOOKS', 'BEAUTY_AND_PERSONAL_CARE', 'SPORTS_AND_OUTDOORS', 'TOYS_AND_GAMES', 'GROCERY_AND_GOURMET', 'AUTOMOTIVE', 'HEALTH_AND_WELLNESS', 'FURNITURE', 'BABY_PRODUCTS');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -35,7 +38,9 @@ CREATE TABLE "admins" (
     "email" TEXT NOT NULL,
     "role" "UserRole" NOT NULL DEFAULT 'ADMIN',
     "profilePhoto" TEXT,
+    "address" TEXT,
     "contactNumber" TEXT NOT NULL,
+    "status" "UserStatus" NOT NULL DEFAULT 'ACTIVE',
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -52,6 +57,7 @@ CREATE TABLE "Customer" (
     "profilePhoto" TEXT,
     "contactNumber" TEXT,
     "address" TEXT,
+    "status" "UserStatus" NOT NULL DEFAULT 'ACTIVE',
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -68,6 +74,7 @@ CREATE TABLE "vendors" (
     "profilePhoto" TEXT,
     "contactNumber" TEXT NOT NULL,
     "address" TEXT,
+    "status" "UserStatus" NOT NULL DEFAULT 'ACTIVE',
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -100,8 +107,8 @@ CREATE TABLE "Product" (
     "imageUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "category" "Category" NOT NULL DEFAULT 'ELECTRONICS',
     "shopId" TEXT NOT NULL,
-    "categoryId" TEXT NOT NULL,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
@@ -172,16 +179,6 @@ CREATE TABLE "CartItem" (
     CONSTRAINT "CartItem_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "Category" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -209,9 +206,6 @@ CREATE UNIQUE INDEX "Cart_customerId_key" ON "Cart"("customerId");
 -- CreateIndex
 CREATE UNIQUE INDEX "CartItem_cartId_productId_key" ON "CartItem"("cartId", "productId");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
-
 -- AddForeignKey
 ALTER TABLE "admins" ADD CONSTRAINT "admins_email_fkey" FOREIGN KEY ("email") REFERENCES "users"("email") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -226,9 +220,6 @@ ALTER TABLE "Shop" ADD CONSTRAINT "Shop_vendorId_fkey" FOREIGN KEY ("vendorId") 
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_shopId_fkey" FOREIGN KEY ("shopId") REFERENCES "Shop"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Follow" ADD CONSTRAINT "Follow_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
