@@ -8,9 +8,9 @@ import { ProductValidation } from "./product.validation";
 const router = express.Router();
 
 
-router.get("/all-products", auth(UserRole.ADMIN), ProductsControllars.GetAllProductsDB);
+router.get("/all-products", ProductsControllars.GetAllProductsDB);
 
-router.get("/:id", auth(UserRole.ADMIN, UserRole.VENDOR), ProductsControllars.GetByProductIdDB);
+router.get("/:id", ProductsControllars.GetByProductIdDB);
 
 
 router.post('/create-product',auth(UserRole.ADMIN, UserRole.VENDOR),

@@ -54,7 +54,7 @@ const CreateProduct = async (req: Request): Promise<Product> => {
 
 const GetAllProducts = async (params: IProductFilterRequest, options: IPagination) => {
     try {
-        const { page, limit, skip } = paginationHelper.calculatePagination(options);
+        const { page, limit, skip } = paginationHelper.calculatePaginationProducts(options);
 
         const { searchTram, ...filterValue } = params;
         const andConditions: Prisma.ProductWhereInput[] = [];
