@@ -42,14 +42,14 @@ const SharedPrisma_1 = require("../../../shared/SharedPrisma");
 const bcrypt = __importStar(require("bcrypt"));
 const config_1 = __importDefault(require("../../config"));
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const userData = yield SharedPrisma_1.prisma.user.findUniqueOrThrow({
+    const userData = yield SharedPrisma_1.prisma.user.findUnique({
         where: {
             email: payload.email,
-            status: client_1.UserStatus.ACTIVE
+            status: client_1.UserStatus.ACTIVE,
         },
     });
     if (!userData) {
-        throw new Error("Unauthorized access");
+        throw new Error("User not found or inactive");
     }
     if (typeof payload.password !== "string" ||
         typeof userData.password !== "string") {

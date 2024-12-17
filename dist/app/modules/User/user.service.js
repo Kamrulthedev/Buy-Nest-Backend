@@ -99,9 +99,6 @@ const CreateVendor = (req) => __awaiter(void 0, void 0, void 0, function* () {
         req.body.profilePhoto = profilePhotoUrl === null || profilePhotoUrl === void 0 ? void 0 : profilePhotoUrl.secure_url;
         req.body.logoUrl = logoUrl === null || logoUrl === void 0 ? void 0 : logoUrl.secure_url;
     }
-    else {
-        throw new Error("Required files are missing.");
-    }
     const data = req.body;
     const existingUser = yield SharedPrisma_1.prisma.user.findUnique({
         where: {

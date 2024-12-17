@@ -73,8 +73,6 @@ const CreateVendor = async (req: Request): Promise<CreateVendorResponse> => {
 
     req.body.profilePhoto = profilePhotoUrl?.secure_url;
     req.body.logoUrl = logoUrl?.secure_url;
-  } else {
-    throw new Error("Required files are missing.");
   }
 
   const data = req.body;

@@ -8,16 +8,17 @@ import emailSender from "./emailSender";
 import AppError from "../../errors/AppError";
 
 const loginUser = async (payload: { email: string; password: string }) => {
-  const userData = await prisma.user.findUniqueOrThrow({
+  const userData = await prisma.user.findUnique({
     where: {
       email: payload.email,
-      status: UserStatus.ACTIVE
+      status: UserStatus.ACTIVE,
     },
   });
-
+  
   if (!userData) {
-    throw new Error("Unauthorized access");
+    throw new Error("User not found or inactive");
   }
+  
 
   if (
     typeof payload.password !== "string" ||
