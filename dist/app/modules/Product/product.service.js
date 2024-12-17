@@ -65,7 +65,7 @@ const CreateProduct = (req) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const GetAllProducts = (params, options) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { page, limit, skip } = paginationHelper_1.paginationHelper.calculatePagination(options);
+        const { page, limit, skip } = paginationHelper_1.paginationHelper.calculatePaginationProducts(options);
         const { searchTram } = params, filterValue = __rest(params, ["searchTram"]);
         const andConditions = [];
         // Search condition

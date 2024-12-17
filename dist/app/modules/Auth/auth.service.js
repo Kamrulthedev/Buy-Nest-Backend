@@ -99,6 +99,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         refreshToken,
         needPasswordChange: userData.needPasswordChange,
         userData: {
+            id: roleData.id,
             name: roleData.name,
             email: userData.email,
             contactNumber: roleData.contactNumber,
