@@ -13,23 +13,23 @@ const GetAllCustomerDB = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Patient retrieval successfully',
+    message: 'Customer retrieval successfully',
     meta: result.meta,
     data: result.data,
   });
 });
 
 
-// const GetByIdFromDB = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await PatientServices.GetByIdFrom(id);
-//   sendResponse(res, {
-//     statusCode: 200,
-//     success: true,
-//     message: 'Patient retrieval successfully',
-//     data: result,
-//   });
-// });
+const GetByIdCustomerDB = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await CustomerServices.GetByIdFrom(id);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Patient retrieval successfully',
+    data: result,
+  });
+});
 
 
 // const UpdateIntoDB = catchAsync(async (req: Request, res: Response) => {
@@ -70,5 +70,5 @@ const GetAllCustomerDB = catchAsync(async (req, res) => {
 
 export const CustomerControllers = {
     GetAllCustomerDB,
-
+    GetByIdCustomerDB
 };

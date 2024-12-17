@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Customer, Prisma } from "@prisma/client";
 import { paginationHelper } from "../../../helpars/paginationHelper";
 import { prisma } from "../../../shared/SharedPrisma";
 import { IPagination } from "../../Interfaces/Pagination";
@@ -11,85 +11,93 @@ const GetAllCustomer = async (
     filters: ICustomerFilterRequest,
     options: IPagination,
 ) => {
-    const { limit, page, skip } = paginationHelper.calculatePagination(options);
-    const { searchTerm, ...filterData } = filters;
+    try {
+        const { limit, page, skip } = paginationHelper.calculatePagination(options);
+        const { searchTerm, ...filterData } = filters;
 
-    const andConditions = [];
+        const andConditions = [];
 
-    if (searchTerm) {
-        andConditions.push({
-            OR: CustomerSearchableFields.map(field => ({
-                [field]: {
-                    contains: searchTerm,
-                    mode: 'insensitive',
-                },
-            })),
-        });
-    }
+        if (searchTerm) {
+            andConditions.push({
+                OR: CustomerSearchableFields.map(field => ({
+                    [field]: {
+                        contains: searchTerm,
+                        mode: 'insensitive',
+                    },
+                })),
+            });
+        }
 
-    if (Object.keys(filterData).length > 0) {
-        andConditions.push({
-            AND: Object.keys(filterData).map(key => {
-                return {
+        if (Object.keys(filterData).length > 0) {
+            andConditions.push({
+                AND: Object.keys(filterData).map(key => ({
                     [key]: {
                         equals: (filterData as any)[key],
                     },
-                };
-            }),
-        });
-    }
-    andConditions.push({
-        isDeleted: false,
-    });
-
-    const whereConditions: Prisma.CustomerWhereInput =
-        andConditions.length > 0 ? { AND: andConditions } : {};
-
-    const result = await prisma.customer.findMany({
-        where: whereConditions,
-        skip,
-        take: limit,
-        orderBy:
-            options.sortBy && options.sortOrder
-                ? { [options.sortBy]: options.sortOrder }
-                : {
-                    createdAt: 'desc',
-                },
-        include: {
-            Cart: true,
-            Order: true,
-            Review: true,
-            Follow: true
+                })),
+            });
         }
-    });
-    const total = await prisma.customer.count({
-        where: whereConditions,
-    });
-    return {
-        meta: {
-            total,
-            page,
-            limit,
-        },
-        data: result,
-    };
+
+        andConditions.push({
+            isDeleted: false,
+        });
+
+        const whereConditions: Prisma.CustomerWhereInput =
+            andConditions.length > 0 ? { AND: andConditions } : {};
+
+        const result = await prisma.customer.findMany({
+            where: whereConditions,
+            skip,
+            take: limit,
+            orderBy:
+                options.sortBy && options.sortOrder
+                    ? { [options.sortBy]: options.sortOrder }
+                    : {
+                        createdAt: 'desc',
+                    },
+            include: {
+                Cart: true,
+                Order: true,
+                Review: true,
+                Follow: true,
+            },
+        });
+
+        const total = await prisma.customer.count({
+            where: whereConditions,
+        });
+
+        return {
+            meta: {
+                total,
+                page,
+                limit,
+            },
+            data: result,
+        };
+    } catch (error) {
+        console.error("Error fetching customers:", error);
+        throw new Error("Failed to fetch customers");
+    }
 };
 
 
 
-// const GetByIdFrom = async (id: string): Promise<Patient | null> => {
-//   const result = await prisma.patient.findUnique({
-//     where: {
-//       id,
-//       isDeleted: false,
-//     },
-//     include: {
-//       medicalReport: true,
-//       patientHealthData: true,
-//     },
-//   });
-//   return result;
-// };
+const GetByIdFrom = async (id: string): Promise<Customer | null> => {
+    const result = await prisma.customer.findUnique({
+        where: {
+            id,
+            isDeleted: false,
+        },
+        include: {
+            Order: true,
+            Follow: true,
+            Review: true,
+            Cart : true
+        },
+    });
+    return result;
+};
 
 
 // const UpdateInto = async (id: string, payload: Partial<IPatientUpdate>): Promise<Patient | null> => {
@@ -206,5 +214,6 @@ const GetAllCustomer = async (
 // };
 
 export const CustomerServices = {
- GetAllCustomer
+    GetAllCustomer,
+    GetByIdFrom
 };
