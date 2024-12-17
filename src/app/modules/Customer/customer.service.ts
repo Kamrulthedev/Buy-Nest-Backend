@@ -1,75 +1,79 @@
-// import { Prisma, UserStatus } from '@prisma/client';
-// import { IPatientFilterRequest, IPatientUpdate } from './patient.interface';
-// import { IPagination } from '../../Interfaces/Pagination';
-// import { paginationHelper } from '../../../helpars/paginationHelper';;
-// import { prisma } from '../../../shared/SharedPrisma';
+import { Prisma } from "@prisma/client";
+import { paginationHelper } from "../../../helpars/paginationHelper";
+import { prisma } from "../../../shared/SharedPrisma";
+import { IPagination } from "../../Interfaces/Pagination";
+import { ICustomerFilterRequest } from "./customer.interface";
+import { CustomerSearchableFields } from "./customer.constent";
 
 
-// const GetAllFrom = async (
-//   filters: IPatientFilterRequest,
-//   options: IPagination,
-// ) => {
-//   const { limit, page, skip } = paginationHelper.calculatePagination(options);
-//   const { searchTerm, ...filterData } = filters;
 
-//   const andConditions = [];
+const GetAllCustomer = async (
+    filters: ICustomerFilterRequest,
+    options: IPagination,
+) => {
+    const { limit, page, skip } = paginationHelper.calculatePagination(options);
+    const { searchTerm, ...filterData } = filters;
 
-//   if (searchTerm) {
-//     andConditions.push({
-//       OR: patientSearchableFields.map(field => ({
-//         [field]: {
-//           contains: searchTerm,
-//           mode: 'insensitive',
-//         },
-//       })),
-//     });
-//   }
+    const andConditions = [];
 
-//   if (Object.keys(filterData).length > 0) {
-//     andConditions.push({
-//       AND: Object.keys(filterData).map(key => {
-//         return {
-//           [key]: {
-//             equals: (filterData as any)[key],
-//           },
-//         };
-//       }),
-//     });
-//   }
-//   andConditions.push({
-//     isDeleted: false,
-//   });
+    if (searchTerm) {
+        andConditions.push({
+            OR: CustomerSearchableFields.map(field => ({
+                [field]: {
+                    contains: searchTerm,
+                    mode: 'insensitive',
+                },
+            })),
+        });
+    }
 
-//   const whereConditions: Prisma.PatientWhereInput =
-//     andConditions.length > 0 ? { AND: andConditions } : {};
+    if (Object.keys(filterData).length > 0) {
+        andConditions.push({
+            AND: Object.keys(filterData).map(key => {
+                return {
+                    [key]: {
+                        equals: (filterData as any)[key],
+                    },
+                };
+            }),
+        });
+    }
+    andConditions.push({
+        isDeleted: false,
+    });
 
-//   const result = await prisma.patient.findMany({
-//     where: whereConditions,
-//     skip,
-//     take: limit,
-//     orderBy:
-//       options.sortBy && options.sortOrder
-//         ? { [options.sortBy]: options.sortOrder }
-//         : {
-//           createdAt: 'desc',
-//         },
-//     include: {
-//       medicalReport: true,
-//       patientHealthData: true,
-//     }
-//   });
-//   const total = await prisma.patient.count({
-//     where: whereConditions,
-//   });
-//   return {
-//     meta: {
-//       total,
-//       page,
-//       limit,
-//     },
-//     data: result,
-//   };
-// };
+    const whereConditions: Prisma.CustomerWhereInput =
+        andConditions.length > 0 ? { AND: andConditions } : {};
+
+    const result = await prisma.customer.findMany({
+        where: whereConditions,
+        skip,
+        take: limit,
+        orderBy:
+            options.sortBy && options.sortOrder
+                ? { [options.sortBy]: options.sortOrder }
+                : {
+                    createdAt: 'desc',
+                },
+        include: {
+            Cart: true,
+            Order: true,
+            Review: true,
+            Follow: true
+        }
+    });
+    const total = await prisma.customer.count({
+        where: whereConditions,
+    });
+    return {
+        meta: {
+            total,
+            page,
+            limit,
+        },
+        data: result,
+    };
+};
 
 
 
@@ -201,10 +205,6 @@
 //   });
 // };
 
-// export const PatientServices = {
-//   GetAllFrom,
-//   GetByIdFrom,
-//   UpdateInto,
-//   DeleteFrom,
-//   SoftDelete,
-// };
+export const CustomerServices = {
+ GetAllCustomer
+};

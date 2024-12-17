@@ -1,23 +1,23 @@
-// import { Request, Response } from 'express';
-// import { catchAsync } from '../../../shared/catchAsync';
-// import { pick } from '../../../shared/pick';
-// import { patientFilterableFields } from './patient.constent';
-// import sendResponse from '../../../shared/sendResponse';
-// import { PatientServices } from './patient.service';
+import { catchAsync } from "../../../shared/catchAsync";
+import { pick } from "../../../shared/pick";
+import sendResponse from "../../../shared/sendResponse";
+import { CustomerSearchableFields } from "./customer.constent";
+import { CustomerServices } from "./customer.service";
 
 
-// const GetAllFromDB = catchAsync(async (req: Request, res: Response) => {
-//   const filters = pick(req.query, patientFilterableFields);
-//   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-//   const result = await PatientServices.GetAllFrom(filters, options);
-//   sendResponse(res, {
-//     statusCode: 200,
-//     success: true,
-//     message: 'Patient retrieval successfully',
-//     meta: result.meta,
-//     data: result.data,
-//   });
-// });
+
+const GetAllCustomerDB = catchAsync(async (req, res) => {
+  const filters = pick(req.query, CustomerSearchableFields);
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+  const result = await CustomerServices.GetAllCustomer(filters, options);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Patient retrieval successfully',
+    meta: result.meta,
+    data: result.data,
+  });
+});
 
 
 // const GetByIdFromDB = catchAsync(async (req: Request, res: Response) => {
@@ -68,10 +68,7 @@
 // });
 
 
-// export const PatientControllers = {
-//   GetAllFromDB,
-//   GetByIdFromDB,
-//   UpdateIntoDB,
-//   DeleteFromDB,
-//   SoftDeleteDB
-// };
+export const CustomerControllers = {
+    GetAllCustomerDB,
+
+};
