@@ -1,6 +1,7 @@
 import { catchAsync } from "../../../shared/catchAsync";
 import { pick } from "../../../shared/pick";
 import sendResponse from "../../../shared/sendResponse";
+import { ProductFilterableFields } from "./constent";
 import { ProductsServices } from "./product.service";
 
 const CreateProductDB = catchAsync(async (req, res) => {
@@ -15,18 +16,18 @@ const CreateProductDB = catchAsync(async (req, res) => {
   
 
 
-// const GetAllShopsDB = catchAsync(async (req, res) => {
-//   const filter = pick(req.query, ShopFilterableFields);
-//   const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
-//   const result = await ShopServices.GetAllShops(filter, options);
-//   sendResponse(res, {
-//     statusCode: 200,
-//     success: true,
-//     message: "Shop Data fetched Successfully!",
-//     meta: result.meta,
-//     data: result.data,
-//   });
-// });
+const GetAllProductsDB = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ProductFilterableFields);
+  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+  const result = await ProductsServices.GetAllProducts(filter, options);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Products Data fetched Successfully!",
+    meta: result.meta,
+    data: result.data,
+  });
+});
 
 
 
@@ -43,5 +44,6 @@ const CreateProductDB = catchAsync(async (req, res) => {
 
 
 export const ProductsControllars = {
-    CreateProductDB
+    CreateProductDB,
+    GetAllProductsDB
 };

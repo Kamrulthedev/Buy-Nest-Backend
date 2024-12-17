@@ -8,12 +8,12 @@ import { ProductValidation } from "./product.validation";
 const router = express.Router();
 
 
-// router.get("/all-shops", auth(UserRole.ADMIN), ShopsControllars.GetAllShopsDB);
+router.get("/all-products", auth(UserRole.ADMIN), ProductsControllars.GetAllProductsDB);
 
-// router.get("/:id", auth(UserRole.ADMIN, UserRole.VENDOR),  ShopsControllars.GetByShopIdDB);
+// router.get("/:id", auth(UserRole.ADMIN, UserRole.VENDOR), ShopsControllars.GetByShopIdDB);
 
 
-router.post('/create-product', 
+router.post('/create-product',auth(UserRole.ADMIN, UserRole.VENDOR),
     Fileuploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
         req.body = ProductValidation.CreateProductValidation.parse(JSON.parse(req.body.data))

@@ -5,6 +5,8 @@ import { prisma } from "../../../shared/SharedPrisma";
 import { Request } from "express";
 import { UploadedFile } from "../../Interfaces/UploadedFileType";
 import { Fileuploader } from "../../../helpars/fileUploads";
+import { IProductFilterRequest } from "./product.interface";
+import { ProductSearchAvleFields } from "./constent";
 
 
 const CreateProduct = async (req: Request): Promise<Product> => {
@@ -50,77 +52,73 @@ const CreateProduct = async (req: Request): Promise<Product> => {
 };
 
 
-// const GetAllShops = async (params: IShopFilterRequest, options: IPagination) => {
-//     try {
-//         const { page, limit, skip } = paginationHelper.calculatePagination(options);
+const GetAllProducts = async (params: IProductFilterRequest, options: IPagination) => {
+    try {
+        const { page, limit, skip } = paginationHelper.calculatePagination(options);
 
-//         const { searchTram, ...filterValue } = params;
-//         const andConditions: Prisma.ShopWhereInput[] = [];  
+        const { searchTram, ...filterValue } = params;
+        const andConditions: Prisma.ProductWhereInput[] = [];
 
-//         // Search condition
-//         if (searchTram) {
-//             andConditions.push({
-//                 OR: ShopSearchAvleFields.map((field) => ({
-//                     [field]: {
-//                         contains: searchTram,
-//                         mode: "insensitive",
-//                     },
-//                 })),
-//             });
-//         }
+        // Search condition
+        if (searchTram) {
+            andConditions.push({
+                OR: ProductSearchAvleFields.map((field) => ({
+                    [field]: {
+                        contains: searchTram,
+                        mode: "insensitive",
+                    },
+                })),
+            });
+        }
 
-//         // Filter conditions
-//         if (Object.keys(filterValue).length > 0) {
-//             andConditions.push({
-//                 AND: Object.keys(filterValue).map((key) => ({
-//                     [key as keyof typeof filterValue]: {
-//                         equals: filterValue[key as keyof typeof filterValue],
-//                     },
-//                 })),
-//             });
-//         }
+        // Filter conditions
+        if (Object.keys(filterValue).length > 0) {
+            andConditions.push({
+                AND: Object.keys(filterValue).map((key) => ({
+                    [key as keyof typeof filterValue]: {
+                        equals: filterValue[key as keyof typeof filterValue],
+                    },
+                })),
+            });
+        }
 
-//         const whereCondition: Prisma.ShopWhereInput = { AND: andConditions };  // Ensure this matches Prisma.ShopWhereInput
+        const whereCondition: Prisma.ProductWhereInput = { AND: andConditions }; // Use ProductWhereInput
 
-//         // Fetch shops with related data (products, orders, followers) and count
-//         const [result, TotalCount] = await Promise.all([
-//             prisma.shop.findMany({
-//                 where: whereCondition,
-//                 skip,
-//                 take: limit,
-//                 orderBy:
-//                     options.sortBy && options.sortOrder
-//                         ? {
-//                             [options.sortBy]: options.sortOrder,
-//                         }
-//                         : {
-//                             createdAt: "desc",
-//                         },
-//                 include: {
-//                     vendor: true,
-//                     products: true,
-//                     orders: true,
-//                     followers: true,
-//                 },
-//             }),
-//             prisma.shop.count({
-//                 where: whereCondition,
-//             }),
-//         ]);
+        // Fetch products with related data and count
+        const [result, totalCount] = await Promise.all([
+            prisma.product.findMany({
+                where: whereCondition,
+                skip,
+                take: limit,
+                orderBy: options.sortBy && options.sortOrder
+                    ? {
+                        [options.sortBy]: options.sortOrder,
+                    }
+                    : {
+                        createdAt: "desc",
+                    },
+                include: {
+                    reviews: true,
+                },
+            }),
+            prisma.product.count({
+                where: whereCondition,
+            }),
+        ]);
 
-//         return {
-//             meta: {
-//                 page,
-//                 limit,
-//                 total: TotalCount,
-//             },
-//             data: result,
-//         };
-//     } catch (error) {
-//         console.error("Error fetching shops:", error);
-//         throw new Error("Failed to fetch shops");
-//     }
-// };
+        return {
+            meta: {
+                page,
+                limit,
+                total: totalCount,
+            },
+            data: result,
+        };
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        throw new Error("Failed to fetch products");
+    }
+};
 
 
 
@@ -140,7 +138,8 @@ const CreateProduct = async (req: Request): Promise<Product> => {
 
 
 export const ProductsServices = {
-    CreateProduct
+    CreateProduct,
+    GetAllProducts
 };
 
 

@@ -9,3 +9,7 @@ export interface Product {
     category: string;
     shopId: string;
 }
+
+export type IProductFilterRequest = {
+    searchTram?: string;
+    };

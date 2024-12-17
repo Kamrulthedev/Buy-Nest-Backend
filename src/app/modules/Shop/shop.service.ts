@@ -89,7 +89,10 @@ const GetByShopId = async (id: string) => {
             id
         },
         include: {
-            vendor: true
+            vendor: true,
+            products: true,
+            orders: true,
+            followers: true
         }
     });
     return result;

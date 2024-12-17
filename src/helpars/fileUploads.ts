@@ -23,6 +23,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+
 const uploadToCloudinary = async (file: UploadedFile): Promise<CloudinaryAsset | undefined> => {
     return new Promise((resolve, reject) => {
         cloudinary.uploader.upload(file.path,
