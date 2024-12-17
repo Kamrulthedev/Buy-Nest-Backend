@@ -31,19 +31,20 @@ const GetAllProductsDB = catchAsync(async (req, res) => {
 
 
 
-// const GetByShopIdDB = catchAsync(async (req, res) => {
-//     const { id } = req.params;
-//     const result = await ShopServices.GetByShopId(id);
-//     sendResponse(res, {
-//       statusCode: 200,
-//       success: true,
-//       message: "Shop Data Fatched Successfully!",
-//       data: result,
-//     });
-//   });
+const GetByProductIdDB = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await ProductsServices.GetByProductId(id);
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Procuts By Id Data Fatched Successfully!",
+      data: result,
+    });
+  });
 
 
 export const ProductsControllars = {
     CreateProductDB,
-    GetAllProductsDB
+    GetAllProductsDB,
+    GetByProductIdDB
 };

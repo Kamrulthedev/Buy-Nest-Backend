@@ -38,7 +38,7 @@ const CreateProduct = async (req: Request): Promise<Product> => {
                 price: parseFloat(price),
                 discount: discount ? parseFloat(discount) : 0.0,
                 stock: parseInt(stock, 10),
-                imageUrl: req.body.imageUrl || '', 
+                imageUrl: req.body.imageUrl || '',
                 category,
                 shopId,
             },
@@ -99,6 +99,7 @@ const GetAllProducts = async (params: IProductFilterRequest, options: IPaginatio
                     },
                 include: {
                     reviews: true,
+                    shop: true
                 },
             }),
             prisma.product.count({
@@ -123,23 +124,25 @@ const GetAllProducts = async (params: IProductFilterRequest, options: IPaginatio
 
 
 //single-get-data
-// const GetByShopId = async (id: string) => {
-//     const result = await prisma.shop.findUnique({
-//         where: {
-//             id
-//         },
-//         include: {
-//             vendor: true
-//         }
-//     });
-//     return result;
-// };
+const GetByProductId = async (id: string) => {
+    const result = await prisma.product.findUnique({
+        where: {
+            id
+        },
+        include: {
+            shop: true,
+            reviews: true
+        }
+    });
+    return result;
+};
 
 
 
 export const ProductsServices = {
     CreateProduct,
-    GetAllProducts
+    GetAllProducts,
+    GetByProductId
 };
 
 

@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get("/all-products", auth(UserRole.ADMIN), ProductsControllars.GetAllProductsDB);
 
-// router.get("/:id", auth(UserRole.ADMIN, UserRole.VENDOR), ShopsControllars.GetByShopIdDB);
+router.get("/:id", auth(UserRole.ADMIN, UserRole.VENDOR), ProductsControllars.GetByProductIdDB);
 
 
 router.post('/create-product',auth(UserRole.ADMIN, UserRole.VENDOR),
