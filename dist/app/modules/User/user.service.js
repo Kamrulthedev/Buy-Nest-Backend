@@ -91,36 +91,75 @@ const CreateAdmin = (req) => __awaiter(void 0, void 0, void 0, function* () {
 });
 //create vendor
 const CreateVendor = (req) => __awaiter(void 0, void 0, void 0, function* () {
-    const file = req.file;
-    if (file) {
-        const uploadToCloudinary = yield fileUploads_1.Fileuploader.uploadToCloudinary(file);
-        req.body.profilePhoto = uploadToCloudinary === null || uploadToCloudinary === void 0 ? void 0 : uploadToCloudinary.secure_url;
+    const file = req.files;
+    if (file && file.length >= 2) {
+        const [profilePhotoFile, logoFile] = file;
+        const profilePhotoUrl = yield fileUploads_1.Fileuploader.uploadToCloudinary(profilePhotoFile);
+        const logoUrl = yield fileUploads_1.Fileuploader.uploadToCloudinary(logoFile);
+        req.body.profilePhoto = profilePhotoUrl === null || profilePhotoUrl === void 0 ? void 0 : profilePhotoUrl.secure_url;
+        req.body.logoUrl = logoUrl === null || logoUrl === void 0 ? void 0 : logoUrl.secure_url;
+    }
+    else {
+        throw new Error("Required files are missing.");
     }
     const data = req.body;
-    const vendorCrateData = {
+    const existingUser = yield SharedPrisma_1.prisma.user.findUnique({
+        where: {
+            email: data.email,
+        },
+    });
+    if (existingUser) {
+        throw new Error("Email already exists. Please use a different email.");
+    }
+    const vendorCreateData = {
         name: data.name,
         email: data.email,
         contactNumber: data.contactNumber,
-        profilePhoto: data.profilePhoto
+        profilePhoto: data.profilePhoto,
+        address: data.address || null,
+        isDeleted: false,
+    };
+    const shopCreateData = {
+        name: data.shopName,
+        description: data.shopDescription,
+        logoUrl: data.logoUrl,
+        vendor: {
+            connect: { email: data.email },
+        },
     };
     const hashedPassword = yield bcrypt.hash(data.password, 12);
     const userData = {
+        name: data.name,
         email: data.email,
         password: hashedPassword,
-        role: client_1.UserRole.VENDOR,
-        name: data.name,
         contactNumber: data.contactNumber,
+        role: client_1.UserRole.VENDOR,
+        profilePhoto: data.profilePhoto,
+        status: client_1.UserStatus.ACTIVE,
     };
-    const result = yield SharedPrisma_1.prisma.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
-        yield transactionClient.user.create({
-            data: userData,
-        });
-        const createdVendordata = yield transactionClient.vendor.create({
-            data: vendorCrateData,
-        });
-        return createdVendordata;
-    }));
-    return result;
+    try {
+        const result = yield SharedPrisma_1.prisma.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
+            const createdUser = yield transactionClient.user.create({
+                data: userData,
+            });
+            const createdVendor = yield transactionClient.vendor.create({
+                data: vendorCreateData,
+            });
+            const createdShop = yield transactionClient.shop.create({
+                data: shopCreateData,
+            });
+            return {
+                createdUser: createdUser,
+                createdVendor: createdVendor,
+                createdShop: createdShop,
+            };
+        }));
+        return result;
+    }
+    catch (error) {
+        console.error("Error creating vendor:", error);
+        throw new Error("Failed to create vendor.");
+    }
 });
 const CreateCustomer = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const file = req.file;

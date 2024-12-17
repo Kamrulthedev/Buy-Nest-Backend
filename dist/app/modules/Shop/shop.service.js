@@ -20,19 +20,19 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdminServices = void 0;
-const admin_constent_1 = require("./admin.constent");
+exports.ShopServices = void 0;
 const paginationHelper_1 = require("../../../helpars/paginationHelper");
 const SharedPrisma_1 = require("../../../shared/SharedPrisma");
-const GetAdmins = (params, options) => __awaiter(void 0, void 0, void 0, function* () {
+const shop_constent_1 = require("./shop.constent");
+const GetAllShops = (params, options) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { page, limit, skip } = paginationHelper_1.paginationHelper.calculatePagination(options);
         const { searchTram } = params, filterValue = __rest(params, ["searchTram"]);
-        const andConditions = [];
+        const andConditions = []; // Ensure this is of type ShopWhereInput[]
         // Search condition
         if (searchTram) {
             andConditions.push({
-                OR: admin_constent_1.adminSearchAvleFields.map((field) => ({
+                OR: shop_constent_1.ShopSearchAvleFields.map((field) => ({
                     [field]: {
                         contains: searchTram,
                         mode: "insensitive",
@@ -50,12 +50,10 @@ const GetAdmins = (params, options) => __awaiter(void 0, void 0, void 0, functio
                 })),
             });
         }
-        // Soft delete condition
-        andConditions.push({ isDeleted: false });
-        const whereCondition = { AND: andConditions };
-        // Fetch admins and count
+        const whereCondition = { AND: andConditions }; // Ensure this matches Prisma.ShopWhereInput
+        // Fetch shops with related data (products, orders, followers) and count
         const [result, TotalCount] = yield Promise.all([
-            SharedPrisma_1.prisma.admin.findMany({
+            SharedPrisma_1.prisma.shop.findMany({
                 where: whereCondition,
                 skip,
                 take: limit,
@@ -66,8 +64,14 @@ const GetAdmins = (params, options) => __awaiter(void 0, void 0, void 0, functio
                     : {
                         createdAt: "desc",
                     },
+                include: {
+                    vendor: true,
+                    products: true,
+                    orders: true,
+                    followers: true,
+                },
             }),
-            SharedPrisma_1.prisma.admin.count({
+            SharedPrisma_1.prisma.shop.count({
                 where: whereCondition,
             }),
         ]);
@@ -81,61 +85,26 @@ const GetAdmins = (params, options) => __awaiter(void 0, void 0, void 0, functio
         };
     }
     catch (error) {
-        console.error("Error fetching admins:", error);
-        throw new Error("Failed to fetch admins");
+        console.error("Error fetching shops:", error);
+        throw new Error("Failed to fetch shops");
     }
 });
 //single-get-data
-const GetById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield SharedPrisma_1.prisma.admin.findUnique({
-        where: {
-            id,
-            isDeleted: false
-        },
-    });
-    return result;
-});
-//update-data
-const UpdateAdmin = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
-    yield SharedPrisma_1.prisma.admin.findUniqueOrThrow({
-        where: {
-            id,
-            isDeleted: false
-        },
-    });
-    const result = yield SharedPrisma_1.prisma.admin.update({
+const GetByShopId = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield SharedPrisma_1.prisma.shop.findUnique({
         where: {
             id
         },
-        data,
-    });
-    return result;
-});
-//delete data
-const DeleteFromAdmin = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    yield SharedPrisma_1.prisma.admin.findUniqueOrThrow({
-        where: {
-            id
+        include: {
+            vendor: true,
+            products: true,
+            orders: true,
+            followers: true
         }
     });
-    const result = yield SharedPrisma_1.prisma.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
-        const adminDeletedData = yield transactionClient.admin.delete({
-            where: {
-                id,
-            },
-        });
-        const userDeletedData = yield transactionClient.user.delete({
-            where: {
-                email: adminDeletedData.email,
-            },
-        });
-        return adminDeletedData;
-    }));
     return result;
 });
-exports.AdminServices = {
-    GetAdmins,
-    GetById,
-    UpdateAdmin,
-    DeleteFromAdmin
+exports.ShopServices = {
+    GetAllShops,
+    GetByShopId
 };

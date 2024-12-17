@@ -20,11 +20,50 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdminServices = void 0;
-const admin_constent_1 = require("./admin.constent");
+exports.ProductsServices = void 0;
 const paginationHelper_1 = require("../../../helpars/paginationHelper");
 const SharedPrisma_1 = require("../../../shared/SharedPrisma");
-const GetAdmins = (params, options) => __awaiter(void 0, void 0, void 0, function* () {
+const fileUploads_1 = require("../../../helpars/fileUploads");
+const constent_1 = require("./constent");
+const CreateProduct = (req) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const file = req.file;
+        if (file) {
+            const uploadToCloudinary = yield fileUploads_1.Fileuploader.uploadToCloudinary(file);
+            req.body.imageUrl = uploadToCloudinary === null || uploadToCloudinary === void 0 ? void 0 : uploadToCloudinary.secure_url;
+        }
+        const { name, description, price, discount, stock, category, shopId } = req.body;
+        // Basic validation
+        if (!shopId)
+            throw new Error("Shop ID is required!");
+        if (!name || !description || !price || !category || !stock)
+            throw new Error("Missing required fields!");
+        const shop = yield SharedPrisma_1.prisma.shop.findUnique({
+            where: { id: shopId },
+        });
+        if (!shop)
+            throw new Error("Shop not found!");
+        // Create the product
+        const result = yield SharedPrisma_1.prisma.product.create({
+            data: {
+                name,
+                description,
+                price: parseFloat(price),
+                discount: discount ? parseFloat(discount) : 0.0,
+                stock: parseInt(stock, 10),
+                imageUrl: req.body.imageUrl || '',
+                category,
+                shopId,
+            },
+        });
+        return result;
+    }
+    catch (error) {
+        console.error(error);
+        throw new Error("Failed to create product");
+    }
+});
+const GetAllProducts = (params, options) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { page, limit, skip } = paginationHelper_1.paginationHelper.calculatePagination(options);
         const { searchTram } = params, filterValue = __rest(params, ["searchTram"]);
@@ -32,7 +71,7 @@ const GetAdmins = (params, options) => __awaiter(void 0, void 0, void 0, functio
         // Search condition
         if (searchTram) {
             andConditions.push({
-                OR: admin_constent_1.adminSearchAvleFields.map((field) => ({
+                OR: constent_1.ProductSearchAvleFields.map((field) => ({
                     [field]: {
                         contains: searchTram,
                         mode: "insensitive",
@@ -50,12 +89,10 @@ const GetAdmins = (params, options) => __awaiter(void 0, void 0, void 0, functio
                 })),
             });
         }
-        // Soft delete condition
-        andConditions.push({ isDeleted: false });
-        const whereCondition = { AND: andConditions };
-        // Fetch admins and count
-        const [result, TotalCount] = yield Promise.all([
-            SharedPrisma_1.prisma.admin.findMany({
+        const whereCondition = { AND: andConditions }; // Use ProductWhereInput
+        // Fetch products with related data and count
+        const [result, totalCount] = yield Promise.all([
+            SharedPrisma_1.prisma.product.findMany({
                 where: whereCondition,
                 skip,
                 take: limit,
@@ -66,8 +103,12 @@ const GetAdmins = (params, options) => __awaiter(void 0, void 0, void 0, functio
                     : {
                         createdAt: "desc",
                     },
+                include: {
+                    reviews: true,
+                    shop: true
+                },
             }),
-            SharedPrisma_1.prisma.admin.count({
+            SharedPrisma_1.prisma.product.count({
                 where: whereCondition,
             }),
         ]);
@@ -75,67 +116,31 @@ const GetAdmins = (params, options) => __awaiter(void 0, void 0, void 0, functio
             meta: {
                 page,
                 limit,
-                total: TotalCount,
+                total: totalCount,
             },
             data: result,
         };
     }
     catch (error) {
-        console.error("Error fetching admins:", error);
-        throw new Error("Failed to fetch admins");
+        console.error("Error fetching products:", error);
+        throw new Error("Failed to fetch products");
     }
 });
 //single-get-data
-const GetById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield SharedPrisma_1.prisma.admin.findUnique({
-        where: {
-            id,
-            isDeleted: false
-        },
-    });
-    return result;
-});
-//update-data
-const UpdateAdmin = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
-    yield SharedPrisma_1.prisma.admin.findUniqueOrThrow({
-        where: {
-            id,
-            isDeleted: false
-        },
-    });
-    const result = yield SharedPrisma_1.prisma.admin.update({
+const GetByProductId = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield SharedPrisma_1.prisma.product.findUnique({
         where: {
             id
         },
-        data,
-    });
-    return result;
-});
-//delete data
-const DeleteFromAdmin = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    yield SharedPrisma_1.prisma.admin.findUniqueOrThrow({
-        where: {
-            id
+        include: {
+            shop: true,
+            reviews: true
         }
     });
-    const result = yield SharedPrisma_1.prisma.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
-        const adminDeletedData = yield transactionClient.admin.delete({
-            where: {
-                id,
-            },
-        });
-        const userDeletedData = yield transactionClient.user.delete({
-            where: {
-                email: adminDeletedData.email,
-            },
-        });
-        return adminDeletedData;
-    }));
     return result;
 });
-exports.AdminServices = {
-    GetAdmins,
-    GetById,
-    UpdateAdmin,
-    DeleteFromAdmin
+exports.ProductsServices = {
+    CreateProduct,
+    GetAllProducts,
+    GetByProductId
 };

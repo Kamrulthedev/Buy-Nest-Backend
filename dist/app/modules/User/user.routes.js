@@ -21,7 +21,7 @@ router.post("/create-admin", (0, auth_1.auth)(client_1.UserRole.ADMIN), fileUplo
     req.body = user_validation_1.UserValidation.createAdmin.parse(JSON.parse(req.body.data));
     return user_controllar_1.UserControllars.CreateAdminDB(req, res, next);
 });
-router.post("/create-vendor", (0, auth_1.auth)(client_1.UserRole.ADMIN), fileUploads_1.Fileuploader.upload.single('file'), (req, res, next) => {
+router.post("/create-vendor", (0, auth_1.auth)(client_1.UserRole.ADMIN), fileUploads_1.Fileuploader.upload.array('files', 2), (req, res, next) => {
     req.body = user_validation_1.UserValidation.CreateVendorValidation.parse(JSON.parse(req.body.data));
     return user_controllar_1.UserControllars.CreateVendorDB(req, res, next);
 });

@@ -8,13 +8,15 @@ const createAdmin = zod_1.z.object({
     email: zod_1.z.string({ required_error: "Email is requied!" }),
     contactNumber: zod_1.z.string({ required_error: "Contect Number is Required!" })
 });
-//Create Doctors Validation Schema
+//Create Vendor & Shop Validation Schema
 const CreateVendorValidation = zod_1.z.object({
     password: zod_1.z.string({ required_error: "Password is Requred!" }),
     name: zod_1.z.string({ required_error: "Name is required!" }),
     email: zod_1.z.string({ required_error: "Email is requied!" }),
     contactNumber: zod_1.z.string({ required_error: "Contect Number is Required!" }),
     address: zod_1.z.string().optional(),
+    shopName: zod_1.z.string({ required_error: "Shop Name is Required!" }),
+    shopDescription: zod_1.z.string({ required_error: "Shop Description is Required!" })
 });
 const CreateCustomer = zod_1.z.object({
     password: zod_1.z.string({ required_error: "Password is Requred!" }),

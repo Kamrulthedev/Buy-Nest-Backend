@@ -15,5 +15,4 @@ router.get("/admins", (0, auth_1.auth)(client_1.UserRole.ADMIN), admin_controlla
 router.get("/:id", (0, auth_1.auth)(client_1.UserRole.ADMIN), admin_controllar_1.AdminControllars.GetByIdDB);
 router.patch("/:id", (0, auth_1.auth)(client_1.UserRole.ADMIN), (0, validateRequest_1.validateRequest)(admin_validation_1.ValidationWithZod.UpdateValidation), admin_controllar_1.AdminControllars.UpdateAdminDB);
 router.delete("/:id", (0, auth_1.auth)(client_1.UserRole.ADMIN), admin_controllar_1.AdminControllars.DeleteFromAdminDB);
-router.delete("/soft/:id", (0, auth_1.auth)(client_1.UserRole.ADMIN), admin_controllar_1.AdminControllars.SoftDeleteFromAdminDB);
 exports.AdminRoutes = router;
