@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get("/all-shops", auth(UserRole.ADMIN), ShopsControllars.GetAllShopsDB);
 
-router.get("/all-shops-create-carts", auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.CUSTOMER), ShopsControllars.GetAllShopsCreateCartsDB);
+router.get("/all-shops-create-carts", ShopsControllars.GetAllShopsCreateCartsDB);
 
 router.get("/:id", auth(UserRole.ADMIN, UserRole.VENDOR),  ShopsControllars.GetByShopIdDB);
 

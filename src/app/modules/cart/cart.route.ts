@@ -7,10 +7,10 @@ import { CartControllars } from "./cart.controllar";
 const router = express.Router();
 
 
-// router.get("/all-products", ProductsControllars.GetAllProductsDB);
+router.get("/all-carts", CartControllars.AllCartsDB);
 
 // router.get("/:id", ProductsControllars.GetByProductIdDB);
-
+router.delete("/delete-cart/:id", auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.CUSTOMER), CartControllars.DelteCartDB);
 
 router.post('/create-cart', auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.CUSTOMER), CartControllars.CreateCartDB);
 

@@ -91,7 +91,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
     refreshToken,
     needPasswordChange: userData.needPasswordChange,
     userData: {
-      id: roleData.id,
+      id: userData.id,
       name: roleData.name,
       email: userData.email,
       contactNumber: roleData.contactNumber,
