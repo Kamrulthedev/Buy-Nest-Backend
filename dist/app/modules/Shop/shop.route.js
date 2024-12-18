@@ -10,5 +10,6 @@ const auth_1 = require("../../middlewares/auth");
 const shop_controlllar_1 = require("./shop.controlllar");
 const router = express_1.default.Router();
 router.get("/all-shops", (0, auth_1.auth)(client_1.UserRole.ADMIN), shop_controlllar_1.ShopsControllars.GetAllShopsDB);
+router.get("/all-shops-create-carts", shop_controlllar_1.ShopsControllars.GetAllShopsCreateCartsDB);
 router.get("/:id", (0, auth_1.auth)(client_1.UserRole.ADMIN, client_1.UserRole.VENDOR), shop_controlllar_1.ShopsControllars.GetByShopIdDB);
 exports.ShopsRoutes = router;

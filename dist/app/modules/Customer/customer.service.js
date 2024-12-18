@@ -62,7 +62,6 @@ const GetAllCustomer = (filters, options) => __awaiter(void 0, void 0, void 0, f
                     createdAt: 'desc',
                 },
             include: {
-                Cart: true,
                 Order: true,
                 Review: true,
                 Follow: true,
@@ -95,7 +94,6 @@ const GetByIdFrom = (id) => __awaiter(void 0, void 0, void 0, function* () {
             Order: true,
             Follow: true,
             Review: true,
-            Cart: true
         },
     });
     return result;

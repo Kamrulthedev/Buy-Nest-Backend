@@ -30,6 +30,15 @@ const GetAllShopsDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 
         data: result.data,
     });
 }));
+const GetAllShopsCreateCartsDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield shop_service_1.ShopServices.GetAllShopsCreateCarts();
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Shop Data Fatched Successfully!",
+        data: result,
+    });
+}));
 const GetByShopIdDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const result = yield shop_service_1.ShopServices.GetByShopId(id);
@@ -42,5 +51,6 @@ const GetByShopIdDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 
 }));
 exports.ShopsControllars = {
     GetAllShopsDB,
-    GetByShopIdDB
+    GetByShopIdDB,
+    GetAllShopsCreateCartsDB
 };

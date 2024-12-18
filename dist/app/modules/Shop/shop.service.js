@@ -89,6 +89,15 @@ const GetAllShops = (params, options) => __awaiter(void 0, void 0, void 0, funct
         throw new Error("Failed to fetch shops");
     }
 });
+const GetAllShopsCreateCarts = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield SharedPrisma_1.prisma.shop.findMany({
+        select: {
+            id: true,
+            name: true
+        }
+    });
+    return result;
+});
 //single-get-data
 const GetByShopId = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield SharedPrisma_1.prisma.shop.findUnique({
@@ -106,5 +115,6 @@ const GetByShopId = (id) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.ShopServices = {
     GetAllShops,
-    GetByShopId
+    GetByShopId,
+    GetAllShopsCreateCarts
 };

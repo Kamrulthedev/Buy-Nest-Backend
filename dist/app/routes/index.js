@@ -10,6 +10,7 @@ const vendor_route_1 = require("../modules/Vendor/vendor.route");
 const shop_route_1 = require("../modules/Shop/shop.route");
 const product_route_1 = require("../modules/Product/product.route");
 const customer_route_1 = require("../modules/Customer/customer.route");
+const cart_route_1 = require("../modules/cart/cart.route");
 const router = express_1.default.Router();
 const moduleRotes = [
     {
@@ -35,6 +36,10 @@ const moduleRotes = [
     {
         path: "/customer",
         route: customer_route_1.CustomerRoutes
+    },
+    {
+        path: "/carts",
+        route: cart_route_1.CartRoutes
     }
 ];
 moduleRotes.forEach(route => router.use(route.path, route.route));

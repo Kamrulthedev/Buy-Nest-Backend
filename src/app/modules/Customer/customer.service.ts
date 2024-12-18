@@ -56,7 +56,6 @@ const GetAllCustomer = async (
                         createdAt: 'desc',
                     },
             include: {
-                Cart: true,
                 Order: true,
                 Review: true,
                 Follow: true,
@@ -93,7 +92,6 @@ const GetByIdFrom = async (id: string): Promise<Customer | null> => {
             Order: true,
             Follow: true,
             Review: true,
-            Cart : true
         },
     });
     return result;
