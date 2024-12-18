@@ -1,28 +1,30 @@
 import { prisma } from "../../../shared/SharedPrisma";
 
 
-const CreateCart = async (data: { customerId: string }) => {
-    const { customerId } = data;
-
-    // Check if a cart already exists for the customer
+const CreateCart = async (data: { userId: string, shopId: string }) => {
+    const { userId, shopId } = data;
     const existingCart = await prisma.cart.findFirst({
-        where: { customerId: customerId },
+        where: {
+            userId: userId,
+            shopId: shopId
+        },
     });
 
-    if (existingCart) throw new Error("Cart already exists for this customer!");
+    if (existingCart) throw new Error("Cart already exists for this customer and shop!");
 
-    // Create the cart
     const result = await prisma.cart.create({
         data: {
-            customerId: customerId
+            userId: userId,
+            shopId: shopId
         },
         include: {
-            customer: true
+            shop: true
         }
     });
 
     return result;
 };
+
 
 
 

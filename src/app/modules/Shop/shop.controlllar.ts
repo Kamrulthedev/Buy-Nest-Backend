@@ -21,6 +21,17 @@ const GetAllShopsDB = catchAsync(async (req, res) => {
 
 
 
+const GetAllShopsCreateCartsDB = catchAsync(async (req, res) => {
+    const result = await ShopServices.GetAllShopsCreateCarts();
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Shop Data Fatched Successfully!",
+      data: result,
+    });
+  });
+
+
 const GetByShopIdDB = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await ShopServices.GetByShopId(id);
@@ -35,5 +46,6 @@ const GetByShopIdDB = catchAsync(async (req, res) => {
 
 export const ShopsControllars = {
     GetAllShopsDB,
-    GetByShopIdDB
+    GetByShopIdDB,
+    GetAllShopsCreateCartsDB
 };

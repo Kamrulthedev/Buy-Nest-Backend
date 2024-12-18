@@ -5,6 +5,7 @@ import { VendorsRoutes } from "../modules/Vendor/vendor.route";
 import { ShopsRoutes } from "../modules/Shop/shop.route";
 import { PorductsRoutes } from "../modules/Product/product.route";
 import { CustomerRoutes } from "../modules/Customer/customer.route";
+import { CartRoutes } from "../modules/cart/cart.route";
 
 
 
@@ -34,6 +35,10 @@ const moduleRotes = [
   {
     path: "/customer",
     route: CustomerRoutes
+  },
+  {
+    path: "/carts",
+    route: CartRoutes
   }
 ];
 

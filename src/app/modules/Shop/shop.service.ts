@@ -81,6 +81,19 @@ const GetAllShops = async (params: IShopFilterRequest, options: IPagination) => 
 };
 
 
+const GetAllShopsCreateCarts = async () => {
+    const result = await prisma.shop.findMany({
+        select: {
+            id: true,  
+            name: true
+        }
+    });
+    return result;
+};
+
+
+
+
 
 //single-get-data
 const GetByShopId = async (id: string) => {
@@ -102,5 +115,6 @@ const GetByShopId = async (id: string) => {
 
 export const ShopServices = {
     GetAllShops,
-    GetByShopId
+    GetByShopId,
+    GetAllShopsCreateCarts
 };

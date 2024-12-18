@@ -30,6 +30,8 @@ model User {
   vendor             Vendor?
   customer           Customer?
 
+  cart Cart[]
+
   @@map("users")
 }
 
@@ -64,7 +66,6 @@ model Customer {
   updatedAt     DateTime   @updatedAt
   user          User       @relation(references: [email], fields: [email])
 
-  Cart   Cart[]
   Review Review[]
   Order  Order[]
   Follow Follow[]
@@ -104,8 +105,8 @@ model Shop {
   products  Product[]
   orders    Order[]
   followers Follow[]
+  cart      Cart[]
 }
-
 
 model Product {
   id          String   @id @default(uuid())
@@ -179,13 +180,17 @@ model Review {
 }
 
 model Cart {
-  id         String   @id @default(uuid())
-  customerId String   @unique
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(uuid())
+  userId    String
+  shopId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  customer Customer   @relation(fields: [customerId], references: [id])
-  items    CartItem[]
+  user  User       @relation(fields: [userId], references: [id])
+  shop  Shop       @relation(fields: [shopId], references: [id])
+  items CartItem[]
+
+  @@unique([userId, shopId])
 }
 
 model CartItem {
@@ -239,4 +244,3 @@ enum Category {
   FURNITURE
   BABY_PRODUCTS
 }
-
