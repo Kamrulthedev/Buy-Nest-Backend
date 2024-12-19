@@ -61,7 +61,7 @@ const UpdateProductIdDB = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Update Procut By Id Successfully!",
+    message: "Update Product By Id Successfully!",
     data: result,
   });
 });
@@ -74,7 +74,7 @@ const DeleteProductIdDB = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Delete Procut By Id Successfully!",
+    message: "Delete Prodcut By Id Successfully!",
     data: result,
   });
 });

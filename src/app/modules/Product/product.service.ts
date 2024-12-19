@@ -232,19 +232,21 @@ const UpdateProductId = async (id: string, req: Request) => {
 
 
 
-
 const DeleteProductId = async (id: string) => {
-    const result = await prisma.product.findUnique({
-        where: {
-            id
-        },
-        include: {
-            shop: true,
-            reviews: true
-        }
+    const product = await prisma.product.findUniqueOrThrow({
+        where: { id }
     });
-    return result;
+
+    if (!product) {
+        throw new Error("Product not found.");
+    }
+    const result = await prisma.product.delete({
+        where: { id },
+    });
+
+    return result
 };
+
 
 
 
