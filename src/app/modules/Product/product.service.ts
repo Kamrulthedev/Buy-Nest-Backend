@@ -7,6 +7,7 @@ import { UploadedFile } from "../../Interfaces/UploadedFileType";
 import { Fileuploader } from "../../../helpars/fileUploads";
 import { IProductFilterRequest } from "./product.interface";
 import { ProductSearchAvleFields } from "./constent";
+import AppError from "../../errors/AppError";
 
 
 const CreateProduct = async (req: Request): Promise<Product> => {
@@ -123,6 +124,54 @@ const GetAllProducts = async (params: IProductFilterRequest, options: IPaginatio
 
 
 
+
+const GetAllProductsWithVendor = async (id: string, options: IPagination) => {
+    const { page, limit, skip } = paginationHelper.calculatePaginationProducts(options);
+    const shopInfo = await prisma.shop.findUniqueOrThrow({
+        where: {
+            vendorId: id
+        }
+    });
+
+    if (!shopInfo) {
+        throw new AppError(404, "This Vendor Is not Found!");
+    }
+    const total = await prisma.product.count({
+        where: {
+            shopId: shopInfo.id
+        }
+    });
+    const result = await prisma.product.findMany({
+        where: {
+            shopId: shopInfo.id
+        },
+        skip,
+        take: limit,
+        orderBy: options.sortBy && options.sortOrder
+            ? {
+                [options.sortBy]: options.sortOrder,
+            }
+            : {
+                createdAt: "desc",
+            },
+        include: {
+            reviews: true,
+            shop: true,
+        },
+    });
+
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+        },
+        data: result,
+    };
+};
+
+
+
 //single-get-data
 const GetByProductId = async (id: string) => {
     const result = await prisma.product.findUnique({
@@ -142,7 +191,8 @@ const GetByProductId = async (id: string) => {
 export const ProductsServices = {
     CreateProduct,
     GetAllProducts,
-    GetByProductId
+    GetByProductId,
+    GetAllProductsWithVendor
 };
 
 

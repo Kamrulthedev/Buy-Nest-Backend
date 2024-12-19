@@ -88,6 +88,7 @@ const GetAllShopsCreateCarts = async () => {
             name: true
         }
     });
+    console.log(result)
     return result;
 };
 

@@ -29,6 +29,18 @@ const GetAllProductsDB = catchAsync(async (req, res) => {
   });
 });
 
+const GetAllProductsWithVendorDB = catchAsync(async (req, res) => {
+  const {id} = req.params
+  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+  const result = await ProductsServices.GetAllProductsWithVendor(id, options);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Vendor Products Data fetched Successfully!",
+    data: result
+  });
+});
+
 
 
 const GetByProductIdDB = catchAsync(async (req, res) => {
@@ -46,5 +58,6 @@ const GetByProductIdDB = catchAsync(async (req, res) => {
 export const ProductsControllars = {
     CreateProductDB,
     GetAllProductsDB,
-    GetByProductIdDB
+    GetByProductIdDB,
+    GetAllProductsWithVendorDB
 };

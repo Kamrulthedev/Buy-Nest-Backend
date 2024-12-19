@@ -10,6 +10,8 @@ const router = express.Router();
 
 router.get("/all-products", ProductsControllars.GetAllProductsDB);
 
+router.get('/all-products-with-vendor/:id',  ProductsControllars.GetAllProductsWithVendorDB)
+
 router.get("/:id", ProductsControllars.GetByProductIdDB);
 
 

@@ -159,7 +159,7 @@ model OrderItem {
   id        String @id @default(uuid())
   orderId   String
   productId String
-  quantity  Int
+  quantity  Int                                                                                                                                                                                                                                                                                                                                                                                                                                                 
   price     Float
 
   order   Order   @relation(fields: [orderId], references: [id])
