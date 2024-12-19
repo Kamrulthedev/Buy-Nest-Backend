@@ -132,7 +132,6 @@ const GetAllProductsWithVendor = async (id: string, options: IPagination) => {
             vendorId: id
         }
     });
-
     if (!shopInfo) {
         throw new AppError(404, "This Vendor Is not Found!");
     }
