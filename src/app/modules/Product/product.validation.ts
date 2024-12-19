@@ -18,7 +18,19 @@ const CreateProductValidation = z.object({
 });
 
 
+const UpdateProductValidation = z.object({
+    name: z.string().optional(),
+    imageUrl: z.string().optional(),
+    stock: z.number().optional(),
+    discount: z.number().optional(),
+    price: z.number().optional(),
+    description: z.string().optional(),
+    category: z.enum(categoryValues).optional(),
+});
+
+
 export const ProductValidation = {
     CreateProductValidation,
+    UpdateProductValidation
 
 };

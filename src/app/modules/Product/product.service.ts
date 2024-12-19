@@ -124,7 +124,6 @@ const GetAllProducts = async (params: IProductFilterRequest, options: IPaginatio
 
 
 
-
 const GetAllProductsWithVendor = async (id: string, options: IPagination) => {
     console.log(id)
     const { page, limit, skip } = paginationHelper.calculatePaginationProducts(options);
@@ -188,11 +187,74 @@ const GetByProductId = async (id: string) => {
 
 
 
+const UpdateProductId = async (id: string, req: Request) => {
+    const file = req?.file as UploadedFile;
+
+    if (file) {
+        try {
+            const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
+            if (uploadToCloudinary?.secure_url) {
+                req.body.imageUrl = uploadToCloudinary.secure_url;
+            } else {
+                throw new Error("Failed to upload image to Cloudinary.");
+            }
+        } catch (error) {
+            console.error("Error uploading file to Cloudinary:", error);
+            throw error;
+        }
+    }
+
+    try {
+        const currentProduct = await prisma.product.findUnique({
+            where: { id },
+        });
+        if (!currentProduct) {
+            throw new Error("Product not found.");
+        }
+        const updatedProduct = await prisma.product.update({
+            where: { id },
+            data: req.body,
+        });
+        const isUpdated = Object.keys(req.body).some(
+            (key) => currentProduct[key as keyof typeof currentProduct] !== updatedProduct[key as keyof typeof updatedProduct]
+        );
+
+        if (!isUpdated) {
+            return { message: "No changes detected. Product was not updated." };
+        }
+
+        return updatedProduct;
+    } catch (error) {
+        console.error("Error updating product:", error);
+        throw error;
+    }
+};
+
+
+
+
+const DeleteProductId = async (id: string) => {
+    const result = await prisma.product.findUnique({
+        where: {
+            id
+        },
+        include: {
+            shop: true,
+            reviews: true
+        }
+    });
+    return result;
+};
+
+
+
 export const ProductsServices = {
     CreateProduct,
     GetAllProducts,
     GetByProductId,
-    GetAllProductsWithVendor
+    GetAllProductsWithVendor,
+    UpdateProductId,
+    DeleteProductId
 };
 
 
