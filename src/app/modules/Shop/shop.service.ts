@@ -94,8 +94,6 @@ const GetAllShopsCreateCarts = async () => {
 
 
 
-
-
 //single-get-data
 const GetByShopId = async (id: string) => {
     const result = await prisma.shop.findUnique({
@@ -114,8 +112,26 @@ const GetByShopId = async (id: string) => {
 
 
 
+const GetByWithVendorShopId = async (id: string) => {
+    const result = await prisma.shop.findUnique({
+        where: {
+            vendorId: id
+        },
+        include: {
+            vendor: true,
+            products: true,
+            orders: true,
+            followers: true
+        }
+    });
+    return result;
+};
+
+
+
 export const ShopServices = {
     GetAllShops,
     GetByShopId,
+    GetByWithVendorShopId,
     GetAllShopsCreateCarts
 };

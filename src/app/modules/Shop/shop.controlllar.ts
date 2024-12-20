@@ -44,8 +44,27 @@ const GetByShopIdDB = catchAsync(async (req, res) => {
   });
 
 
+const GetBywithVendorShopIdDB = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await ShopServices.GetByWithVendorShopId(id);
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Shop With Vendor Data Fatched Successfully!",
+      data: result,
+    });
+  });
+
+
+
+  const UdpateShop = async(id: string, data: any) =>{
+    
+  }
+
+
 export const ShopsControllars = {
     GetAllShopsDB,
     GetByShopIdDB,
+    GetBywithVendorShopIdDB,
     GetAllShopsCreateCartsDB
 };

@@ -125,13 +125,13 @@ const GetAllProducts = async (params: IProductFilterRequest, options: IPaginatio
 
 
 const GetAllProductsWithVendor = async (id: string, options: IPagination) => {
-    console.log(id)
     const { page, limit, skip } = paginationHelper.calculatePaginationProducts(options);
     const shopInfo = await prisma.shop.findUniqueOrThrow({
         where: {
             vendorId: id
         }
     });
+
     if (!shopInfo) {
         throw new AppError(404, "This Vendor Is not Found!");
     }
