@@ -188,46 +188,37 @@ const GetByProductId = async (id: string) => {
 
 
 const UpdateProductId = async (id: string, req: Request) => {
-    const file = req?.file as UploadedFile;
+    // const file = req?.body?.file as UploadedFile;
 
-    if (file) {
-        try {
-            const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
-            if (uploadToCloudinary?.secure_url) {
-                req.body.imageUrl = uploadToCloudinary.secure_url;
-            } else {
-                throw new Error("Failed to upload image to Cloudinary.");
-            }
-        } catch (error) {
-            console.error("Error uploading file to Cloudinary:", error);
-            throw error;
-        }
-    }
+    // if (file) {
+    //     try {
+    //         const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
+    //         if (uploadToCloudinary?.secure_url) {
+    //             req.body.data.imageUrl = uploadToCloudinary.secure_url;
+    //         } else {
+    //             throw new Error("Failed to upload image to Cloudinary.");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error uploading file to Cloudinary:", error);
+    //         throw error;
+    //     }
+    // }
+    console.log(req.body.data)
+    const updatedProduct = await prisma.product.update({
+        where: { id },
+        data: {
+            name: req?.body?.data?.name,
+            stock: req?.body?.data?.stock,
+            discount: req?.body?.data?.discount,
+            price: req?.body?.data?.price,
+            description: req?.body?.data?.description,
+            category: req?.body?.data?.category
+        },
+    });
+console.log(updatedProduct)
 
-    try {
-        const currentProduct = await prisma.product.findUnique({
-            where: { id },
-        });
-        if (!currentProduct) {
-            throw new Error("Product not found.");
-        }
-        const updatedProduct = await prisma.product.update({
-            where: { id },
-            data: req.body,
-        });
-        const isUpdated = Object.keys(req.body).some(
-            (key) => currentProduct[key as keyof typeof currentProduct] !== updatedProduct[key as keyof typeof updatedProduct]
-        );
+    return updatedProduct;
 
-        if (!isUpdated) {
-            return { message: "No changes detected. Product was not updated." };
-        }
-
-        return updatedProduct;
-    } catch (error) {
-        console.error("Error updating product:", error);
-        throw error;
-    }
 };
 
 
