@@ -96,6 +96,7 @@ const GetAllShopsCreateCarts = () => __awaiter(void 0, void 0, void 0, function*
             name: true
         }
     });
+    console.log(result);
     return result;
 });
 //single-get-data

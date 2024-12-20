@@ -15,6 +15,16 @@ const CreateProductValidation = zod_1.z.object({
     description: zod_1.z.string({ required_error: "Description is required!" }),
     category: zod_1.z.enum(categoryValues, { required_error: "Category is required!" }),
 });
+const UpdateProductValidation = zod_1.z.object({
+    name: zod_1.z.string().optional(),
+    imageUrl: zod_1.z.string().optional(),
+    stock: zod_1.z.number().optional(),
+    discount: zod_1.z.number().optional(),
+    price: zod_1.z.number().optional(),
+    description: zod_1.z.string().optional(),
+    category: zod_1.z.enum(categoryValues).optional(),
+});
 exports.ProductValidation = {
     CreateProductValidation,
+    UpdateProductValidation
 };

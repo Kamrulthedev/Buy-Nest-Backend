@@ -203,7 +203,6 @@ const UpdateProductId = async (id: string, req: Request) => {
     //         throw error;
     //     }
     // }
-    console.log(req.body.data)
     const updatedProduct = await prisma.product.update({
         where: { id },
         data: {
@@ -215,7 +214,6 @@ const UpdateProductId = async (id: string, req: Request) => {
             category: req?.body?.data?.category
         },
     });
-console.log(updatedProduct)
 
     return updatedProduct;
 
@@ -237,7 +235,6 @@ const DeleteProductId = async (id: string) => {
 
     return result
 };
-
 
 
 

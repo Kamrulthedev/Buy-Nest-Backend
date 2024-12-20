@@ -15,7 +15,7 @@ router.get('/all-products-with-vendor/:id', ProductsControllars.GetAllProductsWi
 router.get("/:id", ProductsControllars.GetByProductIdDB);
 
 
-router.delete("/delete-product/:id", ProductsControllars.DeleteProductIdDB);
+router.delete("/delete-product/:id", auth(UserRole.ADMIN, UserRole.VENDOR), ProductsControllars.DeleteProductIdDB);
 
 
 router.post('/create-product', auth(UserRole.ADMIN, UserRole.VENDOR),
@@ -26,21 +26,9 @@ router.post('/create-product', auth(UserRole.ADMIN, UserRole.VENDOR),
     });
 
 
-// router.patch('/update-product/:id',
-//     Fileuploader.upload.single('file'),
-//     (req: Request, res: Response, next: NextFunction) => {
-//         console.log(req.body.data)
-//         req.body.data = JSON.parse(req.body.data);    
-//         console.log(req.body.data)    
-//         return ProductsControllars.UpdateProductIdDB(req, res, next)
-//     });
-
-
 router.patch('/update-product/:id',
     (req: Request, res: Response, next: NextFunction) => {
-
         req.body.data = JSON.parse(req.body.data);    
-
         return ProductsControllars.UpdateProductIdDB(req, res, next)
     });
 

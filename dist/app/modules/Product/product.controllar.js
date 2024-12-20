@@ -39,6 +39,17 @@ const GetAllProductsDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(vo
         data: result.data,
     });
 }));
+const GetAllProductsWithVendorDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const options = (0, pick_1.pick)(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+    const result = yield product_service_1.ProductsServices.GetAllProductsWithVendor(id, options);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Vendor Products Data fetched Successfully!",
+        data: result
+    });
+}));
 const GetByProductIdDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const result = yield product_service_1.ProductsServices.GetByProductId(id);
@@ -49,8 +60,31 @@ const GetByProductIdDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(vo
         data: result,
     });
 }));
+const UpdateProductIdDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield product_service_1.ProductsServices.UpdateProductId(id, req);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Update Product By Id Successfully!",
+        data: result,
+    });
+}));
+const DeleteProductIdDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield product_service_1.ProductsServices.DeleteProductId(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Delete Prodcut By Id Successfully!",
+        data: result,
+    });
+}));
 exports.ProductsControllars = {
     CreateProductDB,
     GetAllProductsDB,
-    GetByProductIdDB
+    GetByProductIdDB,
+    GetAllProductsWithVendorDB,
+    DeleteProductIdDB,
+    UpdateProductIdDB
 };
