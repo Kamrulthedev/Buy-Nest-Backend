@@ -7,7 +7,6 @@ import { ShopSearchAvleFields } from "./shop.constent";
 
 
 
-
 const GetAllShops = async (params: IShopFilterRequest, options: IPagination) => {
     try {
         const { page, limit, skip } = paginationHelper.calculatePagination(options);
@@ -84,7 +83,7 @@ const GetAllShops = async (params: IShopFilterRequest, options: IPagination) => 
 const GetAllShopsCreateCarts = async () => {
     const result = await prisma.shop.findMany({
         select: {
-            id: true,  
+            id: true,
             name: true
         }
     });
@@ -121,7 +120,7 @@ const GetByWithVendorShopId = async (id: string) => {
             vendor: true,
             products: true,
             orders: true,
-            followers: true
+            followers: true,
         }
     });
     return result;
@@ -129,9 +128,32 @@ const GetByWithVendorShopId = async (id: string) => {
 
 
 
+const UpdateShop = async (id: string, req: any) => {
+    const data = req?.body;
+
+    const shopInfo = await prisma.shop.findUniqueOrThrow({
+        where: {
+            id: id
+        }
+    });
+
+    const result = await prisma.shop.update({
+        where: {
+            id: shopInfo?.id
+        },
+        data: {
+            name: data?.name,
+            description: data?.description
+        }
+    });
+    return result
+};
+
+
 export const ShopServices = {
     GetAllShops,
     GetByShopId,
     GetByWithVendorShopId,
-    GetAllShopsCreateCarts
+    GetAllShopsCreateCarts,
+    UpdateShop
 };
