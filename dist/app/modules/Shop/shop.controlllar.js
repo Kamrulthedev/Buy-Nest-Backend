@@ -49,8 +49,30 @@ const GetByShopIdDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 
         data: result,
     });
 }));
+const GetBywithVendorShopIdDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield shop_service_1.ShopServices.GetByWithVendorShopId(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Shop With Vendor Data Fatched Successfully!",
+        data: result,
+    });
+}));
+const UdpateShopDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield shop_service_1.ShopServices.UpdateShop(id, req);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Shop Update Successfully!",
+        data: result,
+    });
+}));
 exports.ShopsControllars = {
     GetAllShopsDB,
     GetByShopIdDB,
-    GetAllShopsCreateCartsDB
+    GetBywithVendorShopIdDB,
+    GetAllShopsCreateCartsDB,
+    UdpateShopDB
 };

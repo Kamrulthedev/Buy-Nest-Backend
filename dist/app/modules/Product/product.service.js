@@ -131,7 +131,6 @@ const GetAllProducts = (params, options) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 const GetAllProductsWithVendor = (id, options) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(id);
     const { page, limit, skip } = paginationHelper_1.paginationHelper.calculatePaginationProducts(options);
     const shopInfo = yield SharedPrisma_1.prisma.shop.findUniqueOrThrow({
         where: {

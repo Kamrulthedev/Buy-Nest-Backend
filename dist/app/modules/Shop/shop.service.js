@@ -114,8 +114,42 @@ const GetByShopId = (id) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return result;
 });
+const GetByWithVendorShopId = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield SharedPrisma_1.prisma.shop.findUnique({
+        where: {
+            vendorId: id
+        },
+        include: {
+            vendor: true,
+            products: true,
+            orders: true,
+            followers: true,
+        }
+    });
+    return result;
+});
+const UpdateShop = (id, req) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = req === null || req === void 0 ? void 0 : req.body;
+    const shopInfo = yield SharedPrisma_1.prisma.shop.findUniqueOrThrow({
+        where: {
+            id: id
+        }
+    });
+    const result = yield SharedPrisma_1.prisma.shop.update({
+        where: {
+            id: shopInfo === null || shopInfo === void 0 ? void 0 : shopInfo.id
+        },
+        data: {
+            name: data === null || data === void 0 ? void 0 : data.name,
+            description: data === null || data === void 0 ? void 0 : data.description
+        }
+    });
+    return result;
+});
 exports.ShopServices = {
     GetAllShops,
     GetByShopId,
-    GetAllShopsCreateCarts
+    GetByWithVendorShopId,
+    GetAllShopsCreateCarts,
+    UpdateShop
 };
