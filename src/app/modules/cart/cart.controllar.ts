@@ -23,6 +23,9 @@ const DelteCartDB = catchAsync(async (req, res) => {
         data: result,
     });
 });
+
+
+
 const AllCartsDB = catchAsync(async (req, res) => {
     const result = await CartssServices.AllCartsGet();
     sendResponse(res, {
@@ -34,8 +37,21 @@ const AllCartsDB = catchAsync(async (req, res) => {
 });
 
 
+const UserCartsDB = catchAsync(async (req, res) => {
+    const {id} = req.params;
+    const result = await CartssServices.USerCartsGet(id as string);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "USer Carts Get Successfully!",
+        data: result,
+    });
+});
+
+
 export const CartControllars = {
     CreateCartDB,
     DelteCartDB,
-    AllCartsDB
+    AllCartsDB,
+    UserCartsDB
 };

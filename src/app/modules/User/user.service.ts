@@ -92,8 +92,8 @@ const CreateVendor = async (req: Request): Promise<CreateVendorResponse> => {
     email: data.email,
     contactNumber: data.contactNumber,
     profilePhoto: data.profilePhoto,
-    address: data.address || null, 
-    isDeleted: false, 
+    address: data.address || null,
+    isDeleted: false,
   };
 
   const shopCreateData = {
@@ -112,7 +112,7 @@ const CreateVendor = async (req: Request): Promise<CreateVendorResponse> => {
     email: data.email,
     password: hashedPassword,
     contactNumber: data.contactNumber,
-    role: UserRole.VENDOR, 
+    role: UserRole.VENDOR,
     profilePhoto: data.profilePhoto,
     status: UserStatus.ACTIVE,
   };
@@ -132,7 +132,7 @@ const CreateVendor = async (req: Request): Promise<CreateVendorResponse> => {
       });
 
       return {
-        createdUser: createdUser, 
+        createdUser: createdUser,
         createdVendor: createdVendor,
         createdShop: createdShop,
       };
@@ -147,7 +147,7 @@ const CreateVendor = async (req: Request): Promise<CreateVendorResponse> => {
 
 
 
-const CreateCustomer = async (req: Request): Promise<CreateCustomerResponse> => {
+const CreateCustomer = async (req: Request): Promise<any> => {
   const file = req.file as Express.Multer.File;
   if (file) {
     try {
@@ -192,22 +192,37 @@ const CreateCustomer = async (req: Request): Promise<CreateCustomerResponse> => 
         data: customerCreateData,
       });
 
-      return createdCustomerData;
+      return { createdCustomerData, createdUser };
     });
 
     // Create token
     const accessToken = generateToken(
       {
-        email: result.email,
-        role: result.role,
+        email: result.createdCustomerData.email,
+        role: result.createdCustomerData.role,
       },
       config.jwt_access_token as string,
       config.jwt_access_token_expires_in as string
     );
 
     return {
-      result,
       accessToken,
+      result: {
+        id: result.createdUser.id,
+        userId: result.createdCustomerData.id,
+        name: result.createdCustomerData.name,
+        email: result.createdCustomerData.email,
+        contactNumber: result.createdCustomerData.contactNumber,
+        role: result.createdUser.role,
+        profilePhoto: result.createdUser.profilePhoto,
+        address: result.createdCustomerData.address,
+        needPasswordChange: result.createdUser.needPasswordChange,
+        status: result.createdUser.status,
+        isDeleted: result.createdCustomerData.isDeleted,
+        createdAt: result.createdUser.createdAt,
+        updatedAt: result.createdUser.updatedAt
+      }
+
     };
   } catch (error) {
     throw new Error('Error creating customer: ');
