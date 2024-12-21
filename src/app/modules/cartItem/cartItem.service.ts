@@ -29,7 +29,27 @@ const CreateCartItem = async (data: { productId: string; cartId: string }) => {
     return result;
 };
 
+const GetUserCartItems = async (id: string) => {
+    const result = await prisma.cartItem.findMany({
+        where: {
+            cartId: id,
+        },
+        include: {
+            product: true,
+            cart: true
+        }
+    });
+
+    if (result.length === 0) {
+        console.log("No items found for this cart.");
+    }
+
+    return result;
+};
+
+
 
 export const CartItemServices = {
-    CreateCartItem
+    CreateCartItem,
+    GetUserCartItems
 }

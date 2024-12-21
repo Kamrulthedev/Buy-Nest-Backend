@@ -15,6 +15,19 @@ const CreateCartItemDB = catchAsync(async (req, res) => {
 });
 
 
+const GetUserCartItemDB = catchAsync(async (req, res) => {
+    const {id} = req?.params;
+    const result = await CartItemServices.GetUserCartItems(id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "User Cart Items fatched Successfully!",
+        data: result,
+    });
+});
+
+
 export const CartItemControllers = {
-    CreateCartItemDB
+    CreateCartItemDB,
+    GetUserCartItemDB
 };
