@@ -30,7 +30,8 @@ model User {
   vendor             Vendor?
   customer           Customer?
 
-  cart Cart[]
+  cart  Cart[]
+  Order Order[]
 
   @@map("users")
 }
@@ -147,19 +148,21 @@ model Order {
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 
-  customerId String
-  shopId     String
+  userId String
+  shopId String
 
-  customer Customer    @relation(fields: [customerId], references: [id])
-  shop     Shop        @relation(fields: [shopId], references: [id])
-  items    OrderItem[]
+  user       User        @relation(fields: [userId], references: [id])
+  shop       Shop        @relation(fields: [shopId], references: [id])
+  items      OrderItem[]
+  Customer   Customer?   @relation(fields: [customerId], references: [id])
+  customerId String?
 }
 
 model OrderItem {
   id        String @id @default(uuid())
   orderId   String
   productId String
-  quantity  Int                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+  quantity  Int
   price     Float
 
   order   Order   @relation(fields: [orderId], references: [id])
