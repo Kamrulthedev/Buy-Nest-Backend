@@ -44,8 +44,19 @@ const AllCartsDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, 
         data: result,
     });
 }));
+const UserCartsDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield cart_service_1.CartssServices.USerCartsGet(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "USer Carts Get Successfully!",
+        data: result,
+    });
+}));
 exports.CartControllars = {
     CreateCartDB,
     DelteCartDB,
-    AllCartsDB
+    AllCartsDB,
+    UserCartsDB
 };

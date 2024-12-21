@@ -11,6 +11,7 @@ const cart_controllar_1 = require("./cart.controllar");
 const router = express_1.default.Router();
 router.get("/all-carts", cart_controllar_1.CartControllars.AllCartsDB);
 // router.get("/:id", ProductsControllars.GetByProductIdDB);
+router.get("/user-carts/:id", cart_controllar_1.CartControllars.UserCartsDB);
 router.delete("/delete-cart/:id", (0, auth_1.auth)(client_1.UserRole.ADMIN, client_1.UserRole.VENDOR, client_1.UserRole.CUSTOMER), cart_controllar_1.CartControllars.DelteCartDB);
 router.post('/create-cart', (0, auth_1.auth)(client_1.UserRole.ADMIN, client_1.UserRole.VENDOR, client_1.UserRole.CUSTOMER), cart_controllar_1.CartControllars.CreateCartDB);
 exports.CartRoutes = router;

@@ -199,16 +199,30 @@ const CreateCustomer = (req) => __awaiter(void 0, void 0, void 0, function* () {
             const createdCustomerData = yield transactionClient.customer.create({
                 data: customerCreateData,
             });
-            return createdCustomerData;
+            return { createdCustomerData, createdUser };
         }));
         // Create token
         const accessToken = (0, JwtHelpars_1.generateToken)({
-            email: result.email,
-            role: result.role,
+            email: result.createdCustomerData.email,
+            role: result.createdCustomerData.role,
         }, config_1.default.jwt_access_token, config_1.default.jwt_access_token_expires_in);
         return {
-            result,
             accessToken,
+            result: {
+                id: result.createdUser.id,
+                userId: result.createdCustomerData.id,
+                name: result.createdCustomerData.name,
+                email: result.createdCustomerData.email,
+                contactNumber: result.createdCustomerData.contactNumber,
+                role: result.createdUser.role,
+                profilePhoto: result.createdUser.profilePhoto,
+                address: result.createdCustomerData.address,
+                needPasswordChange: result.createdUser.needPasswordChange,
+                status: result.createdUser.status,
+                isDeleted: result.createdCustomerData.isDeleted,
+                createdAt: result.createdUser.createdAt,
+                updatedAt: result.createdUser.updatedAt
+            }
         };
     }
     catch (error) {

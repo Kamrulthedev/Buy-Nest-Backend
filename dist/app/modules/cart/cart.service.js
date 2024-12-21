@@ -13,23 +13,6 @@ exports.CartssServices = void 0;
 const SharedPrisma_1 = require("../../../shared/SharedPrisma");
 const CreateCart = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, shopId } = data;
-    // Validate userId exists
-    const userExists = yield SharedPrisma_1.prisma.user.findUniqueOrThrow({
-        where: {
-            id: userId
-        }
-    });
-    if (!userExists) {
-        throw new Error("Invalid userId: User does not exist");
-    }
-    // Validate shopId exists
-    const shopExists = yield SharedPrisma_1.prisma.shop.findUnique({
-        where: { id: shopId },
-    });
-    if (!shopExists) {
-        throw new Error("Invalid shopId: Shop does not exist");
-    }
-    // Check for an existing cart for the same user and shop
     const existingCart = yield SharedPrisma_1.prisma.cart.findFirst({
         where: {
             userId: userId,
@@ -71,8 +54,21 @@ const AllCartsGet = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield SharedPrisma_1.prisma.cart.findMany();
     return result;
 });
+const USerCartsGet = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield SharedPrisma_1.prisma.cart.findMany({
+        where: {
+            userId: id,
+        },
+        include: {
+            shop: true,
+            user: true
+        }
+    });
+    return result;
+});
 exports.CartssServices = {
     CreateCart,
     DeleteCart,
-    AllCartsGet
+    AllCartsGet,
+    USerCartsGet
 };
