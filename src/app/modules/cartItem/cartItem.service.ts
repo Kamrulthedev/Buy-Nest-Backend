@@ -1,4 +1,5 @@
 import { prisma } from "../../../shared/SharedPrisma";
+import AppError from "../../errors/AppError";
 
 
 
@@ -49,7 +50,32 @@ const GetUserCartItems = async (id: string) => {
 
 
 
+const DeleteCartItem = async (id: string) => {
+    try {
+        await prisma.cartItem.findFirstOrThrow({
+            where: {
+                id: id,
+            },
+        });
+
+        const result = await prisma.cartItem.delete({
+            where: {
+                id: id,
+            },
+        });
+
+        return result;
+    } catch (error : any) {
+        if (error.name === 'NotFoundError') {
+            throw new AppError(404, "Cart item with the provided ID not found.");
+        }
+        throw new AppError(500, "An unexpected error occurred.");
+    }
+};
+
+
 export const CartItemServices = {
     CreateCartItem,
-    GetUserCartItems
+    GetUserCartItems,
+    DeleteCartItem
 }

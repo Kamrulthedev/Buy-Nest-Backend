@@ -13,10 +13,12 @@ const router = express.Router();
 
 router.get("/user-cart-items/:id",  CartItemControllers.GetUserCartItemDB);
 
-// router.delete("/delete-cart/:id", auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.CUSTOMER), CartControllars.DelteCartDB);
-// auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.CUSTOMER)
 
-router.post('/create-cart-item', CartItemControllers.CreateCartItemDB);
+router.delete("/delete-cart-item/:id", auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.CUSTOMER), CartItemControllers.DeleteCartItemDB);
+
+
+
+router.post('/create-cart-item', auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.CUSTOMER), CartItemControllers.CreateCartItemDB);
 
 
 export const CartItemsRoutes = router;
