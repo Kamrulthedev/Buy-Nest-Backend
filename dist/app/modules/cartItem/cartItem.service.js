@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CartItemServices = void 0;
 const SharedPrisma_1 = require("../../../shared/SharedPrisma");
+const AppError_1 = __importDefault(require("../../errors/AppError"));
 const CreateCartItem = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const { productId, cartId } = data;
     const existingCart = yield SharedPrisma_1.prisma.cartItem.findFirst({
@@ -50,7 +54,29 @@ const GetUserCartItems = (id) => __awaiter(void 0, void 0, void 0, function* () 
     }
     return result;
 });
+const DeleteCartItem = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield SharedPrisma_1.prisma.cartItem.findFirstOrThrow({
+            where: {
+                id: id,
+            },
+        });
+        const result = yield SharedPrisma_1.prisma.cartItem.delete({
+            where: {
+                id: id,
+            },
+        });
+        return result;
+    }
+    catch (error) {
+        if (error.name === 'NotFoundError') {
+            throw new AppError_1.default(404, "Cart item with the provided ID not found.");
+        }
+        throw new AppError_1.default(500, "An unexpected error occurred.");
+    }
+});
 exports.CartItemServices = {
     CreateCartItem,
-    GetUserCartItems
+    GetUserCartItems,
+    DeleteCartItem
 };

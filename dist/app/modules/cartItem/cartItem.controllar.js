@@ -35,7 +35,18 @@ const GetUserCartItemDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(v
         data: result,
     });
 }));
+const DeleteCartItemDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req === null || req === void 0 ? void 0 : req.params;
+    const result = yield cartItem_service_1.CartItemServices.DeleteCartItem(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Delete Cart Item Successfully!",
+        data: result,
+    });
+}));
 exports.CartItemControllers = {
     CreateCartItemDB,
-    GetUserCartItemDB
+    GetUserCartItemDB,
+    DeleteCartItemDB
 };
