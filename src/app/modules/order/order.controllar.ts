@@ -3,8 +3,6 @@ import sendResponse from "../../../shared/sendResponse";
 import { OrdersServices } from "./order.service";
 
 
-
-
 const CreateOrderDB = catchAsync(async (req, res) => {
     const result = await OrdersServices.CreateOrder(req.body);
     sendResponse(res, {
@@ -16,18 +14,19 @@ const CreateOrderDB = catchAsync(async (req, res) => {
 });
 
 
-// const GetUserCartItemDB = catchAsync(async (req, res) => {
-//     const {id} = req?.params;
-//     const result = await CartItemServices.GetUserCartItems(id);
-//     sendResponse(res, {
-//         statusCode: 200,
-//         success: true,
-//         message: "User Cart Items fatched Successfully!",
-//         data: result,
-//     });
-// });
+const GetUserOrderDB = catchAsync(async (req, res) => {
+    const {id} = req?.params;
+    const result = await OrdersServices.GetUserOrders(id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "User Orders fatched Successfully!",
+        data: result,
+    });
+});
 
 
 export const OrderControllers = {
     CreateOrderDB,
+    GetUserOrderDB
 };

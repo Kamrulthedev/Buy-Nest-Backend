@@ -11,7 +11,7 @@ const router = express.Router();
 
 // // router.get("/:id", ProductsControllars.GetByProductIdDB);
 
-router.get("/user-cart-items/:id",  );
+router.get("/user-cart/:id",  OrderControllers.GetUserOrderDB);
 
 // router.delete("/delete-cart/:id", auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.CUSTOMER), CartControllars.DelteCartDB);
 // auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.CUSTOMER)

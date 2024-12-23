@@ -16,18 +16,19 @@ const CreateOrderItemDB = catchAsync(async (req, res) => {
 });
 
 
-// const GetUserCartItemDB = catchAsync(async (req, res) => {
-//     const {id} = req?.params;
-//     const result = await CartItemServices.GetUserCartItems(id);
-//     sendResponse(res, {
-//         statusCode: 200,
-//         success: true,
-//         message: "User Cart Items fatched Successfully!",
-//         data: result,
-//     });
-// });
+const GetUserOrdersItemDB = catchAsync(async (req, res) => {
+    const {id} = req?.params;
+    const result = await OrderItemServices.GetUserOrdersItems(id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "User Orders Items fatched Successfully!",
+        data: result,
+    });
+});
 
 
 export const OrderItemControllers = {
     CreateOrderItemDB,
+    GetUserOrdersItemDB
 };

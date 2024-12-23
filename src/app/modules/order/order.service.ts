@@ -47,26 +47,27 @@ const CreateOrder = async (data: TOrderData): Promise<any> => {
 
 
 
-// const GetUserCartItems = async (id: string) => {
-//     const result = await prisma.cartItem.findMany({
-//         where: {
-//             cartId: id,
-//         },
-//         include: {
-//             product: true,
-//             cart: true
-//         }
-//     });
+const GetUserOrders = async (id: string) => {
+    const result = await prisma.order.findMany({
+        where: {
+            userId: id,
+        },
+        include: {
+            shop: true,
+            items: true
+        }
+    });
 
-//     if (result.length === 0) {
-//         console.log("No items found for this cart.");
-//     }
+    if (result.length === 0) {
+        console.log("No items found for this cart.");
+    }
 
-//     return result;
-// };
+    return result;
+};
 
 
 
 export const OrdersServices = {
     CreateOrder,
+    GetUserOrders
 };
