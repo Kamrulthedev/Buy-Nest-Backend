@@ -11,17 +11,6 @@ const CreateOrder = async (data: TOrderData): Promise<any> => {
     const { TotalPrice, userId, shopId, cardId } = data;
 
     try {
-        const existingOrder = await prisma.order.findFirst({
-            where: {
-                shopId,
-                userId,
-            },
-        });
-
-        if (existingOrder) {
-            throw new Error("This order already exists.");
-        }
-
         const numericTotalPrice = parseFloat(TotalPrice);
 
         if (isNaN(numericTotalPrice)) {

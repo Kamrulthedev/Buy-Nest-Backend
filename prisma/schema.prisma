@@ -68,7 +68,6 @@ model Customer {
   user          User       @relation(references: [email], fields: [email])
 
   Review Review[]
-  Order  Order[]
   Follow Follow[]
 }
 
@@ -154,8 +153,6 @@ model Order {
   user       User        @relation(fields: [userId], references: [id])
   shop       Shop        @relation(fields: [shopId], references: [id])
   items      OrderItem[]
-  Customer   Customer?   @relation(fields: [customerId], references: [id])
-  customerId String?
 }
 
 model OrderItem {
