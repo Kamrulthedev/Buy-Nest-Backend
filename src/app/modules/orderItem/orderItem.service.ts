@@ -11,12 +11,6 @@ const CreateOrderItem = async (data: TOrderItemData): Promise<any> => {
     const { price, quantity, productId, orderId } = data;
 
     try {
-        // const numericTotalPrice = parseFloat(price);
-
-        // if (isNaN(numericTotalPrice)) {
-        //     throw new Error("Invalid TotalPrice value. It must be a valid number.");
-        // }
-
         // Create the new order
         const result = await prisma.orderItem.create({
             data: {
@@ -26,7 +20,6 @@ const CreateOrderItem = async (data: TOrderItemData): Promise<any> => {
                 price: price
             }
         });
-        console.log(result)
         return result;
 
     } catch (error: any) {
