@@ -6,6 +6,8 @@ const initialeDB = async (req: Request, res: Response) => {
   res.send(result);
 };
 
+
+
 const confirmantionDB = async (req: Request, res: Response) => {
   const { transactionId, id } = req.query;
   const result = await PaymentServices.confirmantion(

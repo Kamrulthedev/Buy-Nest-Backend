@@ -62,7 +62,6 @@ const GetAllCustomer = (filters, options) => __awaiter(void 0, void 0, void 0, f
                     createdAt: 'desc',
                 },
             include: {
-                Order: true,
                 Review: true,
                 Follow: true,
             },
@@ -91,7 +90,6 @@ const GetByIdFrom = (id) => __awaiter(void 0, void 0, void 0, function* () {
             isDeleted: false,
         },
         include: {
-            Order: true,
             Follow: true,
             Review: true,
         },

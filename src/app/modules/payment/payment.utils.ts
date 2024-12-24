@@ -9,7 +9,7 @@ export const initialePayment = async (OrderDate: any) => {
     store_id: process.env.STORE_ID,
     signature_key: process.env.SIGNATURE_KEY,
     tran_id: OrderDate.transactionId,
-    success_url: `https://buy-nest-backend.vercel.app/api/confirmation?
+    success_url: `https://buy-nest-backend.vercel.app/api/v1/confirmation?
 transactionId=${OrderDate.transactionId}&id=${OrderDate.BookinId}&status=success`,
     fail_url:  `https://buy-nest-backend.vercel.app/api/confirmation?&status=Faild`,
     cancel_url: "https://buy-nest-delta.vercel.app/",

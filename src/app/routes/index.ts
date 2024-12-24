@@ -9,6 +9,7 @@ import { CartRoutes } from "../modules/cart/cart.route";
 import { CartItemsRoutes } from "../modules/cartItem/cartItem.route";
 import { OrderRoutes } from "../modules/order/order.route";
 import { OrderItemRoutes } from "../modules/orderItem/orderItem.route";
+import { PaymentRoutes } from "../modules/payment/payment.route";
 
 
 
@@ -54,6 +55,10 @@ const moduleRotes = [
   {
     path: "/order-item",
     route: OrderItemRoutes
+  },
+  {
+    path: '/payment',
+    route: PaymentRoutes
   }
 ];
 

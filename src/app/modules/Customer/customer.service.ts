@@ -56,7 +56,6 @@ const GetAllCustomer = async (
                         createdAt: 'desc',
                     },
             include: {
-                Order: true,
                 Review: true,
                 Follow: true,
             },
@@ -89,7 +88,6 @@ const GetByIdFrom = async (id: string): Promise<Customer | null> => {
             isDeleted: false,
         },
         include: {
-            Order: true,
             Follow: true,
             Review: true,
         },
