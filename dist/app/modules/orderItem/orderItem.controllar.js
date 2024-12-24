@@ -12,30 +12,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OrderControllers = void 0;
+exports.OrderItemControllers = void 0;
 const catchAsync_1 = require("../../../shared/catchAsync");
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
-const order_service_1 = require("./order.service");
-const CreateOrderDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield order_service_1.OrdersServices.CreateOrder(req.body);
+const orderItem_service_1 = require("./orderItem.service");
+const CreateOrderItemDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield orderItem_service_1.OrderItemServices.CreateOrderItem(req.body);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: "Create Order Successfully!",
+        message: "Create Order Item Successfully!",
         data: result,
     });
 }));
-const GetUserOrderDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const GetUserOrdersItemDB = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req === null || req === void 0 ? void 0 : req.params;
-    const result = yield order_service_1.OrdersServices.GetUserOrders(id);
+    const result = yield orderItem_service_1.OrderItemServices.GetUserOrdersItems(id);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: "User Orders fatched Successfully!",
+        message: "User Orders Items fatched Successfully!",
         data: result,
     });
 }));
-exports.OrderControllers = {
-    CreateOrderDB,
-    GetUserOrderDB
+exports.OrderItemControllers = {
+    CreateOrderItemDB,
+    GetUserOrdersItemDB
 };

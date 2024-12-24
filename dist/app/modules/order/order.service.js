@@ -14,15 +14,6 @@ const SharedPrisma_1 = require("../../../shared/SharedPrisma");
 const CreateOrder = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const { TotalPrice, userId, shopId, cardId } = data;
     try {
-        const existingOrder = yield SharedPrisma_1.prisma.order.findFirst({
-            where: {
-                shopId,
-                userId,
-            },
-        });
-        if (existingOrder) {
-            throw new Error("This order already exists.");
-        }
         const numericTotalPrice = parseFloat(TotalPrice);
         if (isNaN(numericTotalPrice)) {
             throw new Error("Invalid TotalPrice value. It must be a valid number.");
@@ -52,21 +43,22 @@ const CreateOrder = (data) => __awaiter(void 0, void 0, void 0, function* () {
         throw new Error("Failed to create the order. Please try again later.");
     }
 });
-// const GetUserCartItems = async (id: string) => {
-//     const result = await prisma.cartItem.findMany({
-//         where: {
-//             cartId: id,
-//         },
-//         include: {
-//             product: true,
-//             cart: true
-//         }
-//     });
-//     if (result.length === 0) {
-//         console.log("No items found for this cart.");
-//     }
-//     return result;
-// };
+const GetUserOrders = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield SharedPrisma_1.prisma.order.findMany({
+        where: {
+            userId: id,
+        },
+        include: {
+            shop: true,
+            items: true
+        }
+    });
+    if (result.length === 0) {
+        console.log("No items found for this cart.");
+    }
+    return result;
+});
 exports.OrdersServices = {
     CreateOrder,
+    GetUserOrders
 };

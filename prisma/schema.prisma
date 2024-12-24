@@ -69,6 +69,7 @@ model Customer {
 
   Review Review[]
   Follow Follow[]
+  Order  Order[]
 }
 
 model Vendor {
@@ -153,6 +154,8 @@ model Order {
   user       User        @relation(fields: [userId], references: [id])
   shop       Shop        @relation(fields: [shopId], references: [id])
   items      OrderItem[]
+  Customer   Customer?   @relation(fields: [customerId], references: [id])
+  customerId String?
 }
 
 model OrderItem {
