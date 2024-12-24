@@ -14,6 +14,7 @@ const cart_route_1 = require("../modules/cart/cart.route");
 const cartItem_route_1 = require("../modules/cartItem/cartItem.route");
 const order_route_1 = require("../modules/order/order.route");
 const orderItem_route_1 = require("../modules/orderItem/orderItem.route");
+const payment_route_1 = require("../modules/payment/payment.route");
 const router = express_1.default.Router();
 const moduleRotes = [
     {
@@ -55,6 +56,10 @@ const moduleRotes = [
     {
         path: "/order-item",
         route: orderItem_route_1.OrderItemRoutes
+    },
+    {
+        path: '/payment',
+        route: payment_route_1.PaymentRoutes
     }
 ];
 moduleRotes.forEach(route => router.use(route.path, route.route));
