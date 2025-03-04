@@ -44,6 +44,7 @@ const CreateAdmin = async (req: Request): Promise<Admin> => {
     role: UserRole.ADMIN,
     name: data.name,
     contactNumber: data.contactNumber,
+    profilePhoto: data.profilePhoto
   }
 
 
