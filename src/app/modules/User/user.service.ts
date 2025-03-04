@@ -173,6 +173,7 @@ const CreateCustomer = async (req: Request): Promise<any> => {
     role: UserRole.CUSTOMER,
     name: data.name,
     contactNumber: data.contactNumber,
+    profilePhoto: data.profilePhoto
   };
 
   try {
