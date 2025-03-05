@@ -19,11 +19,11 @@ const CreateProduct = async (req: Request): Promise<Product> => {
             req.body.imageUrl = uploadToCloudinary?.secure_url;
         }
 
-        const { name, description, price, discount, stock, category, shopId } = req.body;
+        const { name, description, price, discount, stock, category, shopId, imageUrl } = req.body;
 
         // Basic validation
         if (!shopId) throw new Error("Shop ID is required!");
-        if (!name || !description || !price || !category || !stock) throw new Error("Missing required fields!");
+        if (!name || !description || !price || !category || !stock || !imageUrl) throw new Error("Missing required fields!");
 
         const shop = await prisma.shop.findUnique({
             where: { id: shopId },
