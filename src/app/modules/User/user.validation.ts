@@ -16,8 +16,8 @@ const CreateVendorValidation = z.object({
     email: z.string({ required_error: "Email is requied!" }),
     contactNumber: z.string({ required_error: "Contect Number is Required!" }),
     address: z.string().optional(),
-    shopName: z.string({required_error: "Shop Name is Required!"}),
-    shopDescription: z.string({required_error: "Shop Description is Required!"})
+    shopName: z.string({ required_error: "Shop Name is Required!" }),
+    shopDescription: z.string({ required_error: "Shop Description is Required!" })
 });
 
 
@@ -35,6 +35,7 @@ const UpdateUser = z.object({
     email: z.string().optional(),
     contactNumber: z.string().optional(),
     address: z.string().optional(),
+    profilePhoto: z.string().url().optional(),
 })
 
 
