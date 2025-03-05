@@ -11,6 +11,7 @@ import AppError from "../../errors/AppError";
 
 
 const CreateProduct = async (req: Request): Promise<Product> => {
+    console.log(req.body)
     try {
         const file = req.file as UploadedFile;
 
