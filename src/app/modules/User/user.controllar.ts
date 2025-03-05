@@ -75,7 +75,6 @@ const UpdateMyProfileDB = catchAsync(async (req, res) => {
   const { user } = req;
   const { body }: any = req;
   const { file } = req;
-  console.log(req.body)
   const result = await UserServices.UpdateMyProfile(user, body, file as any | null);
   sendResponse(res, {
     statusCode: 200,

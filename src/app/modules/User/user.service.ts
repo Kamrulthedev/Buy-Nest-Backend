@@ -376,7 +376,6 @@ const ChangeUserStatus = async (data: { userId: string, status: UserRole }) => {
 
 
 const UpdateMyProfile = async (user: { email: string, role: string, status: string } | null, body: any | null, file: UploadedFile) => {
-  console.log(body)
   const Upload = file as UploadedFile;
   if (Upload) {
     const uploadToCloudinary = await Fileuploader.uploadToCloudinary(file);
