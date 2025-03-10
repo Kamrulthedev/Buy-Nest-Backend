@@ -77,6 +77,7 @@ const CreateAdmin = (req) => __awaiter(void 0, void 0, void 0, function* () {
         role: client_1.UserRole.ADMIN,
         name: data.name,
         contactNumber: data.contactNumber,
+        profilePhoto: data.profilePhoto
     };
     const result = yield SharedPrisma_1.prisma.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
         yield transactionClient.user.create({
@@ -184,6 +185,7 @@ const CreateCustomer = (req) => __awaiter(void 0, void 0, void 0, function* () {
         role: client_1.UserRole.CUSTOMER,
         name: data.name,
         contactNumber: data.contactNumber,
+        profilePhoto: data.profilePhoto
     };
     try {
         const result = yield SharedPrisma_1.prisma.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
@@ -372,7 +374,6 @@ const UpdateMyProfile = (user, body, file) => __awaiter(void 0, void 0, void 0, 
             },
             data: body
         });
-        console.log(UpdateInfo);
     }
     else if (userInfo.role === client_1.UserRole.VENDOR) {
         UpdateInfo = yield SharedPrisma_1.prisma.vendor.update({

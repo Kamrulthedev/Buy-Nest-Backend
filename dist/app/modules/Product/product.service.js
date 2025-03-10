@@ -30,17 +30,18 @@ const fileUploads_1 = require("../../../helpars/fileUploads");
 const constent_1 = require("./constent");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const CreateProduct = (req) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
     try {
         const file = req.file;
         if (file) {
             const uploadToCloudinary = yield fileUploads_1.Fileuploader.uploadToCloudinary(file);
             req.body.imageUrl = uploadToCloudinary === null || uploadToCloudinary === void 0 ? void 0 : uploadToCloudinary.secure_url;
         }
-        const { name, description, price, discount, stock, category, shopId } = req.body;
+        const { name, description, price, discount, stock, category, shopId, imageUrl } = req.body;
         // Basic validation
         if (!shopId)
             throw new Error("Shop ID is required!");
-        if (!name || !description || !price || !category || !stock)
+        if (!name || !description || !price || !category || !stock || !imageUrl)
             throw new Error("Missing required fields!");
         const shop = yield SharedPrisma_1.prisma.shop.findUnique({
             where: { id: shopId },

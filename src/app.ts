@@ -6,8 +6,8 @@ import cookieParser from 'cookie-parser';
 const cors = require('cors');
 
 const app: Application = express();
-app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
-// app.use(cors({ origin: ["https://buy-nest-delta.vercel.app"], credentials: true }));
+// app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
+app.use(cors({ origin: ["https://buy-nest-delta.vercel.app"], credentials: true }));
 app.use(cookieParser()); 
 
 //use parser

@@ -31,6 +31,7 @@ const UpdateUser = zod_1.z.object({
     email: zod_1.z.string().optional(),
     contactNumber: zod_1.z.string().optional(),
     address: zod_1.z.string().optional(),
+    profilePhoto: zod_1.z.string().url().optional(),
 });
 exports.UserValidation = {
     createAdmin,
