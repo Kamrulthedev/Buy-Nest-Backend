@@ -160,6 +160,7 @@ const CreateVendor = (req) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const CreateCustomer = (req) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
     const file = req.file;
     if (file) {
         try {
@@ -171,7 +172,6 @@ const CreateCustomer = (req) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     const data = req.body;
-    // Check if email already exists
     const existingUser = yield SharedPrisma_1.prisma.user.findUnique({
         where: { email: data.email },
     });

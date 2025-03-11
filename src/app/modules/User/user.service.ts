@@ -149,6 +149,8 @@ const CreateVendor = async (req: Request): Promise<CreateVendorResponse> => {
 
 
 const CreateCustomer = async (req: Request): Promise<any> => {
+  console.log(req.body)
+
   const file = req.file as Express.Multer.File;
   if (file) {
     try {
@@ -158,8 +160,9 @@ const CreateCustomer = async (req: Request): Promise<any> => {
       throw new Error('Error uploading profile photo');
     }
   }
+
+
   const data = req.body;
-  // Check if email already exists
   const existingUser = await prisma.user.findUnique({
     where: { email: data.email },
   });
